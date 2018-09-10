@@ -251,12 +251,12 @@ class PenaltiesController extends BaseController
     public function penalty_pay(Request $request)
     {
         return $request;
+
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);
         if ($validator->fails()) {
-//            return $this->fail(2002, [], $validator->errors()->first());
-            return redirect('/penalties/pay')->with('penalty_info',$penaltyinfo);
+            return $this->fail(2002, [], $validator->errors()->first());
         }
         $penalty_number = $request['penalty_number'];
 

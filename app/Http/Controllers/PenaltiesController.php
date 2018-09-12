@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PenaltyInfo;
+use App\PenaltyOrder;
 use App\ThirdAccount;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cookie;
@@ -150,6 +151,8 @@ class PenaltiesController extends BaseController
     //5101041204594064
     public function penalty_info(Request $request)
     {
+
+//        return back()->withErrors(['penalty_number'=>'此激活用定过！']);
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);
@@ -177,7 +180,9 @@ class PenaltiesController extends BaseController
             if ($account) {
                 return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
             } else {
-                return "请添加账户";
+//                return "no account";
+//                return $this->fail(9999, "请添加账户");
+                return back()->withErrors(['penalty_number'=>'请添加账户！']);
             }
         }
 
@@ -200,11 +205,13 @@ class PenaltiesController extends BaseController
 //        $response->body();
         $response_code = $response->getStatusCode();
         if ($response_code != 200) {
-            return $this->fail(9999);
+//            return $this->fail(9999);
+            return back()->withErrors(['penalty_number'=>'系统异常！']);
         }
         $response_body = json_decode($response->getBody(), true);
         if ($response_body['code'] != 200) {
-            return $this->fail(9999, [], $response_body);
+//            return $this->fail(9999, [], $response_body);
+            return back()->withErrors(['penalty_number'=>$response_body]);
         }
         $penaltyinfo->penalty_number = $response_body['jdsbh'];
         $penaltyinfo->penalty_car_number = $response_body['hphm'];
@@ -239,7 +246,7 @@ class PenaltiesController extends BaseController
                 'key' => '你的KEY',
                 // 'cert_path'          => 'path/to/your/cert.pem', // XXX: 绝对路径！！！！
                 // 'key_path'           => 'path/to/your/key',      // XXX: 绝对路径！！！！
-                'notify_url' => '你的回调地址',       // 你也可以在下单时单独设置来想覆盖它
+                'notify_url' => '你的回调地址',       // TODO: 你也可以在下单时单独设置来想覆盖它
                 // 'device_info'     => '013467007045764',
                 // 'sub_app_id'      => '',
                 // 'sub_merchant_id' => '',
@@ -250,13 +257,12 @@ class PenaltiesController extends BaseController
 
     public function penalty_pay(Request $request)
     {
-        return $request;
 
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);
         if ($validator->fails()) {
-            return $this->fail(2002, [], $validator->errors()->first());
+            return $this->fail(2002, $validator->errors()->first());
         }
         $penalty_number = $request['penalty_number'];
 
@@ -266,41 +272,68 @@ class PenaltiesController extends BaseController
             return $this->fail(9999);
         }
 
-        $penaltyorder = new PenaltyOrder;
+        //计算订单金额
+        $valid_ddje = $pnaltyinfo->penalty_money;
+        $valid_ddje += 14;//TODO:服务费
+        $valid_ddje += ($pnaltyinfo->penalty_money_late);
 
-        $penaltyorder->order_number = "";
-        $penaltyorder->order_money = $pnaltyinfo->penalty_money;
-        $penaltyorder->order_penalty_number = $penalty_number;
-        $penaltyorder->order_user_id = "";//TODO: 用户id
-        $penaltyorder->order_status = "unpaid";
+        //自动生成，订单编号
+        $sj = rand(10000, 99999);
+        $order_number = date("YmdHis") . '0' . $sj;
 
-        $id = Input::get('order_id');//传入订单ID
-        $order_find = ExampleOrder::find($id); //找到该订单
-        $mch_id = xxxxxxx;//你的MCH_ID
-        $options = $this->options();
-        $app = new Application($options);
-        $payment = $app->payment;
-        $out_trade_no = $mch_id . date("YmdHis"); //拼一下订单号
-        $attributes = [
-            'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
-            'body' => '购买CSDN产品',
-            'detail' => $order_find->info, //我这里是通过订单找到商品详情，你也可以自定义
-            'out_trade_no' => $out_trade_no,
-            'total_fee' => $order_find->money * 100, //因为是以分为单位，所以订单里面的金额乘以100
-            // 'notify_url'       => 'http://xxx.com/order-notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
-            'openid' => '当前用户的 openid', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
-            // ...
-        ];
-        $order = new Order($attributes);
-        $result = $payment->prepare($order);
-        if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS') {
-            $order_find->out_trade_no = $out_trade_no; //在这里更新订单的支付ID
-            $order_find->save();
-            // return response()->json(['result'=>$result]);
-            $prepayId = $result->prepay_id;
-            $config = $payment->configForAppPayment($prepayId);
-            return response()->json($config);
+        $penaltyorder = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
+        if ($penaltyorder != null) {
+            $order_status = $penaltyorder->order_status;
+            if ($order_status == "paid" || $order_status == "processing") {
+                return $this->fail(9999, "该违法已在处理中...");
+            } else if ($order_status == "completed") {
+                return $this->fail(9999, "该违法已处理");
+            }
+            //修改订单金额
+            $penaltyorder->order_money = $valid_ddje;
+            //修改订单用户
+            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+            $penaltyorder->save();
+        } else {
+            $penaltyorder = new PenaltyOrder;
+            $penaltyorder->order_number = $order_number;
+            $penaltyorder->order_money = $valid_ddje;
+            $penaltyorder->order_penalty_number = $penalty_number;
+            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+            $penaltyorder->order_status = "unpaid";
+            $penaltyorder->save();
         }
+
+
+////        $id = Input::get('order_id');//传入订单ID
+////        $order_find = ExampleOrder::find($id); //找到该订单
+////        $mch_id = xxxxxxx;//你的MCH_ID
+//        $options = $this->options();
+//        $app = new Application($options);
+//        $payment = $app->payment;
+////        $out_trade_no = $mch_id . date("YmdHis"); //拼一下订单号
+//        $attributes = [
+//            'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
+//            'body' => '代缴',
+//            'detail' => $penalty_number.'代缴', //我这里是通过订单找到商品详情，你也可以自定义
+//            'out_trade_no' => $penaltyorder->order_number,
+//            'total_fee' =>  $penaltyorder->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+//            // 'notify_url'       => 'http://xxx.com/order-notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+//            'openid' => '当前用户的 openid', // TODO: trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
+//            // ...
+//        ];
+//        $order = new Order($attributes);
+//        $result = $payment->prepare($order);
+//        if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS') {
+//            $order_find->out_trade_no = $out_trade_no; //在这里更新订单的支付ID
+//            $order_find->save();
+//            // return response()->json(['result'=>$result]);
+//            $prepayId = $result->prepay_id;
+//            $config = $payment->configForAppPayment($prepayId);
+//            return response()->json($config);
+//        }else{
+//
+//        }
 
     }
 
@@ -315,7 +348,7 @@ class PenaltiesController extends BaseController
         ]);
     }
 
-    public function fail($code, $data = [], $msg = null)
+    public function fail($code, $msg = null, $data = [])
     {
         return response()->json([
             'status' => false,

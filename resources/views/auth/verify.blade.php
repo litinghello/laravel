@@ -5,17 +5,17 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Verify Your Email Address</div>
+                <div class="card-header">邮件验证</div>
 
                 <div class="card-body">
                     @if (session('resent'))
                         <div class="alert alert-success" role="alert">
-                            A fresh verification link has been sent to your email address.
+                            新的验证链接已发送到您的电子邮件地址。
                         </div>
                     @endif
 
-                    Before proceeding, please check your email for a verification link.
-                    If you did not receive the email, <a href="{{ route('verification.resend') }}">click here to request another</a>.
+                    在继续之前，请检查您的电子邮件以获取验证链接。
+                    如果您没有收到电子邮件， <a href="{{ route('verification.resend') }}">点击再次发送。</a>.
                 </div>
             </div>
         </div>

@@ -21,6 +21,11 @@ class PenaltiesController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    //用于只允许通过认证的用户访问指定的路由
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     //添加第三方账户
     //http://localhost/laravel/penalties/account/add?account_type=51jfk&account_name=123456&account_password=123456
     public function add_third_account(Request $request)

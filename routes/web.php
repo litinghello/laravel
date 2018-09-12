@@ -14,6 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
 //用户路由
 Auth::routes();
 //用户登录访问

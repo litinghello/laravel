@@ -26,6 +26,7 @@
                                 'penalty_illegal_time'=>'违法时间',
                                 'penalty_process_time'=>'处理时间',
                                 //'penalty_behavior'=>'违法行为',
+                                //'penalty_money_extra'=>'手续费',
                                 'penalty_phone_number'=>'手机号码(必填)',
                                 ];
                             @endphp
@@ -57,9 +58,9 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="penalty_info_label">说明</h4>
+                                            <h4 class="modal-title" id="penalty_info_label">手续费</h4>
                                         </div>
-                                        <div class="modal-body">包含违章费用，滞纳金，手续费。</div>
+                                        <div class="modal-body">每笔手续费10元人民币</div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                                         </div>

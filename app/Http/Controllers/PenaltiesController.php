@@ -6,17 +6,17 @@ use App\PenaltyInfo;
 use App\PenaltyOrder;
 use App\ThirdAccount;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Cookie;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\json_decode;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+use EasyWeChat\Payment\Order;
 
 class PenaltiesController extends BaseController
 {
@@ -171,9 +171,10 @@ class PenaltiesController extends BaseController
         // 这里需要实现 已经存在直接返回（10分钟内）
         $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         if ($penaltyinfo != null) {
-            if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-10 minute"))) {
+//            if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-10 minute"))) {
+            if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-100000 minute"))) {
 //                return $this->success($penaltyinfo);
-                return redirect('/penalties/pay')->with('penalty_info',$penaltyinfo);
+                return redirect('/penalties/pay')->with('penalty_info', $penaltyinfo);
             }
         } else {
             $penaltyinfo = new PenaltyInfo;
@@ -187,7 +188,7 @@ class PenaltiesController extends BaseController
             } else {
 //                return "no account";
 //                return $this->fail(9999, "请添加账户");
-                return back()->withErrors(['penalty_number'=>'请添加账户！']);
+                return back()->withErrors(['penalty_number' => '请添加账户！']);
             }
         }
 
@@ -211,12 +212,12 @@ class PenaltiesController extends BaseController
         $response_code = $response->getStatusCode();
         if ($response_code != 200) {
 //            return $this->fail(9999);
-            return back()->withErrors(['penalty_number'=>'系统异常！']);
+            return back()->withErrors(['penalty_number' => '系统异常！']);
         }
         $response_body = json_decode($response->getBody(), true);
         if ($response_body['code'] != 200) {
 //            return $this->fail(9999, [], $response_body);
-            return back()->withErrors(['penalty_number'=>$response_body]);
+            return back()->withErrors(['penalty_number' => $response_body]);
         }
         $penaltyinfo->penalty_number = $response_body['jdsbh'];
         $penaltyinfo->penalty_car_number = $response_body['hphm'];
@@ -232,7 +233,7 @@ class PenaltiesController extends BaseController
         // 缓存
         $penaltyinfo->save();
 //        return $this->success($pnaltyinfo);
-        return redirect('/penalties/pay')->with('penalty_info',$penaltyinfo);
+        return redirect('/penalties/pay')->with('penalty_info', $penaltyinfo);
     }
 
 
@@ -260,69 +261,73 @@ class PenaltiesController extends BaseController
         ];
     }
 
-    public function penalty_pay(Request $request)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'penalty_number' => 'required|alpha_num|between:15,16',
-        ]);
-        if ($validator->fails()) {
-            return $this->fail(2002, $validator->errors()->first());
-        }
-        $penalty_number = $request['penalty_number'];
-
-        // 查询数据库
-        $pnaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
-        if ($pnaltyinfo == null) {
-            return $this->fail(9999);
-        }
-
-        //计算订单金额
-        $valid_ddje = $pnaltyinfo->penalty_money;
-        $valid_ddje += 14;//TODO:服务费
-        $valid_ddje += ($pnaltyinfo->penalty_money_late);
-
-        //自动生成，订单编号
-        $sj = rand(10000, 99999);
-        $order_number = date("YmdHis") . '0' . $sj;
-
-        $penaltyorder = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
-        if ($penaltyorder != null) {
-            $order_status = $penaltyorder->order_status;
-            if ($order_status == "paid" || $order_status == "processing") {
-                return $this->fail(9999, "该违法已在处理中...");
-            } else if ($order_status == "completed") {
-                return $this->fail(9999, "该违法已处理");
-            }
-            //修改订单金额
-            $penaltyorder->order_money = $valid_ddje;
-            //修改订单用户
-            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
-            $penaltyorder->save();
-        } else {
-            $penaltyorder = new PenaltyOrder;
-            $penaltyorder->order_number = $order_number;
-            $penaltyorder->order_money = $valid_ddje;
-            $penaltyorder->order_penalty_number = $penalty_number;
-            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
-            $penaltyorder->order_status = "unpaid";
-            $penaltyorder->save();
-        }
-
-
-////        $id = Input::get('order_id');//传入订单ID
-////        $order_find = ExampleOrder::find($id); //找到该订单
-////        $mch_id = xxxxxxx;//你的MCH_ID
+//    public function penalty_pay(Request $request)
+//    {
+//
+//        $validator = Validator::make($request->all(), [
+//            'penalty_number' => 'required|alpha_num|between:15,16',
+//        ]);
+////        $log = new Logger('register');
+////        $log->pushHandler(new StreamHandler(storage_path('logs/reg.log'),Logger::INFO) );
+////        $log->addInfo('用户注册信息:'.'2222222222');
+//        if ($validator->fails()) {
+//            return back()->withErrors($validator);
+//        }
+//
+////        $log->addInfo('用户注册信息:'.'33333');
+////        Log::useFiles(storage_path().'/logs/laravel.log')->info('test:','111111');
+//        $penalty_number = $request['penalty_number'];
+//        // 查询数据库
+//        $pnaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
+//        if ($pnaltyinfo == null) {
+////            return $this->fail(9999);
+//            return back()->withErrors(['penalty_number' => '系统异常']);
+//        }
+//
+//        //计算订单金额
+//        $valid_ddje = $pnaltyinfo->penalty_money;
+//        $valid_ddje += 14;//TODO:服务费
+//        $valid_ddje += ($pnaltyinfo->penalty_money_late);
+//
+//        //自动生成，订单编号
+//        $sj = rand(10000, 99999);
+//        $order_number = date("YmdHis") . '0' . $sj;
+//
+//        $penaltyorder = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
+//        if ($penaltyorder != null) {
+//            $order_status = $penaltyorder->order_status;
+//            if ($order_status == "paid" || $order_status == "processing") {
+////                return $this->fail(9999, "该违法已在处理中...");
+//                return back()->withErrors(['penalty_number' => '该违法已在处理中...']);
+//            } else if ($order_status == "completed") {
+////                return $this->fail(9999, "该违法已处理");
+//                return back()->withErrors(['penalty_number' => '该违法已处理']);
+//            }
+//            //修改订单金额
+//            $penaltyorder->order_money = $valid_ddje;
+//            //修改订单用户
+//            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+//            $penaltyorder->save();
+//        } else {
+//            $penaltyorder = new PenaltyOrder;
+//            $penaltyorder->order_number = $order_number;
+//            $penaltyorder->order_money = $valid_ddje;
+//            $penaltyorder->order_penalty_number = $penalty_number;
+//            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+//            $penaltyorder->order_status = "unpaid";
+//            $penaltyorder->save();
+//        }
+//
+//
 //        $options = $this->options();
 //        $app = new Application($options);
 //        $payment = $app->payment;
-////        $out_trade_no = $mch_id . date("YmdHis"); //拼一下订单号
 //        $attributes = [
 //            'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
 //            'body' => '代缴',
-//            'detail' => $penalty_number.'代缴', //我这里是通过订单找到商品详情，你也可以自定义
-//            'out_trade_no' => $penaltyorder->order_number,
-//            'total_fee' =>  $penaltyorder->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+//            'detail' => $penalty_number . '代缴', //我这里是通过订单找到商品详情，你也可以自定义
+//            'out_trade_no' => $penaltyorder->order_number,//传入订单ID
+//            'total_fee' => $penaltyorder->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
 //            // 'notify_url'       => 'http://xxx.com/order-notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
 //            'openid' => '当前用户的 openid', // TODO: trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
 //            // ...
@@ -330,17 +335,47 @@ class PenaltiesController extends BaseController
 //        $order = new Order($attributes);
 //        $result = $payment->prepare($order);
 //        if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS') {
-//            $order_find->out_trade_no = $out_trade_no; //在这里更新订单的支付ID
-//            $order_find->save();
-//            // return response()->json(['result'=>$result]);
 //            $prepayId = $result->prepay_id;
 //            $config = $payment->configForAppPayment($prepayId);
-//            return response()->json($config);
-//        }else{
+//            $config = $payment->sdkConfig($prepayId); // 返回数组
 //
+////            return response()->json($config);
+//            return redirect('/penalties/pay_order')->with('config', $config);
+//        } else {
+//            return back()->withErrors(['penalty_number' => '微信支付异常']);
 //        }
-
-    }
+//
+//    }
+//
+//    //下面是回调函数
+//    public function paySuccess()
+//    {
+//        $options = $this->options();
+//        $app = new Application($options);
+//        $response = $app->payment->handleNotify(function ($notify, $successful) {
+//            // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
+//            $order = ExampleOrder::where('out_trade_no', $notify->out_trade_no)->first();
+//            $penaltyorder = PenaltyOrder::where('order_penalty_number', $notify->out_trade_no)->first();
+//            if (count($order) == 0) { // 如果订单不存在
+//                return 'Order not exist.'; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+//            }
+//            // 如果订单存在
+//            // 检查订单是否已经更新过支付状态
+//            if ($order->pay_time) { // 假设订单字段“支付时间”不为空代表已经支付
+//                return true; // 已经支付成功了就不再更新了
+//            }
+//            // 用户是否支付成功
+//            if ($successful) {
+//                // 不是已经支付状态则修改为已经支付状态
+//                $order->pay_time = time(); // 更新支付时间为当前时间
+//                $order->status = 6; //支付成功,
+//            } else { // 用户支付失败
+//                $order->status = 2; //待付款
+//            }
+//            $order->save(); // 保存订单
+//            return true; // 返回处理完成
+//        });
+//    }
 
 
     public function success($data = [], $msg = null)

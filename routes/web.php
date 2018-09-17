@@ -48,6 +48,10 @@ Route::get('/penalties/pay', function () {
     return view('penalty.pay');
 });
 //支付处理
-Route::post('/penalties/pay','PenaltiesController@penalty_pay')->name('penalties.pay');
+Route::post('/penalties/pay','WXpayController@penalty_pay')->name('penalties.pay');
+//支付页面
+Route::get('/penalties/pay_order', function () {
+    return view('penalty.pay_order');
+});
 
 

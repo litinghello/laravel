@@ -8,6 +8,19 @@
                 <div class="card-header">{{ __('支付页面') }}</div>
 
                 <div class="card-body">
+
+                    <div class="form-group">
+                        @if (count($errors) > 0)
+                            <div class="alert alert-danger">
+                                <ul style="color:red;">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
+
                     <form method="POST" action="{{ route('penalties.pay') }}">
                         @csrf
                         {{--{{ $penalty = session('penalty_info')  }}--}}
@@ -68,7 +81,7 @@
                                 </div><!-- /.modal -->
                             </div>
                         @else
-                            {{ __('数据错误') }}
+                            {{--{{ __('数据错误') }}--}}
                         @endif
                     </form>
                 </div>

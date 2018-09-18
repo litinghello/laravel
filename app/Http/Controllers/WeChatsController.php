@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 //use Log;
 
-class WeChatController extends Controller
+class WeChatsController extends Controller
 {
     public function wechat_oauth(){
         $app = app('wechat.official_account');

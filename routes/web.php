@@ -29,6 +29,10 @@ Route::get('/wechats/menu/create','WeChatsController@create_menu')->name("wechat
 //(注：使用web中间件是为了防止出现session不共享的情况)
 Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router) {
     Route::get('/wechats/auth','WeChatsController@login_auth')->name("wechats.auth");
+    //查询页面
+    Route::get('/penalties/inquire', function () {
+        return view('penalty.inquire');
+    });
 });
 
 //添加第三方账户
@@ -39,10 +43,6 @@ Route::any('/penalties/login/51jfk','PenaltiesController@login_51jfk_account')->
 Route::any('/penalties/info','PenaltiesController@penalty_info')->name('penalties.info');
 
 
-//查询页面
-Route::get('/penalties/inquire', function () {
-    return view('penalty.inquire');
-});
 //支付页面
 Route::get('/penalties/pay', function () {
     return view('penalty.pay');

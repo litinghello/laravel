@@ -105,7 +105,7 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"罚款缴纳",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/penalties/inquire",
                     ]
                 ]
             ],

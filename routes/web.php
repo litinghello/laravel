@@ -33,25 +33,25 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router
     Route::get('/penalties/inquire', function () {
         return view('penalty.inquire');
     });
+    //查询决定书编号信息
+    Route::any('/penalties/info','PenaltiesController@penalty_info')->name('penalties.info');
+    //支付页面
+    Route::get('/penalties/pay', function () {
+        return view('penalty.pay');
+    });
+//支付处理
+    Route::post('/penalties/pay','WXpayController@penalty_pay')->name('penalties.pay');
+//支付页面
+    Route::get('/penalties/pay_order', function () {
+        return view('penalty.pay_order');
+    });
 });
 
 //添加第三方账户
 Route::any('/penalties/account/add','PenaltiesController@add_third_account')->name('penalties.account.add');
 //登录第三方账户 51jfk
 Route::any('/penalties/login/51jfk','PenaltiesController@login_51jfk_account')->name('penalties.login.51jfk');
-//查询决定书编号信息
-Route::any('/penalties/info','PenaltiesController@penalty_info')->name('penalties.info');
 
 
-//支付页面
-Route::get('/penalties/pay', function () {
-    return view('penalty.pay');
-});
-//支付处理
-Route::post('/penalties/pay','WXpayController@penalty_pay')->name('penalties.pay');
-//支付页面
-Route::get('/penalties/pay_order', function () {
-    return view('penalty.pay_order');
-});
 
 

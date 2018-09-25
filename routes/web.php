@@ -40,12 +40,15 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router
         return view('penalty.pay');
     });
 //支付处理
-    Route::post('/penalties/pay','WXpayController@penalty_pay')->name('penalties.pay');
+    Route::post('/penalties/pay','WeChatsController@penalty_pay')->name('penalties.pay');
 //支付页面
     Route::get('/penalties/pay_order', function () {
         return view('penalty.pay_order');
     });
 });
+
+//支付回调
+Route::post('/penalties/pay_call','WeChatsController@penalty_paycall')->name('penalties.paycall');
 
 //添加第三方账户
 Route::any('/penalties/account/add','PenaltiesController@add_third_account')->name('penalties.account.add');

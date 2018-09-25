@@ -4,6 +4,18 @@ namespace App\Http\Controllers;
 
 //use Log;
 
+use App\PenaltyInfo;
+use App\PenaltyOrder;
+use GuzzleHttp\Cookie\json_decode;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+use EasyWeChat\Factory;
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 class WeChatsController extends Controller
 {
     public function wechat_oauth(){
@@ -146,6 +158,112 @@ class WeChatsController extends Controller
             ]
         ];
         return $app->menu->create($buttons);
+    }
+
+
+
+
+    public function penalty_pay(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'penalty_number' => 'required|alpha_num|between:15,16',
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+        $penalty_number = $request['penalty_number'];
+        // 查询数据库
+        $pnaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
+        if ($pnaltyinfo == null) {
+            return back()->withErrors(['penalty_number' => '系统异常']);
+        }
+
+        //计算订单金额
+        $valid_ddje = $pnaltyinfo->penalty_money;
+        $valid_ddje += 10;//TODO:服务费
+        $valid_ddje += ($pnaltyinfo->penalty_money_late);
+
+        //自动生成，订单编号
+        $sj = rand(10000, 99999);
+        $order_number = date("YmdHis") . '0' . $sj;
+
+        $penaltyorder = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
+        if ($penaltyorder != null) {
+            $order_status = $penaltyorder->order_status;
+            if ($order_status == "paid" || $order_status == "processing") {
+                return back()->withErrors(['penalty_number' => '该违法已在处理中...']);
+            } else if ($order_status == "completed") {
+                return back()->withErrors(['penalty_number' => '该违法已处理']);
+            }
+            //修改订单金额
+            $penaltyorder->order_money = $valid_ddje;
+            //修改订单用户
+            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+            $penaltyorder->save();
+        } else {
+            $penaltyorder = new PenaltyOrder;
+            $penaltyorder->order_number = $order_number;
+            $penaltyorder->order_money = $valid_ddje;
+            $penaltyorder->order_penalty_number = $penalty_number;
+            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+            $penaltyorder->order_status = "unpaid";
+            $penaltyorder->save();
+        }
+
+        $options = config('wechat.payment');
+        $app = Factory::payment($options);
+        $result = $app->order->unify([
+            'body' => '代缴',
+            'out_trade_no' => $penaltyorder->order_number,//传入订单ID
+            'total_fee' => $penaltyorder->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+//            'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+//            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'trade_type' => 'JSAPI',
+            'openid' => $app->oauth->user()->getId(),//TODO: 用户openid
+        ]);
+        if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS') {
+            $prepayId = $result->prepay_id;
+            $jssdk = $app->jssdk;
+            $config = $jssdk->sdkConfig($prepayId); // 返回数组
+            return redirect('/penalties/pay_order')->with('config', $config);
+        } else {
+            return back()->withErrors(['penalty_number' => '微信支付异常']);
+        }
+
+
+    }
+
+    //下面是回调函数
+    public function paycall()
+    {
+        $options = config('wechat.payment');
+        $app = new Application($options);
+        $response = $app->payment->handleNotify(function ($notify, $successful) {
+            // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
+//            $order = ExampleOrder::where('out_trade_no', $notify->out_trade_no)->first();
+            $order = PenaltyOrder::where('order_number', $notify->out_trade_no)->first();
+            if (count($order) == 0) { // 如果订单不存在
+                return 'Order not exist.'; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+            }
+            // 如果订单存在
+            // 检查订单是否已经更新过支付状态
+//            if ($order->pay_time) { // 假设订单字段“支付时间”不为空代表已经支付
+//                return true; // 已经支付成功了就不再更新了
+//            }
+
+            // 用户是否支付成功
+            if ($successful) {
+                // 不是已经支付状态则修改为已经支付状态
+//                $order->pay_time = time(); // 更新支付时间为当前时间
+//                $order->status = 6; //支付成功,
+                $order->order_status = 'paid'; //支付成功,
+            } else { // 用户支付失败
+                $order->order_status = 'unpaid'; //待付款
+            }
+            $order->save(); // 保存订单
+            return true; // 返回处理完成
+        });
     }
 
 }

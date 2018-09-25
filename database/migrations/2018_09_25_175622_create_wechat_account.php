@@ -19,6 +19,7 @@ class CreateWechatAccount extends Migration
             $table->string('wechat_name')->comment('用户名称');//
             $table->string('wechat_nick_name')->comment('用户别名');//
             $table->string('wechat_email_account')->comment('绑定的邮箱');//
+            $table->string('wechat_main_account')->comment('绑定的主账户');//
             $table->string('wechat_reserve')->comment('其它信息');//
             $table->timestamps();
         });

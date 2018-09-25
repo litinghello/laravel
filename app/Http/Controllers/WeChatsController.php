@@ -18,7 +18,12 @@ use Monolog\Handler\StreamHandler;
 
 class WeChatsController extends Controller
 {
+    public function wechat_bind_account(){
+        $user = session('wechat.oauth_user');
+        //查询账户是否为空 如果为空进行用户绑定
 
+        return $user;
+    }
     public function wechat_oauth(){
         $app = app('wechat.official_account');
         $response = $app->oauth->scopes(['snsapi_userinfo'])->redirect();

@@ -18,6 +18,7 @@ use Monolog\Handler\StreamHandler;
 
 class WeChatsController extends Controller
 {
+
     public function wechat_oauth(){
         $app = app('wechat.official_account');
         $response = $app->oauth->scopes(['snsapi_userinfo'])->redirect();
@@ -112,7 +113,7 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"违章处理",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ],
                     [
                         "type" => "view",
@@ -127,17 +128,17 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"汽车审验",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ],
                     [
                         "type" => "view",
                         "name"=>"过户上户",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ],
                     [
                         "type" => "view",
                         "name"=>"事故查询",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ]
                 ]
             ],
@@ -146,26 +147,21 @@ class WeChatsController extends Controller
                 "sub_button"=>[
                     [
                         "type" => "view",
-                        "name"=>"订单进度",
-                        "url"=>"http://www.soso.com/",
+                        "name"=>"订单信息",
+                        "url"=>"http://www.cttx-zbx.com/home",
                     ],
                     [
                         "type" => "view",
                         "name"=>"联系我们",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ]
                 ]
             ]
         ];
         return $app->menu->create($buttons);
     }
-
-
-
-
-    public function penalty_pay(Request $request)
-    {
-
+    //微信支付
+    public function penalty_pay(Request $request){
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);

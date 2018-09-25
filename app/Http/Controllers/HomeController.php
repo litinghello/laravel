@@ -16,18 +16,6 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
     /**
-     * 处理身份认证尝试.
-     *
-     * @return Response
-     */
-    public function authenticate()
-    {
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            // 认证通过...
-            return redirect()->intended('dashboard');
-        }
-    }
-    /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response

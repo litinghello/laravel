@@ -53,5 +53,9 @@ Route::any('/penalties/account/add','PenaltiesController@add_third_account')->na
 Route::any('/penalties/login/51jfk','PenaltiesController@login_51jfk_account')->name('penalties.login.51jfk');
 
 
+//后台查看数据
+Route::get('/adminltes/table/home', 'AdminLtesController@penalty_order_table_home')->name('adminltes.table.home');
+Route::get('/adminltes/table/data', 'AdminLtesController@get_penalty_order_data')->name('adminltes.table.data');
+Route::get('/adminltes/table/complete', 'AdminLtesController@set_penalty_order_data')->name('adminltes.table.complete');
 
 

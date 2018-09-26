@@ -54,15 +54,18 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('登录') }}
+                                    {{ __('邮件登录') }}
                                 </button>
-
+                                <a  class="btn btn-success" href="{{ route('wechats.login') }}">
+                                    {{ __('微信登录') }}
+                                </a>
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     {{ __('忘记密码？') }}
                                 </a>
                             </div>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

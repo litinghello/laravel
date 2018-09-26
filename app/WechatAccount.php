@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PenaltyInfo extends Model
+class WechatAccount extends Model
 {
     //protected $connection = 'connection-name';//数据库连接
     protected $table = 'wechat_account';//数据表名

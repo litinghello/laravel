@@ -154,9 +154,7 @@ class PenaltiesController extends BaseController
      * @return string
      */
     //5101041204594064
-    public function penalty_info(Request $request)
-    {
-
+    public function penalty_info(Request $request){
 //        return back()->withErrors(['penalty_number'=>'此激活用定过！']);
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
@@ -235,10 +233,6 @@ class PenaltiesController extends BaseController
 //        return $this->success($pnaltyinfo);
         return redirect('/penalties/pay')->with('penalty_info', $penaltyinfo);
     }
-
-
-
-
     public function success($data = [], $msg = null)
     {
         return response()->json([

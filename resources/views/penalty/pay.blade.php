@@ -21,10 +21,8 @@
                         @endif
                     </div>
 
-                    <form method="POST" action="{{ route('penalties.pay') }}">
+                    <form method="POST" id="order_info" action="{{ route('penalties.pay') }}">
                         @csrf
-                        {{--{{ $penalty = session('penalty_info')  }}--}}
-                        {{--{{session()->has('penalty_info')}}}--}}
                         @if(session()->has('penalty_info'))
                             @php
                                 $penalty_info = session('penalty_info');
@@ -58,9 +56,9 @@
                             @endif
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <div id="wechat_pay" type="button" class="btn btn-primary">
                                         {{ __('微信支付') }}
-                                    </button>
+                                    </div>
                                     <a class="btn btn-link" data-toggle="modal" data-target="#penalty_info">
                                         {{ __('收费规则?') }}
                                     </a>
@@ -84,9 +82,58 @@
                             {{--{{ __('数据错误') }}--}}
                         @endif
                     </form>
+                    <div id="text">test</div>
+                    <script type="text/javascript">
+                        //调用微信JS api 支付
+                        function jsApiCall(value){
+                            WeixinJSBridge.invoke(
+                                'getBrandWCPayRequest',value,
+                                function(res){
+                                    WeixinJSBridge.log(res.err_msg);
+                                    alert(res.err_code+res.err_desc+res.err_msg);
+                                }
+                            )
+                        }
+                        function wechat_pay(value){
+                            if (typeof(WeixinJSBridge) === "undefined"){
+                                if( document.addEventListener ){
+                                    document.addEventListener('WeixinJSBridgeReady', jsApiCall(value), false);
+                                }else if (document.attachEvent){
+                                    document.attachEvent('WeixinJSBridgeReady', jsApiCall(value));
+                                    document.attachEvent('onWeixinJSBridgeReady', jsApiCall(value));
+                                }
+                            }else{
+                                jsApiCall(value);
+                            }
+                        }
+                        $("#wechat_pay").click(function(){
+                             var order_info = $("#order_info").serialize();
+                            document.getElementById("text").innerHTML=order_info;
+                            $.ajax({
+                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                url:"{{route('penalties.pay')}}",
+                                        type:"POST",
+                                        data:order_info,
+                                        //dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                                        //processData:false,
+                                        //contentType:false,
+                                        success:function(data){
+                                            //document.getElementById("text").innerHTML="success "+JSON.stringify(data);
+                                            //wechat_pay(data);
+                                        },
+                                        error:function(data){
+                                            document.getElementById("text").innerHTML="error "+JSON.stringify(data);
+                                        }
+                            });
+                        });
+                    </script>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+
+
+

@@ -169,7 +169,6 @@ class WeChatsController extends Controller
     }
     //微信支付
     public function penalty_pay(Request $request){
-        return $request;
         $user = session('wechat.oauth_user'); //拿到授权用户资料
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',

@@ -117,12 +117,12 @@
                                         //dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
                                         //processData:false,
                                         //contentType:false,
-                                        success:function(data){
-                                            //document.getElementById("text").innerHTML="success "+JSON.stringify(data);
-                                            //wechat_pay(data);
+                                        success:function(value){
+                                            //document.getElementById("text").innerHTML="success "+JSON.stringify(value);
+                                            wechat_pay(data);
                                         },
-                                        error:function(data){
-                                            document.getElementById("text").innerHTML="error "+JSON.stringify(data);
+                                        error:function(value){
+                                            document.getElementById("text").innerHTML="error "+JSON.stringify(value);
                                         }
                             });
                         });

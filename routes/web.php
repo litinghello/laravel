@@ -46,7 +46,7 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router
         return view('penalty.pay_order');
     });
     //微信一键登录
-    Route::get('/wechats/login','WeChatsController@wechat_login')->name('wechats.login');
+    Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');
 });
 
 //支付回调

@@ -11,6 +11,7 @@ use App\User;
 use GuzzleHttp\Cookie\json_decode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 use EasyWeChat\Factory;
@@ -20,30 +21,10 @@ use Monolog\Handler\StreamHandler;
 
 class WeChatsController extends Controller
 {
-    public function wechat_login(){
-        $wechat_info = session('wechat.oauth_user');
-        //查询账户是否为空 如果为空进行用户绑定 保存用户
-        $wechat_account = WechatAccount::where("wechat_id",$wechat_info['default']['id'])->get();
-        if (!$wechat_account->isEmpty()) {
-            //查找主账户
-            echo $wechat_account['wechat_main_account'];
-            $email_account = User::where("id",$wechat_account['wechat_main_account'])->get();
-        }else{
-            $new_account = new User;
-            $new_account->name = $wechat_info['default']['name'];
-            $new_account->email = $wechat_info['default']['name']."@cttx-zbx.com";
-            $new_account->save();
-//            $new_account = new WechatAccount;
-//            $new_account->wechat_id = $user['default']['id'];
-//            $new_account->wechat_name = $user['default']['name'];
-//            $new_account->wechat_nick_name = $user['default']['nickname'];
-//            $new_account->wechat_email_account = $user['default']['email'];
-//
-//            $new_account->save();
-            return $user['default'];
-        }
-
-        return $user;
+    //用于只允许通过认证的用户访问指定的路由
+    public function __construct()
+    {
+        $this->middleware('auth');
     }
     public function wechat_oauth(){
         $app = app('wechat.official_account');

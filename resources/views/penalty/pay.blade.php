@@ -119,10 +119,10 @@
                                         //contentType:false,
                                         success:function(value){
                                             document.getElementById("text").innerHTML="success "+value;
-                                            wechat_pay(JSON.parse(value));
+                                            wechat_pay(value);
                                         },
                                         error:function(value){
-                                            document.getElementById("text").innerHTML="error "+JSON.stringify(value);
+                                            document.getElementById("text").innerHTML="error "+value;
                                         }
                             });
                         });

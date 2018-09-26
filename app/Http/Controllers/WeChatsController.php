@@ -167,8 +167,11 @@ class WeChatsController extends Controller
         ];
         return $app->menu->create($buttons);
     }
-    //微信支付
-    public function penalty_pay(Request $request){
+    public function penalty_pay(Request $request)
+    {
+        $user = session('wechat.oauth_user'); //拿到授权用户资料
+//        return $user['default']['id'];
+
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);
@@ -191,6 +194,8 @@ class WeChatsController extends Controller
         $sj = rand(10000, 99999);
         $order_number = date("YmdHis") . '0' . $sj;
 
+        $config = config('wechat.official_account')['default'];
+        $appAccount = Factory::officialAccount($config);
         $penaltyorder = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
         if ($penaltyorder != null) {
             $order_status = $penaltyorder->order_status;
@@ -202,34 +207,40 @@ class WeChatsController extends Controller
             //修改订单金额
             $penaltyorder->order_money = $valid_ddje;
             //修改订单用户
-            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+//            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+            $penaltyorder->order_user_id = 123;//TODO: 用户id
             $penaltyorder->save();
         } else {
             $penaltyorder = new PenaltyOrder;
             $penaltyorder->order_number = $order_number;
             $penaltyorder->order_money = $valid_ddje;
             $penaltyorder->order_penalty_number = $penalty_number;
-            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+//            $penaltyorder->order_user_id = Auth::id();//TODO: 用户id
+            $penaltyorder->order_user_id = 123;//TODO: 用户id
             $penaltyorder->order_status = "unpaid";
             $penaltyorder->save();
         }
 
-        $options = config('wechat.payment');
+        $options = config('wechat.payment')['default'];
         $app = Factory::payment($options);
         $result = $app->order->unify([
-            'body' => '代缴',
+            'body' => 'ceshi',
             'out_trade_no' => $penaltyorder->order_number,//传入订单ID
-            'total_fee' => $penaltyorder->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+            'total_fee' =>  '100', //TODO:测试先用1分
+//            'total_fee' => $penaltyorder->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+
 //            'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
 //            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
-            'openid' => $app->oauth->user()->getId(),//TODO: 用户openid
+            'openid' =>  $user['default']['id'],//TODO: 用户openid
         ]);
-        if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS') {
-            $prepayId = $result->prepay_id;
+//        return $result;
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
+            $prepayId = $result['prepay_id'];
             $jssdk = $app->jssdk;
-            $config = $jssdk->sdkConfig($prepayId); // 返回数组
-            return redirect('/penalties/pay_order')->with('config', $config);
+            $config = $jssdk->bridgeConfig($prepayId); // // 返回 json 字符串，如果想返回数组，传第二个参数 false
+//            return  json_encode($config);
+            return redirect('/penalties/pay_order')->with('config',$config);
         } else {
             return back()->withErrors(['penalty_number' => '微信支付异常']);
         }

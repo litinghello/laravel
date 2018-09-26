@@ -118,8 +118,8 @@
                                         //processData:false,
                                         //contentType:false,
                                         success:function(value){
-                                            //document.getElementById("text").innerHTML="success "+JSON.stringify(value);
-                                            wechat_pay(data);
+                                            document.getElementById("text").innerHTML="success "+JSON.stringify(value);
+                                            wechat_pay(value);
                                         },
                                         error:function(value){
                                             document.getElementById("text").innerHTML="error "+JSON.stringify(value);

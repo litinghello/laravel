@@ -6,9 +6,12 @@ namespace App\Http\Controllers;
 
 use App\PenaltyInfo;
 use App\PenaltyOrder;
+use App\WechatAccount;
+use App\User;
 use GuzzleHttp\Cookie\json_decode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 use EasyWeChat\Factory;
@@ -18,6 +21,11 @@ use Monolog\Handler\StreamHandler;
 
 class WeChatsController extends Controller
 {
+    //用于只允许通过认证的用户访问指定的路由
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function wechat_oauth(){
         $app = app('wechat.official_account');
         $response = $app->oauth->scopes(['snsapi_userinfo'])->redirect();
@@ -112,7 +120,7 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"违章处理",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ],
                     [
                         "type" => "view",
@@ -127,17 +135,17 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"汽车审验",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ],
                     [
                         "type" => "view",
                         "name"=>"过户上户",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ],
                     [
                         "type" => "view",
                         "name"=>"事故查询",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ]
                 ]
             ],
@@ -146,26 +154,21 @@ class WeChatsController extends Controller
                 "sub_button"=>[
                     [
                         "type" => "view",
-                        "name"=>"订单进度",
-                        "url"=>"http://www.soso.com/",
+                        "name"=>"订单信息",
+                        "url"=>"http://www.cttx-zbx.com/home",
                     ],
                     [
                         "type" => "view",
                         "name"=>"联系我们",
-                        "url"=>"http://www.soso.com/",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ]
                 ]
             ]
         ];
         return $app->menu->create($buttons);
     }
-
-
-
-
     public function penalty_pay(Request $request)
     {
-
         $user = session('wechat.oauth_user'); //拿到授权用户资料
 //        return $user['default']['id'];
 

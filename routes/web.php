@@ -39,12 +39,14 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router
     Route::get('/penalties/pay', function () {
         return view('penalty.pay');
     });
-//支付处理
+    //支付处理
     Route::post('/penalties/pay','WeChatsController@penalty_pay')->name('penalties.pay');
-//支付页面
+    //支付页面
     Route::get('/penalties/pay_order', function () {
         return view('penalty.pay_order');
     });
+    //微信一键登录
+    Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');
 });
 
 //支付回调

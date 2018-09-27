@@ -180,7 +180,8 @@ class WeChatsController extends Controller
         // 查询数据库
         $pnalty_info = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         if ($pnalty_info == null) {
-            return back()->withErrors(['penalty_number' => '系统异常']);
+//            return back()->withErrors(['penalty_number' => '系统异常']);
+            return $this->fail(9999,'系统异常');
         }
         //计算订单金额
         $penalty_money = $pnalty_info->penalty_money + $pnalty_info->penalty_money_late + 10;//设置支付金额
@@ -190,23 +191,20 @@ class WeChatsController extends Controller
         if ($penalty_order != null) {
             $order_status = $penalty_order->order_status;
             if ($order_status == "paid" || $order_status == "processing") {
-                return back()->withErrors(['penalty_number' => '该订单已在处理中']);
+//                return back()->withErrors(['penalty_number' => '该订单已在处理中']);
+                return $this->fail(3001);
             } else if ($order_status == "completed") {
-                return back()->withErrors(['penalty_number' => '该订单已处理完成']);
+//                return back()->withErrors(['penalty_number' => '该订单已处理完成']);
+                return $this->fail(3002);
             }
-            $penalty_order->order_money = $penalty_money;//修改订单金额
-            $penalty_order->order_user_id = Auth::id();//TODO: 用户id //修改订单用户
-//            $penalty_order->order_number = $order_number;
-            $penalty_order->save();
-        } else {
-            PenaltyOrder::create([
+        }
+        $penalty_order =  PenaltyOrder::create([
                 'order_number'=> $order_number,
                 'order_money'=> $penalty_money,
                 'order_penalty_number'=> $penalty_number,
                 'order_user_id'=> Auth::id(),
                 'order_status'=> 'unpaid',
             ]);
-        }
         $options = config('wechat.payment')['default'];
         $app = Factory::payment($options);
         $result = $app->order->unify([
@@ -219,10 +217,12 @@ class WeChatsController extends Controller
             'openid' =>  $user['default']['id'],//TODO: 用户openid
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $config = $app->jssdk->bridgeConfig($result['prepay_id']); // // 返回 json 字符串，如果想返回数组，传第二个参数 false
-            return $config;
+            $config = $app->jssdk->bridgeConfig($result['prepay_id'],false); // // 返回 json 字符串，如果想返回数组，传第二个参数 false
+//            return $config;
+            return $this->success($config );
         } else {
-            return back()->withErrors(['penalty_number' => '微信支付异常']);
+//            return back()->withErrors(['penalty_number' => '微信支付异常']);
+            return $this->fail(9999,'微信支付异常');
         }
     }
 
@@ -256,5 +256,26 @@ class WeChatsController extends Controller
             return true; // 返回处理完成
         });
     }
+
+    public function success($data = [], $msg = null)
+    {
+        return response()->json([
+            'status' => true,
+            'code' => 200,
+            'message' => empty($msg) ? config('errorcode.code')[200] : $msg,
+            'data' => $data,
+        ]);
+    }
+
+    public function fail($code, $msg = null, $data = [])
+    {
+        return response()->json([
+            'status' => false,
+            'code' => $code,
+            'message' => empty($msg) ? config('errorcode.code')[(int)$code] : $msg,
+            'data' => $data,
+        ]);
+    }
+
 
 }

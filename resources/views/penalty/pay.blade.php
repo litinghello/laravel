@@ -1,14 +1,15 @@
 @extends('layouts.app')
-
+@section('js')
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('支付页面') }}</div>
-
                 <div class="card-body">
-
                     <div class="form-group">
                         @if (count($errors) > 0)
                             <div class="alert alert-danger">
@@ -82,37 +83,49 @@
                             {{--{{ __('数据错误') }}--}}
                         @endif
                     </form>
+                    <div id="text"></div>
                     <script type="text/javascript">
-                        //调用微信JS api 支付
-                        function wechat_pay_back(json_obj){
-                            WeixinJSBridge.invoke(
-                                'getBrandWCPayRequest',json_obj,
-                                function(res){
-                                    WeixinJSBridge.log(res.err_msg);
-                                    //alert(res.err_code + res.err_desc + res.err_msg);
-                                }
-                            )
-                        }
-                        function wechat_pay(json_obj){
-                            if (typeof(WeixinJSBridge) === "undefined"){
-                                if( document.addEventListener ){
-                                    document.addEventListener('WeixinJSBridgeReady', wechat_pay_back(json_obj), false);
-                                }else if (document.attachEvent){
-                                    document.attachEvent('WeixinJSBridgeReady', wechat_pay_back(json_obj));
-                                    document.attachEvent('onWeixinJSBridgeReady', wechat_pay_back(json_obj));
-                                }
-                            }else{
-                                wechat_pay_back(json_obj);
+                        var wechat_pay_data = null;
+                        var wechat_pay_type = "WeixinJSBridge";//WeixinJSBridge or JSSDK
+
+                        function wechat_pay(data){//微信两种支付方式，
+                            if(wechat_pay_type === "WeixinJSBridge"){
+                                WeixinJSBridge.invoke(
+                                    'getBrandWCPayRequest',data,
+                                    function(res){
+                                        if(res.err_msg === "get_brand_wcpay_request:ok" ) {
+                                            window.location.replace("{{ route('home') }}");
+                                        }else{
+                                        }
+                                    }
+                                );
+                            }else if(wechat_pay_type === "JSSDK"){
+                                wx.chooseWXPay({
+                                    debug: true,timestamp:data['timestamp'] ,nonceStr: data['nonceStr'] ,
+                                    package: data['package'] ,signType: data['signType'] ,paySign: data['paySign'] , // 支付签名
+                                    success: function (res) {
+                                        window.location.replace("{{ route('home') }}");// 支付成功后的回调函数
+                                    },
+                                    cancel: function(res) {
+                                        alert('支付取消');//支付取消
+                                    }
+                                });
                             }
                         }
                         $("#wechat_pay").click(function(){
-                             var order_info = $("#order_info").serialize();
-                            $.ajax({
-                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                                url:"{{route('penalties.pay')}}",type:"POST",data:order_info,
+                            //这里防止重复加载支付订单
+                            if(wechat_pay_data !== null){
+                                wechat_pay(wechat_pay_data);
+                            }else{
+                                var order_info = $("#order_info").serialize();
+                                $.ajax({
+                                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                    url:"{{route('penalties.pay')}}",type:"POST",data:order_info,
                                     success:function(data){
                                         if(data['status'] === 0){
-                                            wechat_pay(JSON.parse(data['data']));
+                                            wechat_pay_data = data['data'];//保存值
+                                            // document.getElementById("text").innerText = JSON.stringify(wechat_pay_data);
+                                            wechat_pay(wechat_pay_data);//采用微信网页支付
                                         }else{
                                             alert(data['data']);
                                         }
@@ -120,7 +133,8 @@
                                     error:function(error){
                                         alert("请再次提交");
                                     }
-                            });
+                                });
+                            }
                         });
                     </script>
                 </div>

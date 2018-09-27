@@ -233,4 +233,9 @@ class PenaltiesController extends BaseController
 //        return $this->success($pnaltyinfo);
         return redirect('/penalties/pay')->with('penalty_info', $penaltyinfo);
     }
+    
+    //返回当前用户下的订单
+    public function reback_penalty_order(){
+
+    }
  }

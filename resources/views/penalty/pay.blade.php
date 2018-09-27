@@ -2,7 +2,7 @@
 @section('js')
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-@endsection
+@stop
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -83,11 +83,10 @@
                             {{--{{ __('数据错误') }}--}}
                         @endif
                     </form>
-                    <div id="text"></div>
+                    {{--<div id="text"></div>--}}
                     <script type="text/javascript">
                         var wechat_pay_data = null;
                         var wechat_pay_type = "WeixinJSBridge";//WeixinJSBridge or JSSDK
-
                         function wechat_pay(data){//微信两种支付方式，
                             if(wechat_pay_type === "WeixinJSBridge"){
                                 WeixinJSBridge.invoke(

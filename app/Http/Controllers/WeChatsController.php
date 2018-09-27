@@ -172,10 +172,10 @@ class WeChatsController extends Controller
         $user = session('wechat.oauth_user'); //拿到授权用户资料
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
-//            'penalty_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
+            'penalty_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
         $penalty_number = $request['penalty_number'];
         // 查询数据库

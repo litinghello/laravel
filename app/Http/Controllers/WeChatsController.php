@@ -219,10 +219,8 @@ class WeChatsController extends Controller
             'openid' =>  $user['default']['id'],//TODO: 用户openid
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $prepayId = $result['prepay_id'];
-            $jssdk = $app->jssdk;
-            $config = $jssdk->bridgeConfig($prepayId); // // 返回 json 字符串，如果想返回数组，传第二个参数 false
-            return redirect('/penalties/pay_order')->with('config',$config);
+            $config = $app->jssdk->bridgeConfig($result['prepay_id']); // // 返回 json 字符串，如果想返回数组，传第二个参数 false
+            return $config;
         } else {
             return back()->withErrors(['penalty_number' => '微信支付异常']);
         }

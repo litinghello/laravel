@@ -82,48 +82,40 @@
                             {{--{{ __('数据错误') }}--}}
                         @endif
                     </form>
-                    <div id="text">test</div>
                     <script type="text/javascript">
                         //调用微信JS api 支付
-                        function jsApiCall(value){
+                        function wechat_pay_back(json_obj){
                             WeixinJSBridge.invoke(
-                                'getBrandWCPayRequest',value,
+                                'getBrandWCPayRequest',json_obj,
                                 function(res){
                                     WeixinJSBridge.log(res.err_msg);
-                                    alert(res.err_code+res.err_desc+res.err_msg);
+                                    //alert(res.err_code + res.err_desc + res.err_msg);
                                 }
                             )
                         }
-                        function wechat_pay(value){
+                        function wechat_pay(json_obj){
                             if (typeof(WeixinJSBridge) === "undefined"){
                                 if( document.addEventListener ){
-                                    document.addEventListener('WeixinJSBridgeReady', jsApiCall(value), false);
+                                    document.addEventListener('WeixinJSBridgeReady', wechat_pay_back(json_obj), false);
                                 }else if (document.attachEvent){
-                                    document.attachEvent('WeixinJSBridgeReady', jsApiCall(value));
-                                    document.attachEvent('onWeixinJSBridgeReady', jsApiCall(value));
+                                    document.attachEvent('WeixinJSBridgeReady', wechat_pay_back(json_obj));
+                                    document.attachEvent('onWeixinJSBridgeReady', wechat_pay_back(json_obj));
                                 }
                             }else{
-                                jsApiCall(value);
+                                wechat_pay_back(json_obj);
                             }
                         }
                         $("#wechat_pay").click(function(){
                              var order_info = $("#order_info").serialize();
-                            document.getElementById("text").innerHTML=order_info;
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                                url:"{{route('penalties.pay')}}",
-                                        type:"POST",
-                                        data:order_info,
-                                        //dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-                                        //processData:false,
-                                        //contentType:false,
-                                        success:function(value){
-                                            document.getElementById("text").innerHTML="success "+value;
-                                            wechat_pay(value);
-                                        },
-                                        error:function(value){
-                                            document.getElementById("text").innerHTML="error "+value;
-                                        }
+                                url:"{{route('penalties.pay')}}",type:"POST",data:order_info,
+                                    success:function(data){
+                                        wechat_pay(JSON.parse(data));
+                                    },
+                                    error:function(error){
+                                        alert("请再次提交");
+                                    }
                             });
                         });
                     </script>

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\PenaltyOrder;
 use Yajra\Datatables\Datatables;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AdminLtesController extends Controller

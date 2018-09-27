@@ -29,6 +29,8 @@ class User extends Authenticatable
 
     //获取用户相关的的决定书订单
     public function penalty_order(){
-        return $this->belongsTo('App\PenaltyOrder', 'order_user_id', 'id');
+        //第一参数关联的模型名称 第二参数关联模型的键值  第三参数本模型的关联值
+        return $this->hasMany('App\PenaltyOrder', 'order_user_id','id');
+//        return $this->hasOne('App\PenaltyOrder', 'order_user_id');
     }
 }

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\PenaltyInfo;
 use App\PenaltyOrder;
 use App\ThirdAccount;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\json_decode;
+use Yajra\Datatables\Datatables;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -236,6 +239,7 @@ class PenaltiesController extends BaseController
 
     //返回当前用户下的订单
     public function penalty_order_info(){
-
+        $table = User::where('id',Auth::id())->first()->penalty_order;
+        return Datatables::of($table)->make(true);
     }
  }

@@ -63,3 +63,5 @@ Route::get('/adminltes/table/home', 'AdminLtesController@penalty_order_table_hom
 Route::get('/adminltes/table/data', 'AdminLtesController@get_penalty_order_data')->name('adminltes.table.data');
 Route::get('/adminltes/table/complete', 'AdminLtesController@set_penalty_order_data')->name('adminltes.table.complete');
 
+//用户查看订单号
+Route::post('/penalties/order','PenaltiesController@penalty_order_info')->name('penalties.order.info');

@@ -111,7 +111,11 @@
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                 url:"{{route('penalties.pay')}}",type:"POST",data:order_info,
                                     success:function(data){
-                                        wechat_pay(JSON.parse(data));
+                                        if(data['status'] === 0){
+                                            wechat_pay(JSON.parse(data['data']));
+                                        }else{
+                                            alert(data['data']);
+                                        }
                                     },
                                     error:function(error){
                                         alert("请再次提交");

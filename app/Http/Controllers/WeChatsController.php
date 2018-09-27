@@ -220,10 +220,19 @@ class WeChatsController extends Controller
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
             $config = $app->jssdk->bridgeConfig($result['prepay_id']); // // 返回 json 字符串，如果想返回数组，传第二个参数 false
-            return $config;
+//            return $config;
+            return response()->json([
+                'status' => 0,
+                'data' => $config,
+            ]);
         } else {
-            return back()->withErrors(['penalty_number' => '微信支付异常']);
+            return response()->json([
+                'status' => 1,
+                'data' => "微信支付异常",
+            ]);
+//            return back()->withErrors(['penalty_number' => '微信支付异常']);
         }
+
     }
 
     //下面是回调函数

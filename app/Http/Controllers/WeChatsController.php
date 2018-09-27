@@ -172,6 +172,7 @@ class WeChatsController extends Controller
         $user = session('wechat.oauth_user'); //拿到授权用户资料
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
+//            'penalty_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
         ]);
         if ($validator->fails()) {
             return back()->withErrors($validator);
@@ -180,34 +181,31 @@ class WeChatsController extends Controller
         // 查询数据库
         $pnalty_info = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         if ($pnalty_info == null) {
-//            return back()->withErrors(['penalty_number' => '系统异常']);
-            return $this->fail(9999,'系统异常');
+            return response()->json(['status' => 1,'data' => "违法单号未找到"]);
         }
         //计算订单金额
         $penalty_money = $pnalty_info->penalty_money + $pnalty_info->penalty_money_late + 10;//设置支付金额
-        $order_number = date("YmdHis") .'0'. rand(10000, 99999);//自动生成，订单编号
-
         $penalty_order = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
         if ($penalty_order != null) {
-            $order_status = $penalty_order->order_status;
-            if ($order_status == "paid" || $order_status == "processing") {
-//                return back()->withErrors(['penalty_number' => '该订单已在处理中']);
-                return $this->fail(3001);
-            } else if ($order_status == "completed") {
-//                return back()->withErrors(['penalty_number' => '该订单已处理完成']);
-                return $this->fail(3002);
+            if ($penalty_order->order_status == "paid" || $penalty_order->order_status == "processing") {
+                return response()->json(['status' => 1,'data' => "该订单已在处理中"]);
+            } else if ($penalty_order->order_status == "completed") {
+                return response()->json(['status' => 1,'data' => "该订单已经处理完成"]);
             }
-        }
-        $penalty_order =  PenaltyOrder::create([
-                'order_number'=> $order_number,
+            $penalty_order->order_money = $penalty_money;//修改订单金额
+            $penalty_order->order_user_id = Auth::id();//TODO: 用户id //修改订单用户
+            $penalty_order->save();
+        } else {
+            $penalty_order = PenaltyOrder::create([
+                'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
                 'order_money'=> $penalty_money,
                 'order_penalty_number'=> $penalty_number,
                 'order_user_id'=> Auth::id(),
                 'order_status'=> 'unpaid',
             ]);
-        $options = config('wechat.payment')['default'];
-        $app = Factory::payment($options);
-        $result = $app->order->unify([
+        }
+        $pay = Factory::payment(config('wechat.payment')['default']);
+        $result = $pay->order->unify([
             'body' => '缴费',
             'out_trade_no' => $penalty_order->order_number,//传入订单ID
             'total_fee' => $penalty_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
@@ -217,20 +215,22 @@ class WeChatsController extends Controller
             'openid' =>  $user['default']['id'],//TODO: 用户openid
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $config = $app->jssdk->bridgeConfig($result['prepay_id'],false); // // 返回 json 字符串，如果想返回数组，传第二个参数 false
-//            return $config;
-            return $this->success($config );
+            $config = $pay->jssdk->bridgeConfig($result['prepay_id'],false); //WeixinJSBridge支付 返回 json 字符串，如果想返回数组，传第二个参数 false
+            //$config = $pay->jssdk->sdkConfig($result['prepay_id']); //JSSDK支付 返回数组
+            //$configForPickAddress = $pay->jssdk->shareAddressConfig($token);//生成共享收货地址 JS 配置
+            //$config = $pay->jssdk->appConfig($result['prepay_id']);
+            return response()->json(['status' => 0,'data' => $config]);
         } else {
-//            return back()->withErrors(['penalty_number' => '微信支付异常']);
-            return $this->fail(9999,'微信支付异常');
+            return response()->json(['status' => 1,'data' => "微信支付异常"]);
         }
+
     }
 
     //下面是回调函数
     public function paycall(){
         $options = config('wechat.payment');
-        $app = new Application($options);
-        $response = $app->payment->handleNotify(function ($notify, $successful) {
+        $pay = new Application($options);
+        $response = $pay->payment->handleNotify(function ($notify, $successful) {
             // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
 //            $order = ExampleOrder::where('out_trade_no', $notify->out_trade_no)->first();
             $order = PenaltyOrder::where('order_number', $notify->out_trade_no)->first();
@@ -256,26 +256,5 @@ class WeChatsController extends Controller
             return true; // 返回处理完成
         });
     }
-
-    public function success($data = [], $msg = null)
-    {
-        return response()->json([
-            'status' => true,
-            'code' => 200,
-            'message' => empty($msg) ? config('errorcode.code')[200] : $msg,
-            'data' => $data,
-        ]);
-    }
-
-    public function fail($code, $msg = null, $data = [])
-    {
-        return response()->json([
-            'status' => false,
-            'code' => $code,
-            'message' => empty($msg) ? config('errorcode.code')[(int)$code] : $msg,
-            'data' => $data,
-        ]);
-    }
-
 
 }

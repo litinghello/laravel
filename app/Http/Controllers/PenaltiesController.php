@@ -233,25 +233,4 @@ class PenaltiesController extends BaseController
 //        return $this->success($pnaltyinfo);
         return redirect('/penalties/pay')->with('penalty_info', $penaltyinfo);
     }
-    public function success($data = [], $msg = null)
-    {
-        return response()->json([
-            'status' => true,
-            'code' => 200,
-            'message' => empty($msg) ? config('errorcode.code')[200] : $msg,
-            'data' => $data,
-        ]);
-    }
-
-    public function fail($code, $msg = null, $data = [])
-    {
-        return response()->json([
-            'status' => false,
-            'code' => $code,
-            'message' => empty($msg) ? config('errorcode.code')[(int)$code] : $msg,
-            'data' => $data,
-        ]);
-    }
-
-
-}
+ }

@@ -2,7 +2,6 @@
 
 @extends('adminlte::page')
 
-
 @section('content_header')
     <h1>代缴订单</h1>
 @stop
@@ -44,11 +43,11 @@
             $('#table_info').DataTable( {
                 "processing": true,
                 "serverSide": true,
-                "ajax": "/laravel/adminltes/table/data",
+                "ajax": "/adminltes/table/data",
                 columns: [
                     { data: 'id', name: 'id' },
-                    { data: 'order_number', order_number: 'name' },
-                    { data: 'order_money', order_money: 'email' },
+                    { data: 'order_number', name: 'name' },
+                    { data: 'order_money', name: 'email' },
                     { data: 'order_penalty_number', name: 'order_penalty_number' },
                     { data: 'order_user_id', name: 'order_user_id' },
                     { data: 'order_status', name: 'order_status' },

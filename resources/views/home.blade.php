@@ -18,11 +18,8 @@
                             <table id="table_info" class="table table-striped table-hover table-condensed">
                                 <thead>
                                 <tr>
-                                    <th>编号</th>
                                     <th>订单号</th>
-                                    <th>类型</th>
                                     <th>金额</th>
-                                    <th>用户ID</th>
                                     <th>订单状态</th>
                                     <th>时间</th>
                                     <th>操作</th>
@@ -55,13 +52,11 @@
                 "serverSide": true,
                 "ajax": "/penalties/order_data",
                 columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'order_number', order_number: 'name' },
-                    { data: 'order_money', order_money: 'email' },
-                    { data: 'order_penalty_number', name: 'order_penalty_number' },
-                    { data: 'order_user_id', name: 'order_user_id' },
+                    // { data: 'id', name: 'id' },
+                    { data: 'order_number', name: 'order_number' },
+                    { data: 'order_money', name: 'order_money' },
+                    // { data: 'order_penalty_number', name: 'order_penalty_number' },
                     { data: 'order_status', name: 'order_status' },
-                    { data: 'created_at', name: 'created_at' },
                     { data: 'updated_at', name: 'updated_at' },
                     {data: 'action', name: 'action', orderable: false, searchable: false}
                 ]

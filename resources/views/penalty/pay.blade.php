@@ -1,4 +1,9 @@
-@extends('layouts.app')
+{{--@extends('layouts.app')--}}
+@extends('adminlte::page')
+
+@section('content_header')
+    <h1>罚款支付</h1>
+@stop
 @section('js')
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>

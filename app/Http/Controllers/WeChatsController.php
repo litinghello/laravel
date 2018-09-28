@@ -213,8 +213,8 @@ class WeChatsController extends Controller
         $result = $pay->order->unify([
             'body' => '缴费',
             'out_trade_no' => $penalty_order->order_number,//传入订单ID
-//            'total_fee' => $penalty_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
-            'total_fee' => 1, //因为是以分为单位，所以订单里面的金额乘以100
+            'total_fee' => $penalty_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+//            'total_fee' => 1, //因为是以分为单位，所以订单里面的金额乘以100
 //            'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
 //            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
@@ -231,6 +231,12 @@ class WeChatsController extends Controller
         }
 
     }
+    //查询
+    public function penalty_query(Request $request){
+        $app = Factory::payment(config('wechat.payment')['default']);
+        $out = $app->order->queryByOutTradeNumber("20180928181005035836");
+        return json_encode($out);
+    }
     //回调
     public function penalty_paycall(Request $request){
 //        $xml = file_get_contents("php://input");
@@ -245,11 +251,22 @@ class WeChatsController extends Controller
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
             }
             ///////////// <- 建议在这里调用微信的【订单查询】接口查一下该笔订单的情况，确认是已经支付 /////////////
-            if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
+            $app = Factory::payment(config('wechat.payment')['default']);
+
+            if ($message['return_code'] === 'SUCCESS' ) { // return_code 表示通信状态，不代表支付状态
                 // 用户是否支付成功
                 if (array_get($message, 'result_code') === 'SUCCESS') {
-//                    $order->paid_at = time(); // 更新支付时间为当前时间
-                    $order->order_status = 'paid';
+                    $out = $app->order->queryByOutTradeNumber($message['out_trade_no']);
+                    if($out['return_code'] === 'SUCCESS' && $out['result_code'] === 'SUCCESS' && $out['trade_state'] === 'SUCCESS' ){
+                        if( $out['total_fee'] == $order->order_money*100) {
+                            $order->order_status = 'paid';
+                        }else{
+                            Log::info("  out:".json_encode($out));
+                            return true; // 订单不对，别再通知我了
+                        }
+                    }else{
+                        return $fail('通信失败，请稍后再通知我');
+                    }
                     // 用户支付失败
                 } elseif (array_get($message, 'result_code') === 'FAIL') {
                     $order->status = 'unpaid';

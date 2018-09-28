@@ -64,7 +64,6 @@ class LoginController extends Controller
             $email_account = User::where("id",$wechat_account->first()["wechat_main_account"])->first();
         }
         Auth::login($email_account);//登录账户
-
         return view('home');
     }
 }

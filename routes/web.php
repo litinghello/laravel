@@ -35,11 +35,8 @@ Route::post('/penalties/order_data','PenaltiesController@penalty_order_info')->n
 //(注：使用web中间件是为了防止出现session不共享的情况)
 Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router) {
 //    Route::get('/wechats/auth','WeChatsController@login_auth')->name("wechats.auth");
-    //微信一键登录
-    Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');
+    Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');//微信一键登录
 });
-
-
 
 //添加第三方账户
 Route::any('/penalties/account/add','PenaltiesController@add_third_account')->name('penalties.account.add');

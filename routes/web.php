@@ -30,7 +30,7 @@ Route::get('/penalties/pay', 'HomeController@views_penalty_pay')->name('views.pe
 //接口 支付接口
 Route::post('/penalties/pay','WeChatsController@penalty_pay')->name('wechats.penalty.pay');
 //接口 用户查看订单号
-Route::post('/penalties/order_data','PenaltiesController@penalty_order_info')->name('penalties.order.info');
+Route::get('/penalties/order_data','PenaltiesController@penalty_order_data')->name('penalties.order.data');
 //微信认证的中间路由
 //(注：使用web中间件是为了防止出现session不共享的情况)
 Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router) {

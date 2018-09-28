@@ -1,14 +1,16 @@
+<?php $__env->startSection('js'); ?>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<?php echo $__env->yieldSection(); ?>
+
 <?php $__env->startSection('content'); ?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header"><?php echo e(__('用户登录')); ?></div>
-
                 <div class="card-body">
                     <form method="POST" action="<?php echo e(route('login')); ?>">
                         <?php echo csrf_field(); ?>
-
                         <div class="form-group row">
                             <label for="email" class="col-sm-4 col-form-label text-md-right"><?php echo e(__('邮件')); ?></label>
 
@@ -52,18 +54,11 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button id="email_login" type="submit" class="btn btn-primary">
                                     <?php echo e(__('邮件登录')); ?>
 
                                 </button>
-                                <?php if(Session::has('wechat.oauth_user')): ?>
-                                    <?php echo e(__("is session")); ?>
-
-                                <?php else: ?>
-                                    <?php echo e(__("no session")); ?>
-
-                                <?php endif; ?>
-                                <a  class="btn btn-success" href="<?php echo e(route('wechats.login')); ?>">
+                                <a id="wechat_login" class="btn btn-success" href="<?php echo e(route('wechats.login')); ?>">
                                     <?php echo e(__('微信登录')); ?>
 
                                 </a>
@@ -72,6 +67,18 @@
 
                                 </a>
                             </div>
+                            <script type="text/javascript">
+                                if(navigator.userAgent.toLowerCase().indexOf('micromessenger') === -1){
+                                    //未找到微信登录
+                                    $("#wechat_login").hide();
+                                    $("#email_login").show();
+                                }else{
+                                    //找到微信登录
+                                    $("#wechat_login").show();
+                                    $("#email_login").hide();
+                                    $(":input").attr("disabled","disabled");//关闭所有input元素
+                                }
+                            </script>
                         </div>
                     </form>
 

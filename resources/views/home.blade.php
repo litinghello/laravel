@@ -48,8 +48,10 @@
                                 $('#table_info').DataTable( {
                                     "processing": true,
                                     "serverSide": true,
-                                    // "ajax": "/penalties/order_data",
-                                    "ajax": "/laravel/penalties/order_data",
+                                    "ajax": {
+                                        "url":"{{ route('penalties.order.data') }}",
+                                        "type": "GET"
+                                    },
                                     columns: [
                                         // { data: 'id', name: 'id' },
                                         { data: 'order_number', name: 'order_number' },
@@ -75,7 +77,7 @@
                                         infoFiltered: ""//筛选之后的左下角筛选提示，
                                     },
                                     paging: true,
-                                    pagingType: "full_numbers",//分页样式的类型
+                                    pagingType: "full_numbers"//分页样式的类型
                                 });
                             });
                             $("#table_info_filter input[type=search]").css({ width: "auto" });

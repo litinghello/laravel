@@ -43,7 +43,10 @@
             $('#table_info').DataTable( {
                 "processing": true,
                 "serverSide": true,
-                "ajax": "/adminltes/table/data",
+                "ajax": {
+                    "url":"{{ route('adminltes.table.data') }}",
+                    "type": "GET"
+                },
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'order_number', name: 'name' },

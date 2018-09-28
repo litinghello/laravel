@@ -238,7 +238,7 @@ class PenaltiesController extends BaseController
     }
 
     //返回当前用户下的订单
-    public function penalty_order_info(){
+    public function penalty_order_data(){
         $table = User::where('id',Auth::id())->first()->penalty_order;
         return Datatables::of($table)->addColumn('action', function ($table) {
             return '<a href="" class="btn btn-xs btn-primary">详情</a>';

@@ -226,10 +226,12 @@ class WeChatsController extends Controller
 
     }
     //回调
-    public function penalty_paycall(){
-        Log::info('penalty_paycall');
-        return "ok";
-        $options = config('wechat.payment');
+    public function penalty_paycall(Request $request){
+//        $xml = file_get_contents("php://input");
+//        Log::info($request.$xml);
+//        return "ok";
+
+        $options = config('wechat.payment']);
         $app = Factory::payment($options);
         $response = $app->handlePaidNotify(function($message, $fail){
             Log::info( 'message:'.json_encode($message));

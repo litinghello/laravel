@@ -26,7 +26,7 @@ Route::any('/wechats/token','WeChatsController@back_token')->name("wechats.serve
 //接口 创建微信公众号的菜单
 Route::get('/wechats/menu/create','WeChatsController@create_menu')->name("wechats.menu");
 //接口 微信支付回调
-Route::any('/penalties/pay_call.php','WeChatsController@penalty_paycall')->name('penalties.pay.call');
+Route::any('/penalties/pay_call','WeChatsController@penalty_paycall')->name('penalties.pay.call');
 //界面 罚单查询
 Route::get('/penalties/inquire','HomeController@views_penalty_inquire')->name('views.penalty.inquire');
 //接口 决定书编号

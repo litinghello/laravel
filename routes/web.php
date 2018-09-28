@@ -50,7 +50,7 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router
 });
 
 //支付回调
-Route::post('/penalties/pay_call','WeChatsController@penalty_paycall')->name('penalties.paycall');
+Route::any('/penalties/pay_call','WeChatsController@penalty_paycall')->name('penalties.paycall');
 
 //添加第三方账户
 Route::any('/penalties/account/add','PenaltiesController@add_third_account')->name('penalties.account.add');

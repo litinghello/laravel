@@ -111,12 +111,12 @@ return [
         '订单查询',
         [
             'text' => '博客',
-            'url'  => 'admin/blog',
+            'url'  => '/',
             'can'  => 'manage-blog',
         ],
         [
             'text'        => '查询',
-            'url'         => '/home',
+            'url'         => '/',
             'icon'        => 'file',
             'label'       => 0,
             'label_color' => 'success',
@@ -129,7 +129,7 @@ return [
         ],
         [
             'text' => '扣分查询',
-            'url'  => '/home',
+            'url'  => '/',
             'icon' => 'lock',
         ],
             /*

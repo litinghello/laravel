@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-//use Log;
-
+use Log;
 use App\PenaltyInfo;
 use App\PenaltyOrder;
 use App\WechatAccount;
@@ -24,7 +23,7 @@ class WeChatsController extends Controller
     //用于只允许通过认证的用户访问指定的路由
     public function __construct()
     {
-        $this->middleware('auth');
+//        $this->middleware('auth');
     }
     public function wechat_oauth(){
         $app = app('wechat.official_account');
@@ -168,7 +167,7 @@ class WeChatsController extends Controller
     //微信支付
     public function penalty_pay(Request $request){
         $user = session('wechat.oauth_user'); //拿到授权用户资料
-        if(session()->has('wechat.oauth_user')==false){
+        if(session()->has('wechat.oauth_user') == false){
             return response()->json(['status' => 1,'data' => "请尝试通过微信访问支付"]);
         }
         $validator = Validator::make($request->all(), [
@@ -226,7 +225,7 @@ class WeChatsController extends Controller
         }
 
     }
-
+    //回调
     public function penalty_paycall(){
         Log::info('penalty_paycall 111111111111111 ');
 //        return;

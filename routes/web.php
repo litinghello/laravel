@@ -13,6 +13,12 @@
 
 //用户路由
 Auth::routes();
+//微信认证的中间路由
+//(注：使用web中间件是为了防止出现session不共享的情况)
+Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router) {
+//    Route::get('/wechats/auth','WeChatsController@login_auth')->name("wechats.auth");
+    Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');//微信一键登录
+});
 //界面 主页面
 Route::get('/', 'HomeController@views_home')->name('views.home');
 //接口 微信认证接口 回调token 官方需要
@@ -31,12 +37,7 @@ Route::get('/penalties/pay', 'HomeController@views_penalty_pay')->name('views.pe
 Route::post('/penalties/pay','WeChatsController@penalty_pay')->name('wechats.penalty.pay');
 //接口 用户查看订单号
 Route::post('/penalties/order_data','PenaltiesController@penalty_order_data')->name('penalties.order.data');
-//微信认证的中间路由
-//(注：使用web中间件是为了防止出现session不共享的情况)
-Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router) {
-//    Route::get('/wechats/auth','WeChatsController@login_auth')->name("wechats.auth");
-    Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');//微信一键登录
-});
+
 
 //添加第三方账户
 Route::any('/penalties/account/add','PenaltiesController@add_third_account')->name('penalties.account.add');

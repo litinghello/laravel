@@ -47,7 +47,8 @@
                                     "serverSide": true,
                                     "ajax": {
                                         "url":"<?php echo e(route('penalties.order.data')); ?>",
-                                        "type": "GET"
+                                        "type": "POST",
+                                        "headers": {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
                                     },
                                     columns: [
                                         // { data: 'id', name: 'id' },

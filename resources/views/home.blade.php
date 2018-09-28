@@ -50,7 +50,8 @@
                                     "serverSide": true,
                                     "ajax": {
                                         "url":"{{ route('penalties.order.data') }}",
-                                        "type": "GET"
+                                        "type": "POST",
+                                        "headers": {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                                     },
                                     columns: [
                                         // { data: 'id', name: 'id' },

@@ -45,7 +45,8 @@
                 "serverSide": true,
                 "ajax": {
                     "url":"{{ route('adminltes.table.data') }}",
-                    "type": "GET"
+                    "type": "POST",
+                    "headers": {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                 },
                 columns: [
                     { data: 'id', name: 'id' },

@@ -30,7 +30,7 @@ Route::get('/penalties/pay', 'HomeController@views_penalty_pay')->name('views.pe
 //接口 支付接口
 Route::post('/penalties/pay','WeChatsController@penalty_pay')->name('wechats.penalty.pay');
 //接口 用户查看订单号
-Route::get('/penalties/order_data','PenaltiesController@penalty_order_data')->name('penalties.order.data');
+Route::post('/penalties/order_data','PenaltiesController@penalty_order_data')->name('penalties.order.data');
 //微信认证的中间路由
 //(注：使用web中间件是为了防止出现session不共享的情况)
 Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router) {
@@ -45,7 +45,7 @@ Route::any('/penalties/login/51jfk','PenaltiesController@login_51jfk_account')->
 
 //后台查看数据
 Route::get('/adminltes/table/home', 'AdminLtesController@penalty_order_table_home')->name('adminltes.table.home');
-Route::get('/adminltes/table/data', 'AdminLtesController@get_penalty_order_data')->name('adminltes.table.data');
+Route::post('/adminltes/table/data', 'AdminLtesController@get_penalty_order_data')->name('adminltes.table.data');
 Route::get('/adminltes/table/complete', 'AdminLtesController@set_penalty_order_data')->name('adminltes.table.complete');
 
 

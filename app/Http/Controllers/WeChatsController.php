@@ -185,12 +185,16 @@ class WeChatsController extends Controller
         }
         //计算订单金额
         $penalty_money = $pnalty_info->penalty_money + $pnalty_info->penalty_money_late + 10;//设置支付金额
-        $penalty_order = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
-        if ($penalty_order != null) {
-            if ($penalty_order->order_status == "paid" || $penalty_order->order_status == "processing") {
-                return response()->json(['status' => 1,'data' => "该订单已在处理中"]);
-            } else if ($penalty_order->order_status == "completed") {
-                return response()->json(['status' => 1,'data' => "该订单已经处理完成"]);
+
+        $penalty_orders = PenaltyOrder::where('order_penalty_number', $penalty_number)->get();
+
+        foreach ($penalty_orders as $penalty_order) {
+            if ($penalty_order != null) {
+                if ($penalty_order->order_status == "paid" || $penalty_order->order_status == "processing") {
+                    return response()->json(['status' => 1,'data' => "该订单已在处理中"]);
+                } else if ($penalty_order->order_status == "completed") {
+                    return response()->json(['status' => 1,'data' => "该订单已经处理完成"]);
+                }
             }
         }
 //            $penalty_order->order_money = $penalty_money;//修改订单金额

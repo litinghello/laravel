@@ -1,39 +1,38 @@
-{{--@extends('layouts.app')--}}
-@extends('adminlte::page')
-
-@section('content_header')
+<?php $__env->startSection('content_header'); ?>
     <h1>罚款查询</h1>
-@stop
-@section('content')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('查询记录') }}</div>
+                <div class="card-header"><?php echo e(__('查询记录')); ?></div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('penalties.info') }}">
-                        @csrf
+                    <form method="POST" action="<?php echo e(route('penalties.info')); ?>">
+                        <?php echo csrf_field(); ?>
                         <div class="form-group row">
-                            <label for="penalty_number" class="col-md-4 col-form-label text-md-right">{{ __('决定书编号') }}</label>
+                            <label for="penalty_number" class="col-md-4 col-form-label text-md-right"><?php echo e(__('决定书编号')); ?></label>
                             <div class="col-md-6">
-                                <input for="penalty_number" id="penalty_number" type="text" class="form-control{{ $errors->has('penalty_number') ? ' is-invalid' : '' }}" name="penalty_number" value="5101041204594064" required>
-                                @if ($errors->has('penalty_number'))
+                                <input for="penalty_number" id="penalty_number" type="text" class="form-control<?php echo e($errors->has('penalty_number') ? ' is-invalid' : ''); ?>" name="penalty_number" value="5101041204594064" required>
+                                <?php if($errors->has('penalty_number')): ?>
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('penalty_number') }}</strong>
+                                        <strong><?php echo e($errors->first('penalty_number')); ?></strong>
                                     </span>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('查询') }}
+                                    <?php echo e(__('查询')); ?>
+
                                 </button>
 
                                 <a class="btn btn-link" data-toggle="modal" data-target="#penalty_info">
-                                    {{ __('决定书编号?') }}
+                                    <?php echo e(__('决定书编号?')); ?>
+
                                 </a>
                             </div>
                         </div>
@@ -57,4 +56,6 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('adminlte::page', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -40,6 +40,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    //微信登录
     public function wechat_login(){
         $wechat_info = session('wechat.oauth_user');//得到用户数据
         $wechat_account = WechatAccount::where("wechat_id",$wechat_info['default']['id'])->get();//检查用户是否已经存在
@@ -63,7 +64,6 @@ class LoginController extends Controller
             $email_account = User::where("id",$wechat_account->first()["wechat_main_account"])->first();
         }
         Auth::login($email_account);//登录账户
-
         return view('home');
     }
 }

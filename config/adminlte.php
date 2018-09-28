@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'title' => '后台管理',
+    'title' => '车途天下',
 
     'title_prefix' => '',
 
@@ -30,9 +30,9 @@ return [
     |
     */
 
-    'logo' => '<b>Card</b>World',
+    'logo' => '<b>车途</b>天下',
 
-    'logo_mini' => '<b>C</b>WD',
+    'logo_mini' => '<b>车</b>途',
 
     /*
     |--------------------------------------------------------------------------
@@ -108,30 +108,31 @@ return [
     */
 
     'menu' => [
-        '主菜单',
+        '订单查询',
         [
             'text' => '博客',
-            'url'  => 'admin/blog',
+            'url'  => '/',
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => '消息',
-            'url'         => 'admin/pages',
+            'text'        => '查询',
+            'url'         => '/',
             'icon'        => 'file',
             'label'       => 0,
             'label_color' => 'success',
         ],
-        '账户信息',
+        '违章处理',
         [
-            'text' => '个人信息',
-            'url'  => 'admin/settings',
+            'text' => '代缴罚款',
+            'url'  => '/penalties/inquire',
             'icon' => 'user',
         ],
         [
-            'text' => '修改密码',
-            'url'  => 'admin/settings',
+            'text' => '扣分查询',
+            'url'  => '/',
             'icon' => 'lock',
         ],
+            /*
         '订单管理',
         [
             'text'    => '订单管理',
@@ -170,8 +171,8 @@ return [
                     'url'  => '#',
                 ],
             ],
-        ],
-        '其它信息',
+        ],*/
+        /*'其它信息',
         [
             'text'       => 'Important',
             'icon_color' => 'red',
@@ -183,7 +184,7 @@ return [
         [
             'text'       => 'Information',
             'icon_color' => 'aqua',
-        ],
+        ],*/
     ],
 
     /*

@@ -56,6 +56,11 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('邮件登录') }}
                                 </button>
+                                @if(Session::get('wechat.oauth_user'))
+                                    {{Session::get('wechat.oauth_user')}}
+                                @else
+                                    {{__("no session")}}
+                                @endif
                                 <a  class="btn btn-success" href="{{ route('wechats.login') }}">
                                     {{ __('微信登录') }}
                                 </a>

@@ -1,36 +1,33 @@
-{{--@extends('layouts.app')--}}
-@extends('adminlte::page')
-
-@section('content_header')
+<?php $__env->startSection('content_header'); ?>
     <h1>罚款支付</h1>
-@stop
-@section('js')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('js'); ?>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-@show
-@section('content')
+<?php echo $__env->yieldSection(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('支付页面') }}</div>
+                    <div class="card-header"><?php echo e(__('支付页面')); ?></div>
                     <div class="card-body">
                         <div class="form-group">
-                            @if (count($errors) > 0)
+                            <?php if(count($errors) > 0): ?>
                                 <div class="alert alert-danger">
                                     <ul style="color:red;">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
+                                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <li><?php echo e($error); ?></li>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
 
-                        <form method="POST" id="order_info" action="{{ route('wechats.penalty.pay') }}">
-                            @csrf
-                            @if(session()->has('penalty_info'))
-                                @php
+                        <form method="POST" id="order_info" action="<?php echo e(route('wechats.penalty.pay')); ?>">
+                            <?php echo csrf_field(); ?>
+                            <?php if(session()->has('penalty_info')): ?>
+                                <?php
                                     $penalty_info = session('penalty_info');
                                     $info_object = [
                                     'penalty_number'=>'决定数编号',
@@ -46,27 +43,29 @@
                                     //'penalty_money_extra'=>'手续费',
                                     'penalty_phone_number'=>'手机号码(必填)',
                                     ];
-                                @endphp
-                                @foreach ($info_object as $key => $value)
+                                ?>
+                                <?php $__currentLoopData = $info_object; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="form-group row">
-                                        <label for="{{$key}}" class="col-md-4 col-form-label text-md-right">{{ $value }}</label>
+                                        <label for="<?php echo e($key); ?>" class="col-md-4 col-form-label text-md-right"><?php echo e($value); ?></label>
                                         <div class="col-md-6">
-                                            <input name="{{$key}}" class="form-control" type="text" value="{{$penalty_info[$key]?$penalty_info[$key]:''}}" {{$penalty_info[$key]?'readonly':''}} required>
+                                            <input name="<?php echo e($key); ?>" class="form-control" type="text" value="<?php echo e($penalty_info[$key]?$penalty_info[$key]:''); ?>" <?php echo e($penalty_info[$key]?'readonly':''); ?> required>
                                         </div>
                                     </div>
-                                @endforeach
-                                @if ($errors->has('penalty_phone_number'))
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php if($errors->has('penalty_phone_number')): ?>
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('penalty_phone_number') }}</strong>
+                                        <strong><?php echo e($errors->first('penalty_phone_number')); ?></strong>
                                     </span>
-                                @endif
+                                <?php endif; ?>
                                 <div class="form-group row mb-0">
                                     <div class="col-md-8 offset-md-4">
                                         <div id="wechat_pay" type="button" class="btn btn-primary">
-                                            {{ __('微信支付') }}
+                                            <?php echo e(__('微信支付')); ?>
+
                                         </div>
                                         <a class="btn btn-link" data-toggle="modal" data-target="#penalty_info">
-                                            {{ __('收费规则?') }}
+                                            <?php echo e(__('收费规则?')); ?>
+
                                         </a>
                                     </div>
                                 </div>
@@ -84,11 +83,11 @@
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal -->
                                 </div>
-                            @else
-                                {{--{{ __('数据错误') }}--}}
-                            @endif
+                            <?php else: ?>
+                                
+                            <?php endif; ?>
                         </form>
-                        {{--<div id="text"></div>--}}
+                        
                         <script type="text/javascript">
                             var wechat_pay_data = null;
                             var wechat_pay_type = "WeixinJSBridge";//WeixinJSBridge or JSSDK
@@ -98,7 +97,7 @@
                                         'getBrandWCPayRequest',data,
                                         function(res){
                                             if(res.err_msg === "get_brand_wcpay_request:ok" ) {
-                                                window.location.replace("{{ route('views.home') }}");
+                                                window.location.replace("<?php echo e(route('views.home')); ?>");
                                             }else{
                                             }
                                         }
@@ -108,7 +107,7 @@
                                         debug: true,timestamp:data['timestamp'] ,nonceStr: data['nonceStr'] ,
                                         package: data['package'] ,signType: data['signType'] ,paySign: data['paySign'] , // 支付签名
                                         success: function (res) {
-                                            window.location.replace("{{ route('views.home') }}");// 支付成功后的回调函数
+                                            window.location.replace("<?php echo e(route('views.home')); ?>");// 支付成功后的回调函数
                                         },
                                         cancel: function(res) {
                                             alert('支付取消');//支付取消
@@ -124,7 +123,7 @@
                                     var order_info = $("#order_info").serialize();
                                     $.ajax({
                                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                                        url:"{{route('wechats.penalty.pay')}}",type:"POST",data:order_info,
+                                        url:"<?php echo e(route('wechats.penalty.pay')); ?>",type:"POST",data:order_info,
                                         success:function(data){
                                             if(data['status'] === 0){
                                                 wechat_pay_data = data['data'];//保存值
@@ -146,8 +145,10 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
 
 
 
+
+<?php echo $__env->make('adminlte::page', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

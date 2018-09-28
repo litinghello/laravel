@@ -188,9 +188,9 @@ class WeChatsController extends Controller
         $penalty_order = PenaltyOrder::where('order_penalty_number', $penalty_number)->first();
         if ($penalty_order != null) {
             if ($penalty_order->order_status == "paid" || $penalty_order->order_status == "processing") {
-                return response()->json(['status' => 1, 'data' => "该订单已在处理中"]);
+                return response()->json(['status' => 1,'data' => "该订单已在处理中"]);
             } else if ($penalty_order->order_status == "completed") {
-                return response()->json(['status' => 1, 'data' => "该订单已经处理完成"]);
+                return response()->json(['status' => 1,'data' => "该订单已经处理完成"]);
             }
         }
 //            $penalty_order->order_money = $penalty_money;//修改订单金额
@@ -209,10 +209,10 @@ class WeChatsController extends Controller
         $result = $pay->order->unify([
             'body' => '缴费',
             'out_trade_no' => $penalty_order->order_number,//传入订单ID
-            'total_fee' => 1, //因为是以分为单位，所以订单里面的金额乘以100
 //            'total_fee' => $penalty_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+            'total_fee' => 1, //因为是以分为单位，所以订单里面的金额乘以100
 //            'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
-            'notify_url' => 'http://www.cttx-zbx.com/penalties/pay_call', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+//            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
             'openid' =>  $user['default']['id'],//TODO: 用户openid
         ]);
@@ -227,15 +227,15 @@ class WeChatsController extends Controller
         }
 
     }
-    //下面是回调函数
-    public function penalty_paycall(){
-        Log::info('penalty_paycall 111111111111111 ');
-//        return;
+    //回调
+    public function penalty_paycall(Request $request){
+        $xml = file_get_contents("php://input");
+        Log::info($request.$xml);
+//        return "ok";
         $options = config('wechat.payment');
-        $app = Factory::payment($options);
+        $app = Factory::payment(config('wechat.payment')['default']);
         $response = $app->handlePaidNotify(function($message, $fail){
             Log::info( 'message:'.json_encode($message));
-
             // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
             $order = PenaltyOrder::where('order_number', $message['out_trade_no'])->first();
             if (!$order) { // 如果订单不存在 或者 订单已经支付过了
@@ -254,9 +254,7 @@ class WeChatsController extends Controller
             } else {
                 return $fail('通信失败，请稍后再通知我');
             }
-
             $order->save(); // 保存订单
-
             return true; // 返回处理完成
         });
         $response->send(); // return $response;

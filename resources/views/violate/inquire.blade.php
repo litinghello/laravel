@@ -17,10 +17,10 @@
                 {{--<div class="card-header">{{ __('查询记录') }}</div>--}}
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('violates.info') }}">
+                    <form method="POST" class="form-group pull-left" action="{{ route('violates.info') }}">
                         @csrf
                         <div class="form-group">
-                            <label class="sr-only" for="violate_car_number"></label>
+
                             <div class="input-group">
                                 <div class="input-group-addon">车牌号</div>
                                 <div class="input-group-addon">
@@ -28,7 +28,8 @@
                                     </label><select id="violate_car_number_province" class="selectpicker" data-style="btn-info">
                                     </select>
                                 </div>
-                                <input type="text" class="form-control" id="violate_car_number" placeholder="">
+                                <label for="violate_car_number">
+                                </label><input type="text" class="form-control" id="violate_car_number" placeholder="">
                                 @if ($errors->has('violate_car_number'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('violate_car_number') }}</strong>
@@ -37,14 +38,16 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="input-group col-sm-2 control-label">
-                                <div class="input-group-addon" >车辆类型</div>
-                                <div class="input-group-addon">
+                            <div class="input-group">
+                                <div class="input-group-addon" >车类型</div>
+                                <div class="input-group">
+                                    <div class="form-control">
                                     <label for="violate_car_number_type">
                                     </label><select id="violate_car_number_type" class="selectpicker" data-style="btn-info">
                                         <option>小型汽车</option>
                                         <option>大型汽车</option>
                                     </select>
+                                    </div>
                                 </div>
                                 @if ($errors->has('violate_car_number_type'))
                                     <span class="invalid-feedback" role="alert">

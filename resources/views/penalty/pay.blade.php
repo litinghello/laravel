@@ -33,18 +33,18 @@
                                 @php
                                     $penalty_info = session('penalty_info');
                                     $info_object = [
-                                    'penalty_number'=>'决定数编号',
-                                    'penalty_user_name'=>'姓名',
-                                    'penalty_car_number'=>'车牌号',
+                                    'penalty_number'=>'决定书号',
+                                    'penalty_user_name'=>'车主姓名',
+                                    'penalty_car_number'=>'车牌号牌',
                                     //'penalty_car_type'=>'车辆类型',
-                                    'penalty_money'=>'罚款金额(元)',
+                                    'penalty_money'=>'罚款额(元)',
                                     'penalty_money_late'=>'滞纳金(元)',
                                     'penalty_illegal_place'=>'违法地点',
                                     'penalty_illegal_time'=>'违法时间',
                                     'penalty_process_time'=>'处理时间',
                                     //'penalty_behavior'=>'违法行为',
                                     //'penalty_money_extra'=>'手续费',
-                                    'penalty_phone_number'=>'手机号码(必填)',
+                                    'penalty_phone_number'=>'手机号码',
                                     ];
                                 @endphp
                                 @foreach ($info_object as $key => $value)

@@ -115,9 +115,9 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => '查询',
+            'text'        => '订单',
             'url'         => '/',
-            'icon'        => 'file',
+            'icon'        => 'shopping-cart',
             'label'       => 0,
             'label_color' => 'success',
         ],
@@ -125,12 +125,12 @@ return [
         [
             'text' => '代缴罚款',
             'url'  => '/penalties/inquire',
-            'icon' => 'user',
+            'icon' => 'bitcoin',
         ],
         [
-            'text' => '扣分查询',
+            'text' => '违章查询',
             'url'  => '/',
-            'icon' => 'lock',
+            'icon' => 'car',
         ],
             /*
         '订单管理',

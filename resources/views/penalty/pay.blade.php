@@ -92,6 +92,17 @@
                         <script type="text/javascript">
                             var wechat_pay_data = null;
                             var wechat_pay_type = "WeixinJSBridge";//WeixinJSBridge or JSSDK
+
+                            if (typeof WeixinJSBridge == "undefined"){
+                                if( document.addEventListener ){
+                                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                                }else if (document.attachEvent){
+                                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                                }
+                            }else{
+                                onBridgeReady();
+                            }
                             function wechat_pay(data){//微信两种支付方式，
                                 if(wechat_pay_type === "WeixinJSBridge"){
                                     WeixinJSBridge.invoke(

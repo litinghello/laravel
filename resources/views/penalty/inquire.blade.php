@@ -17,7 +17,7 @@
                         <div class="form-group row">
                             <label for="penalty_number" class="col-md-4 col-form-label text-md-right">{{ __('决定书编号') }}</label>
                             <div class="col-md-6">
-                                <input for="penalty_number" id="penalty_number" type="text" class="form-control{{ $errors->has('penalty_number') ? ' is-invalid' : '' }}" name="penalty_number" value="" required>
+                                <input for="penalty_number" id="penalty_number" type="text" class="form-control{{ $errors->has('penalty_number') ? ' is-invalid' : '' }}" name="penalty_number" value="5101041204594064" required>
                                 @if ($errors->has('penalty_number'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('penalty_number') }}</strong>

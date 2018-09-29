@@ -1,15 +1,23 @@
 {{--@extends('layouts.app')--}}
 @extends('adminlte::page')
 
+
 @section('content_header')
     <h1>罚款查询</h1>
 @stop
+@section('css')
+    {{--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">--}}
+@show
+@section('js')
+    {{--<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>--}}
+    {{--<script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>--}}
+@show
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('查询记录') }}</div>
+                {{--<div class="card-header">{{ __('查询记录') }}</div>--}}
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('penalties.info') }}">

@@ -42,4 +42,11 @@ class HomeController extends Controller
             return view('auth.login');
         }
     }
+    public function views_violate_inquire(){
+        if (Auth::check()) {
+            return view('violate.inquire');
+        }else{
+            return view('auth.login');
+        }
+    }
 }

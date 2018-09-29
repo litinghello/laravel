@@ -6,7 +6,7 @@
 @stop
 @section('js')
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 @show
 @section('content')
     <div class="container">
@@ -91,18 +91,7 @@
                         {{--<div id="text"></div>--}}
                         <script type="text/javascript">
                             var wechat_pay_data = null;
-                            var wechat_pay_type = "WeixinJSBridge";//WeixinJSBridge or JSSDK
-
-                            if (typeof WeixinJSBridge == "undefined"){
-                                if( document.addEventListener ){
-                                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-                                }else if (document.attachEvent){
-                                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-                                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-                                }
-                            }else{
-                                onBridgeReady();
-                            }
+                            var wechat_pay_type = "JSSDK";//WeixinJSBridge or JSSDK
                             function wechat_pay(data){//微信两种支付方式，
                                 if(wechat_pay_type === "WeixinJSBridge"){
                                     WeixinJSBridge.invoke(
@@ -116,19 +105,29 @@
                                     );
                                 }else if(wechat_pay_type === "JSSDK"){
                                     // document.getElementById("text").innerText= JSON.stringify(data);
-                                    wx.chooseWXPay({
-                                        debug: true,timestamp:data['timestamp'] ,nonceStr: data['nonceStr'] ,
-                                        package: data['package'] ,signType: data['signType'] ,paySign: data['paySign'] , // 支付签名
-                                        success: function (res) {
-                                            window.location.replace("{{ route('views.home') }}");// 支付成功后的回调函数
-                                        },
-                                        cancel: function(res) {
-                                            alert('支付取消');//支付取消
-                                        },
-                                        fail: function(res) {
-                                            //接口调用失败时执行的回调函数。
-                                            alert("fail"+JSON.stringify(res));//支付取消
-                                        },
+                                    wx.config({
+                                        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                                        appId:data['appId'] , // 必填，公众号的唯一标识
+                                        timestamp: data['timestamp'] , // 必填，生成签名的时间戳
+                                        nonceStr: data['nonceStr'], // 必填，生成签名的随机串
+                                        //signature: data['paySign'],// 必填，签名，见附录1
+                                        jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                                    });
+                                    wx.ready(function(){
+                                        wx.chooseWXPay({
+                                            debug: true,timestamp:data['timestamp'] ,nonceStr: data['nonceStr'] ,
+                                            package: data['package'] ,signType: data['signType'] ,paySign: data['paySign'] , // 支付签名
+                                            success: function (res) {
+                                                window.location.replace("{{ route('views.home') }}");// 支付成功后的回调函数
+                                            },
+                                            cancel: function(res) {
+                                                alert('支付取消');//支付取消
+                                            },
+                                            fail: function(res) {
+                                                //接口调用失败时执行的回调函数。
+                                                // alert("fail"+JSON.stringify(res));//支付取消
+                                            }
+                                        });
                                     });
                                 }
                             }

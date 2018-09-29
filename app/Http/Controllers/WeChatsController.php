@@ -213,16 +213,16 @@ class WeChatsController extends Controller
         $result = $pay->order->unify([
             'body' => '缴费',
             'out_trade_no' => $penalty_order->order_number,//传入订单ID
-            'total_fee' => $penalty_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
-//            'total_fee' => 1, //因为是以分为单位，所以订单里面的金额乘以100
+//            'total_fee' => $penalty_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
+            'total_fee' => 1, //因为是以分为单位，所以订单里面的金额乘以100
 //            'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
 //            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
             'openid' =>  $user['default']['id'],//TODO: 用户openid
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $config = $pay->jssdk->bridgeConfig($result['prepay_id'],false); //WeixinJSBridge支付 返回 json 字符串，如果想返回数组，传第二个参数 false
-            //$config = $pay->jssdk->sdkConfig($result['prepay_id']); //JSSDK支付 返回数组
+//            $config = $pay->jssdk->bridgeConfig($result['prepay_id'],false); //WeixinJSBridge支付 返回 json 字符串，如果想返回数组，传第二个参数 false
+            $config = $pay->jssdk->sdkConfig($result['prepay_id']); //JSSDK支付 返回数组
             //$configForPickAddress = $pay->jssdk->shareAddressConfig($token);//生成共享收货地址 JS 配置
             //$config = $pay->jssdk->appConfig($result['prepay_id']);
             return response()->json(['status' => 0,'data' => $config]);
@@ -231,13 +231,7 @@ class WeChatsController extends Controller
         }
 
     }
-    //查询
-    public function penalty_query(Request $request){
-        $app = Factory::payment(config('wechat.payment')['default']);
-        $out = $app->order->queryByOutTradeNumber("20180928181005035836");
-        return json_encode($out);
-    }
-    //回调
+    //微信回调
     public function penalty_paycall(Request $request){
 //        $xml = file_get_contents("php://input");
 //        Log::info($request.$xml);

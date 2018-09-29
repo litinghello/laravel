@@ -129,7 +129,7 @@ return [
         ],
         [
             'text' => '违章查询',
-            'url'  => '/',
+            'url'  => '/violates/inquire',
             'icon' => 'car',
         ],
             /*

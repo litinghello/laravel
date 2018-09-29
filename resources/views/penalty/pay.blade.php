@@ -104,6 +104,7 @@
                                         }
                                     );
                                 }else if(wechat_pay_type === "JSSDK"){
+                                    // document.getElementById("text").innerText= JSON.stringify(data);
                                     wx.chooseWXPay({
                                         debug: true,timestamp:data['timestamp'] ,nonceStr: data['nonceStr'] ,
                                         package: data['package'] ,signType: data['signType'] ,paySign: data['paySign'] , // 支付签名
@@ -112,7 +113,11 @@
                                         },
                                         cancel: function(res) {
                                             alert('支付取消');//支付取消
-                                        }
+                                        },
+                                        fail: function(res) {
+                                            //接口调用失败时执行的回调函数。
+                                            alert("fail"+JSON.stringify(res));//支付取消
+                                        },
                                     });
                                 }
                             }

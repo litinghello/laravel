@@ -3,7 +3,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-    <h1>代缴订单</h1>
+    <h1>支付订单</h1>
 @stop
 @section('css')
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.css"/>
@@ -25,7 +25,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">订单状态</div>
+                {{--<div class="card-header">订单状态</div>--}}
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">

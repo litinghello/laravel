@@ -9,9 +9,10 @@
     {{--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">--}}
 @show
 @section('js')
-    {{--<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>--}}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 @show
+@extends('layouts.modal')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -22,9 +23,10 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('penalties.info') }}">
                         @csrf
-                        <div class="form-group row">
-                            <label for="penalty_number" class="col-md-4 col-form-label text-md-right">{{ __('决定书编号') }}</label>
-                            <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="sr-only" for="penalty_number"></label>
+                            <div class="input-group">
+                                <div class="input-group-addon">{{ __('决定书编号') }}</div>
                                 <input for="penalty_number" id="penalty_number" type="text" class="form-control{{ $errors->has('penalty_number') ? ' is-invalid' : '' }}" name="penalty_number" placeholder="请输入15-16位处罚决定书编号" value="" required>
                                 @if ($errors->has('penalty_number'))
                                     <span class="invalid-feedback" role="alert">
@@ -35,30 +37,25 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
+                            <div class="text-center">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('查询') }}
                                 </button>
-
-                                <a class="btn btn-link" data-toggle="modal" data-target="#penalty_info">
-                                    {{ __('决定书编号?') }}
+                                <a id="is_order">
+                                    {{ __('什么是决定书编号?') }}
                                 </a>
                             </div>
                         </div>
-
-                        <div class="modal fade" id="penalty_info" tabindex="-1" role="dialog" aria-labelledby="penalty_info_label" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="penalty_info_label">说明</h4>
-                                    </div>
-                                    <div class="modal-body">请注意一般是在处理完违章后有一份《处罚决定书》，标题下方有此编号。</div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                    </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal -->
-                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $("#is_order").click(function(){
+                                    modal_show({
+                                        label:"说明",
+                                        body:"请注意一般是在处理完违章后有一份《处罚决定书》，标题下方有此编号。"
+                                    });
+                                });
+                            });
+                        </script>
                     </form>
                 </div>
             </div>

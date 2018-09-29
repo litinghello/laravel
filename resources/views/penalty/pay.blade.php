@@ -48,9 +48,11 @@
                                     ];
                                 @endphp
                                 @foreach ($info_object as $key => $value)
-                                    <div class="form-group row">
-                                        <label for="{{$key}}" class="col-md-4 col-form-label text-md-right">{{ $value }}</label>
-                                        <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{$key}}" class="col-md-4 col-form-label text-md-right"></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{{ $value }}</div>
+                                            {{--<input type="text" class="form-control" id="violate_car_number" placeholder="">--}}
                                             <input name="{{$key}}" class="form-control" type="text" value="{{$penalty_info[$key]?$penalty_info[$key]:''}}" {{$penalty_info[$key]?'readonly':''}} required>
                                         </div>
                                     </div>
@@ -61,7 +63,7 @@
                                     </span>
                                 @endif
                                 <div class="form-group row mb-0">
-                                    <div class="col-md-8 offset-md-4">
+                                    <div class="text-center">
                                         <div id="wechat_pay" type="button" class="btn btn-primary">
                                             {{ __('微信支付') }}
                                         </div>

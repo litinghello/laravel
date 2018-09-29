@@ -40,6 +40,8 @@ Route::post('/penalties/order_data','PenaltiesController@penalty_order_data')->n
 
 //界面 违章查询
 Route::get('/violates/inquire','HomeController@views_violate_inquire')->name('views.violate.inquire');
+//接口 违章查询
+Route::post('/violates/inquire','HomeController@views_violate_inquire')->name('violates.info');
 
 //添加第三方账户
 Route::any('/penalties/account/add','PenaltiesController@add_third_account')->name('penalties.account.add');

@@ -4,67 +4,96 @@
 @section('content_header')
     <h1>违章查询</h1>
 @stop
+
+@section('js')
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+@show
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('查询记录') }}</div>
+                {{--<div class="card-header">{{ __('查询记录') }}</div>--}}
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('penalties.info') }}">
+                    <form method="POST" action="{{ route('violates.info') }}">
                         @csrf
-                        <div class="form-group row">
-                            <label for="penalty_number" class="col-md-4 col-form-label text-md-right">{{ __('决定书编号') }}</label>
-                            <div class="col-md-6">
-                                <input for="penalty_number" id="penalty_number" type="text" class="form-control{{ $errors->has('penalty_number') ? ' is-invalid' : '' }}" name="penalty_number" value="5101041204594064" required>
-                                @if ($errors->has('penalty_number'))
+                        <div class="form-group">
+                            <label class="sr-only" for="violate_car_number"></label>
+                            <div class="input-group">
+                                <div class="input-group-addon">车牌号</div>
+                                <div class="input-group-addon">
+                                    <label for="violate_car_number_province">
+                                    </label><select id="violate_car_number_province" class="selectpicker" data-style="btn-info">
+                                    </select>
+                                </div>
+                                <input type="text" class="form-control" id="violate_car_number" placeholder="">
+                                @if ($errors->has('violate_car_number'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('penalty_number') }}</strong>
+                                        <strong>{{ $errors->first('violate_car_number') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group col-sm-2 control-label">
+                                <div class="input-group-addon" >车辆类型</div>
+                                <div class="input-group-addon">
+                                    <label for="violate_car_number_type">
+                                    </label><select id="violate_car_number_type" class="selectpicker" data-style="btn-info">
+                                        <option>小型汽车</option>
+                                        <option>大型汽车</option>
+                                    </select>
+                                </div>
+                                @if ($errors->has('violate_car_number_type'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('violate_car_number_type') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('密码') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
+                        <div class="form-group">
+                            <label class="sr-only" for="violate_car_frame_number"></label>
+                            <div class="input-group">
+                                <div class="input-group-addon">车架号</div>
+                                <input type="text" class="form-control" id="violate_car_frame_number" placeholder="后六位">
+                                @if ($errors->has('violate_car_frame_number'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                                        <strong>{{ $errors->first('violate_car_frame_number') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="violate_car_engine_number"></label>
+                            <div class="input-group">
+                                <div class="input-group-addon">车架号</div>
+                                <input type="text" class="form-control" id="violate_car_engine_number" placeholder="后六位">
+                                @if ($errors->has('violate_car_engine_number'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('violate_car_engine_number') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
+                        <div class="form-group">
+                            <div class="text-center">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('查询') }}
                                 </button>
-
-                                <a class="btn btn-link" data-toggle="modal" data-target="#penalty_info">
-                                    {{ __('决定书编号?') }}
-                                </a>
                             </div>
                         </div>
-
-                        <div class="modal fade" id="penalty_info" tabindex="-1" role="dialog" aria-labelledby="penalty_info_label" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="penalty_info_label">说明</h4>
-                                    </div>
-                                    <div class="modal-body">交通违章处罚决定书编号就是驾驶证号，可以到网上交罚款。</div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                    </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal -->
-                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                var province_array=["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
+                                province_array.forEach(function(value){
+                                    $("#violate_car_number_province").append("<option>"+value+"</option>");
+                                });
+                            });
+                        </script>
                     </form>
                 </div>
             </div>

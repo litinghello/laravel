@@ -16,7 +16,9 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 @show
+@extends('layouts.modal')
 
 @section('content')
 <div class="container">
@@ -31,21 +33,23 @@
                         </div>
                     @endif
                         <div class="row center-block">
-                            <table id="table_info" class="table table-striped table-hover table-condensed">
+                            <table id="table_info" class="table table-striped table-hover table-condensed" style="width:100%">
                                 <thead>
                                 <tr>
-                                    <th>订单号</th>
+                                    <th>单号</th>
                                     <th>金额</th>
-                                    <th>订单状态</th>
+                                    <th>状态</th>
                                     <th>时间</th>
-                                    <th>操作</th>
+                                    {{--<th>操作</th>--}}
                                 </tr>
                                 </thead>
                             </table>
                         </div>
                         <script type="text/javascript">
                             $(document).ready(function() {
-                                $('#table_info').DataTable( {
+                                var datatable = $('#table_info').DataTable( {
+                                    "scrollX": true,
+                                    "scrollY": true,
                                     "processing": true,
                                     "serverSide": true,
                                     "ajax": {
@@ -60,7 +64,7 @@
                                         // { data: 'order_penalty_number', name: 'order_penalty_number' },
                                         { data: 'order_status', name: 'order_status' },
                                         { data: 'updated_at', name: 'updated_at' },
-                                        {data: 'action', name: 'action', orderable: false, searchable: false}
+                                        // {data: 'action', name: 'action', orderable: false, searchable: false}
                                     ],
                                     language: {
                                         lengthMenu: '<select class="form-control input-xsmall">' + '<option value="1">1</option>' + '<option value="10">10</option>' + '<option value="20">20</option>' + '<option value="30">30</option>' + '<option value="40">40</option>' + '<option value="50">50</option>' + '</select>条记录',//左上角的分页大小显示。
@@ -80,6 +84,35 @@
                                     paging: true,
                                     pagingType: "full_numbers"//分页样式的类型
                                 });
+                                $('#table_info tbody').on('click', 'tr', function (row) {
+                                    var data = datatable.row( this ).data();
+                                    var info_object = {
+                                        'order_penalty_number':'决定数编号',
+                                        'order_number':'订单号',
+                                        'order_status':"订单状态"
+                                    };
+                                    var order_status={
+                                        'invalid':"无效",
+                                        'unpaid':'未支付',
+                                        'paid':'已支付',
+                                        'processing':'正在处理',
+                                        'completed':'处理完成',
+                                    };
+                                    var body_text = "";
+                                    for (value in info_object){
+                                        console.log(value);
+                                        if(value === 'order_status'){
+                                            body_text+= info_object[value]+":"+order_status[data[value]];
+                                        }else{
+                                            body_text+= info_object[value]+":"+data[value];
+                                        }
+                                        body_text+="<br>";
+                                    }
+                                    modal_show({
+                                        label:"订单信息",
+                                        body:body_text
+                                    });
+                                } );
                             });
                             $("#table_info_filter input[type=search]").css({ width: "auto" });
                         </script>

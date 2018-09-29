@@ -26,69 +26,19 @@
                                 </div>
                             @endif
                         </div>
-
-                        <form method="POST" id="order_info" action="{{ route('wechats.violate.pay') }}">
-                            @csrf
-                            @if(session()->has('violate_info'))
-                                @php
-                                    $violate_info = session('violate_info');
-                                    $info_object = [
-                                    'violate_number'=>'决定书号',
-                                    'violate_user_name'=>'车主姓名',
-                                    'violate_car_number'=>'车牌号牌',
-                                    //'violate_car_type'=>'车辆类型',
-                                    'violate_money'=>'罚款额(元)',
-                                    'violate_score'=>'扣分',
-                                    'violate_illegal_place'=>'违法地点',
-                                    'violate_illegal_time'=>'违法时间',
-                                    //'violate_process_time'=>'处理时间',
-                                    //'violate_behavior'=>'违法行为',
-                                    //'violate_money_extra'=>'手续费',
-                                    'violate_phone_number'=>'手机号码',
-                                    ];
-                                @endphp
-                                @foreach ($info_object as $key => $value)
-                                    <div class="form-group">
-                                        <label for="{{$key}}" class="col-md-4 col-form-label text-md-right"></label>
-                                        <div class="input-group">
-                                            <div class="input-group-addon">{{ $value }}</div>
-                                            <input name="{{$key}}" class="form-control" type="text" value="{{$violate_info[$key]?$violate_info[$key]:''}}" {{$violate_info[$key]?'readonly':''}} required>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                @if ($errors->has('violate_phone_number'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('violate_phone_number') }}</strong>
-                                    </span>
-                                @endif
-                                <div class="form-group row mb-0">
-                                    <div class="text-center">
-                                        <div id="wechat_pay" type="button" class="btn btn-primary">
-                                            {{ __('微信支付') }}
-                                        </div>
-                                        <a class="btn btn-link" data-toggle="modal" data-target="#violate_info">
-                                            {{ __('收费规则?') }}
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="modal fade" id="violate_info" tabindex="-1" role="dialog" aria-labelledby="violate_info_label" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title" id="violate_info_label">服务费</h4>
-                                            </div>
-                                            <div class="modal-body">罚款金额加扣分服务费110元/分，请注意：我们收取的是服务费。</div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                            </div>
-                                        </div><!-- /.modal-content -->
-                                    </div><!-- /.modal -->
-                                </div>
-                            @else
-                                {{--{{ __('数据错误') }}--}}
-                            @endif
-                        </form>
+                        <div class="row center-block">
+                            <table id="table_info" class="table table-striped table-hover table-condensed" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>单号</th>
+                                    <th>金额</th>
+                                    <th>状态</th>
+                                    <th>时间</th>
+                                    {{--<th>操作</th>--}}
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
                         {{--<div id="text"></div>--}}
                         <script type="text/javascript">
                             var wechat_pay_data = null;
@@ -140,7 +90,7 @@
                                     var order_info = $("#order_info").serialize();
                                     $.ajax({
                                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                                        url:"{{route('wechats.violate.pay')}}",type:"POST",data:order_info,
+{{--                                        url:"{{route('wechats.violate.pay')}}",type:"POST",data:order_info,--}}
                                         success:function(data){
                                             if(data['status'] === 0){
                                                 wechat_pay_data = data['data'];//保存值

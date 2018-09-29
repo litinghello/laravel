@@ -15,12 +15,10 @@
         <div class="col-md-8">
             <div class="card">
                 {{--<div class="card-header">{{ __('查询记录') }}</div>--}}
-
                 <div class="card-body">
                     <form method="POST" class="form-group pull-left" action="{{ route('violates.info') }}">
                         @csrf
                         <div class="form-group">
-
                             <div class="input-group">
                                 <div class="input-group-addon">车牌号</div>
                                 <div class="input-group-addon">
@@ -56,7 +54,6 @@
                                 @endif
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="sr-only" for="violate_car_frame_number"></label>
                             <div class="input-group">
@@ -81,24 +78,41 @@
                                 @endif
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">
+                                <a id="viole_inquire_button" type="button" class="btn btn-primary">
                                     {{ __('查询') }}
-                                </button>
+                                </a>
                             </div>
                         </div>
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                var province_array=["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
-                                province_array.forEach(function(value){
-                                    $("#violate_car_number_province").append("<option>"+value+"</option>");
-                                });
-                            });
-                        </script>
                     </form>
                 </div>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        var province_array=["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
+                        province_array.forEach(function(value){
+                            $("#violate_car_number_province").append("<option>"+value+"</option>");
+                        });
+                        /*$("#viole_inquire_button").click(function (){
+                            $.ajax({
+                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                {{--url:"{{route('wechats.viole.pay')}}",type:"POST",data:order_info,--}}
+                                success:function(data){
+                                    if(data['status'] === 0){
+                                        //wechat_pay_data = data['data'];//保存值
+                                        // document.getElementById("text").innerText = JSON.stringify(wechat_pay_data);
+                                        //wechat_pay(wechat_pay_data);//采用微信网页支付
+                                    }else{
+                                        alert(data['data']);
+                                    }
+                                },
+                                error:function(error){
+                                    alert("请再次提交");
+                                }
+                            });
+                        });*/
+                    });
+                </script>
             </div>
         </div>
     </div>

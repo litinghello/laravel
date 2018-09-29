@@ -17,7 +17,7 @@
                         <div class="form-group row">
                             <label for="penalty_number" class="col-md-4 col-form-label text-md-right">{{ __('决定书编号') }}</label>
                             <div class="col-md-6">
-                                <input for="penalty_number" id="penalty_number" type="text" class="form-control{{ $errors->has('penalty_number') ? ' is-invalid' : '' }}" name="penalty_number" value="" required>
+                                <input for="penalty_number" id="penalty_number" type="text" class="form-control{{ $errors->has('penalty_number') ? ' is-invalid' : '' }}" name="penalty_number" placeholder="请输入15-16位处罚决定书编号" value="" required>
                                 @if ($errors->has('penalty_number'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('penalty_number') }}</strong>
@@ -44,7 +44,7 @@
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="penalty_info_label">说明</h4>
                                     </div>
-                                    <div class="modal-body">交通违章处罚决定书编号可以到网上交罚款的编号，通常在处理违章后取得，位数15或16位。</div>
+                                    <div class="modal-body">请注意一般是在处理完违章后有一份《处罚决定书》，标题下方有此编号。</div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                                     </div>

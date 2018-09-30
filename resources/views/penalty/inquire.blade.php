@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">{{ __('决定书编号') }}</div>
-                            <input id="penalty_number" type="text" class="form-control" name="penalty_number" placeholder="请输入15-16位处罚决定书编号" value="5101041204594064" required>
+                            <input id="penalty_number" type="text" class="form-control" name="penalty_number" placeholder="请输入15-16位处罚决定书编号" value="" required>
                         </div>
                     </div>
                     <div class="form-group">

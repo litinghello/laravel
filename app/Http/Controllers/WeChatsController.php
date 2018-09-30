@@ -171,7 +171,7 @@ class WeChatsController extends Controller
 //            return response()->json(['status' => 1,'data' => "请尝试通过微信访问支付"]);
 //        }
         $validator = Validator::make($request->all(), [
-            'order_money' => 'required|number',
+            'order_money' => 'required|numeric',
             'order_src_type' => 'required|alpha_num',
             'order_src_number' => 'required|alpha_num',
             'order_phone_number' => 'required|regex:/^1[34578]\d{9}$/',

@@ -53,4 +53,4 @@ Route::get('/adminltes/table/home', 'AdminLtesController@penalty_order_table_hom
 Route::post('/adminltes/table/data', 'AdminLtesController@get_penalty_order_data')->name('adminltes.table.data');
 Route::get('/adminltes/table/complete', 'AdminLtesController@set_penalty_order_data')->name('adminltes.table.complete');
 
-
+Route::any('/car_info','PenaltiesController@penalty_car_info')->name('penalties.login.51jfk');

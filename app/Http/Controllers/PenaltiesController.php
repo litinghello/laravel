@@ -223,5 +223,72 @@ class PenaltiesController extends BaseController
         ]);
         return response()->json(['status' => 0,'data' =>  [$penaltyinfo]]);
     }
+    /**车辆违法
+     * @param Request $request
+     * @return string
+     */
+    public function penalty_car_info(Request $request){
+        $validator = Validator::make($request->all(), [
+            'lsprefix' => 'required',//省份  川
+            'lsnum' => 'required',//号牌  A5F795
+//            'lstype' => 'required',//车辆种类  02 暂时支持小车
+            'frameno' => 'required',//车架号后6位  010304
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 1,'data' => "参数错误"]);
+        }
 
+        $lsprefix = $request['lsprefix'];
+        $lsnum = $request['lsnum'];
+//        $lstype = $request['lstype'];
+        $frameno = $request['frameno'];
+
+
+        $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
+        if (!$account) {
+            $account = ThirdAccount::where("account_type", '51jfk')->first();
+            if ($account) {
+                return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
+            } else {
+                return back()->withErrors(['penalty_number' => '请添加账户！']);
+            }
+        }
+        $url = 'http://www.51jfk.com/index.php/Weizhang/index.html';
+        $body = "lsprefix=".$lsprefix."&lsnum=".$lsnum."&lstype=02&frameno=".$frameno."&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser=";
+        $cookies = $account['account_cookie'];
+        $client = new Client();
+        $response = $client->post($url, [
+            'headers' => [
+                'X-Requested-With' => 'XMLHttpRequest',
+                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Cookie' => $cookies
+            ],
+            'body' => $body
+        ]);
+        $response_code = $response->getStatusCode();
+        if ($response_code != 200) {
+            return response()->json(['status' => 1,'data' => "系统异常"]);
+        }
+        $response_body = json_decode($response->getBody(), true);
+//        return $response_body;
+
+        preg_match_all("/<ul.*?>.*?<\/ul>/ism", $response_body, $matches);
+        $key = array('xh','info','dm','time','address','address','feiyong','koufen');
+        $infos = array();
+        foreach ($matches[0] as  $match){
+            if(strpos($match,"<li class=\"fakuan\">") !== false){
+                preg_match_all('/<li.*?>(.*?)<\/li>/is', $match, $sss);
+                $info = array();
+                for ($x=0; $x<=7; $x++) {
+                    $info[$key[$x]] = $sss[1][$x];
+                }
+                if('违章信息' != $info['info']){
+                    $infos[]=$info;
+                }
+            }else{
+            }
+        }
+        return response()->json(['status' => 0,'data' => $infos]);
+
+    }
  }

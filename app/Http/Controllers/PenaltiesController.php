@@ -163,33 +163,24 @@ class PenaltiesController extends BaseController
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);
         if ($validator->fails()) {
-//            return $this->fail(2002, [], $validator->errors()->first());
-//            return redirect('/penalties/inquire')->withErrors($validator);
-            return redirect()->back()->withErrors($validator);
+            return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
         $penalty_number = $request['penalty_number'];
 
         // 这里需要实现 已经存在直接返回（10分钟内）
         $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         if ($penaltyinfo != null) {
-//            if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-10 minute"))) {
             if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-100000 minute"))) {
-//                return $this->success($penaltyinfo);
-                return redirect('/penalties/pay')->with('penalty_info', $penaltyinfo);
+                return response()->json(['status' => 0,'data' => [$penaltyinfo]]);
             }
-        } else {
-            $penaltyinfo = new PenaltyInfo;
         }
-
         $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
         if (!$account) {
             $account = ThirdAccount::where("account_type", '51jfk')->first();
             if ($account) {
                 return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
             } else {
-//                return "no account";
-//                return $this->fail(9999, "请添加账户");
-                return back()->withErrors(['penalty_number' => '请添加账户！']);
+                return response()->json(['status' => 1,'data' =>  '请添加账户！']);
             }
         }
 
@@ -212,29 +203,25 @@ class PenaltiesController extends BaseController
 //        $response->body();
         $response_code = $response->getStatusCode();
         if ($response_code != 200) {
-//            return $this->fail(9999);
-            return back()->withErrors(['penalty_number' => '系统异常！']);
+            return response()->json(['status' => 1,'data' =>  '系统异常！']);
         }
         $response_body = json_decode($response->getBody(), true);
         if ($response_body['code'] != 200) {
-//            return $this->fail(9999, [], $response_body);
-            return back()->withErrors(['penalty_number' => $response_body]);
+            return response()->json(['status' => 1,'data' =>  "请求数据失败"]);
         }
-        $penaltyinfo->penalty_number = $response_body['jdsbh'];
-        $penaltyinfo->penalty_car_number = $response_body['hphm'];
-        $penaltyinfo->penalty_car_type = $response_body['hpzl'];
-        $penaltyinfo->penalty_money = $response_body['fkje'];
-        $penaltyinfo->penalty_money_late = $response_body['znj'];
-        $penaltyinfo->penalty_user_name = $response_body['dsr'];
-        $penaltyinfo->penalty_process_time = date('Y-m-d H:i:s', strtotime($response_body['clsj']));
-        $penaltyinfo->penalty_illegal_time = date('Y-m-d H:i:s', strtotime($response_body['wfsj']));
-        $penaltyinfo->penalty_illegal_place = $response_body['wfdz'];
-        $penaltyinfo->penalty_behavior = $response_body['wfxw'] . "";
-        $penaltyinfo->setUpdatedAt(date("Y-m-d H:i:s"));
-        // 缓存
-        $penaltyinfo->save();
-//        return $this->success($pnaltyinfo);
-        return redirect('/penalties/pay')->with('penalty_info', $penaltyinfo);
+        $penaltyinfo = PenaltyInfo::create([
+            'penalty_number'=>$response_body['jdsbh'],
+            'penalty_car_number'=>$response_body['hphm'],
+            'penalty_car_type'=>$response_body['hpzl'],
+            'penalty_money'=>$response_body['fkje'],
+            'penalty_money_late'=>$response_body['znj'],
+            'penalty_user_name'=>$response_body['dsr'],
+            'penalty_process_time'=>date('Y-m-d H:i:s', strtotime($response_body['clsj'])),
+            'penalty_illegal_time'=>date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
+            'penalty_illegal_place'=>$response_body['wfdz'],
+            'penalty_behavior'=>$response_body['wfxw'] . "",
+        ]);
+        return response()->json(['status' => 0,'data' =>  [$penaltyinfo]]);
     }
 
     //返回当前用户下的订单

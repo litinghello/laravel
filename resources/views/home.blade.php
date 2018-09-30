@@ -108,10 +108,7 @@
                                         }
                                         body_text+="<br>";
                                     }
-                                    modal_show({
-                                        label:"订单信息",
-                                        body:body_text
-                                    });
+                                    user_modal_show("订单信息",body_text);
                                 } );
                             });
                             $("#table_info_filter input[type=search]").css({ width: "auto" });

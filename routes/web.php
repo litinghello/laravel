@@ -32,9 +32,9 @@ Route::get('/penalties/inquire','HomeController@views_penalty_inquire')->name('v
 //接口 决定书编号
 Route::post('/penalties/info','PenaltiesController@penalty_info')->name('penalties.info');
 //界面 支付页面界面
-Route::get('/penalties/pay', 'HomeController@views_penalty_pay')->name('views.penalty.pay');
+Route::get('/wechats/pay/penalty', 'HomeController@views_penalty_pay')->name('views.penalty.pay');
 //接口 支付接口
-Route::any('/wechats/pay','WeChatsController@wechat_pay')->name('wechats.pay');
+Route::post('/wechats/pay','WeChatsController@wechat_pay')->name('wechats.pay');
 //接口 用户查看订单号
 Route::post('/penalties/order_data','PenaltiesController@penalty_order_data')->name('penalties.order.data');
 

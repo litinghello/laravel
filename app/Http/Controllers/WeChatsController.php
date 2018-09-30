@@ -166,10 +166,10 @@ class WeChatsController extends Controller
     }
     //微信支付
     public function wechat_pay(Request $request){
-//        $user = session('wechat.oauth_user'); //拿到授权用户资料
-//        if(session()->has('wechat.oauth_user') == false){
-//            return response()->json(['status' => 1,'data' => "请尝试通过微信访问支付"]);
-//        }
+        $user = session('wechat.oauth_user'); //拿到授权用户资料
+        if(session()->has('wechat.oauth_user') == false){
+            return response()->json(['status' => 1,'data' => "请尝试通过微信访问支付"]);
+        }
         $validator = Validator::make($request->all(), [
             'order_money' => 'required|numeric',
             'order_src_type' => 'required|alpha_num',

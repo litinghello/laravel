@@ -1,6 +1,6 @@
 <script type="text/javascript">
-    var wechat_pay_data = null;
-    var wechat_pay_type = "JSSDK";//WeixinJSBridge or JSSDK
+    let wechat_pay_data = null;
+    let wechat_pay_type = "JSSDK";//WeixinJSBridge or JSSDK
     function wechat_process(data){//微信两种支付方式，
         if(wechat_pay_type === "WeixinJSBridge"){
             WeixinJSBridge.invoke(
@@ -53,7 +53,7 @@
             $.ajax({
                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                 url:"{{route('wechats.pay')}}",
-                type:"GET",
+                type:"POST",
                 data:order_data,
                 success:function(data){
                     if(data['status'] === 0){

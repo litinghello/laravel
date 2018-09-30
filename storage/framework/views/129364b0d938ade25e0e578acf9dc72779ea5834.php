@@ -14,6 +14,12 @@
     </div><!-- /.modal -->
 </div>
 <script type="text/javascript">
+    function user_modal_hide(object){
+        $("#user_modal_button_confirm").hide();
+        $('#message_info_label').text("");
+        $('#message_info_body').html("");
+        $('#message_info').modal('hide');
+    }
     function modal_show(object){
         $("#user_modal_button_confirm").hide();
         $('#message_info_label').text(object.label);
@@ -41,7 +47,7 @@
             "</div>");
         $('#message_info').modal('show');
 
-        $("#user_modal_button_confirm").click(function () {
+        $("#user_modal_button_confirm").show().click(function () {
             event($("#user_model_input").val());
         });
     }

@@ -57,5 +57,5 @@
             click_event(user_datatables_object.row( this ).data());
         });
     }
-
+    $("#datalables_body input[type=search]").css({ width: "auto" });
 </script>

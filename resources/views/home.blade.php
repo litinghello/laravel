@@ -76,7 +76,6 @@
                                     }
                                 });
                             });
-                            // $("#table_info_filter input[type=search]").css({ width: "auto" });
                         </script>
                 </div>
             </div>

@@ -61,11 +61,10 @@
                                     success:function(data){
                                         if(data['status'] === 0){
                                             data['data'].forEach(function (value) {
-                                                value['order_status'] = order_status[value.order_status];
+                                                value.order_status = order_status[value.order_status];
                                             });
-                                            console.log(data);
                                             user_datatables_init(info_object,data['data'],function (data) {
-
+                                                user_modal_warning("订单处理");
                                             });
                                             user_datatables_show();
                                         }else{

@@ -49,9 +49,10 @@
         if(wechat_pay_data !== null){
             wechat_process(wechat_pay_data);
         }else{
+            console.log(order_data);
             $.ajax({
                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
-                url:"{{route('wechats.penalty.pay')}}",type:"POST",data:order_data,
+                url:"{{route('wechats.pay')}}",type:"POST",data:order_data,
                 success:function(data){
                     if(data['status'] === 0){
                         wechat_pay_data = data['data'];//保存值
@@ -61,9 +62,9 @@
                     }
                 },
                 error:function(error){
-                    user_modal_prompt("请再次提交");
+                    user_modal_prompt("支付提交失败");
                 }
             });
         }
-    };
+    }
 </script>

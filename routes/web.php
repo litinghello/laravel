@@ -34,7 +34,7 @@ Route::post('/penalties/info','PenaltiesController@penalty_info')->name('penalti
 //界面 支付页面界面
 Route::get('/penalties/pay', 'HomeController@views_penalty_pay')->name('views.penalty.pay');
 //接口 支付接口
-Route::post('/penalties/pay','WeChatsController@penalty_pay')->name('wechats.penalty.pay');
+Route::post('/penalties/pay','WeChatsController@wechat_pay')->name('wechats.pay');
 //接口 用户查看订单号
 Route::post('/penalties/order_data','PenaltiesController@penalty_order_data')->name('penalties.order.data');
 

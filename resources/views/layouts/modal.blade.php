@@ -41,7 +41,7 @@
             "</div>");
         $('#message_info').modal('show');
 
-        $("#user_modal_button_confirm").click(function () {
+        $("#user_modal_button_confirm").show().click(function () {
             event($("#user_model_input").val());
         });
     }

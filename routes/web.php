@@ -36,7 +36,7 @@ Route::get('/wechats/pay/penalty', 'HomeController@views_penalty_pay')->name('vi
 //接口 支付接口
 Route::post('/wechats/pay','WeChatsController@wechat_pay')->name('wechats.pay');
 //接口 用户查看订单号
-Route::any('/wechats/order/data','WeChatsController@wechat_order_data')->name('wechats.order.data');
+Route::post('/wechats/order/data','WeChatsController@wechat_order_data')->name('wechats.order.data');
 
 //界面 违章查询
 Route::get('/violates/inquire','HomeController@views_violate_inquire')->name('views.violate.inquire');

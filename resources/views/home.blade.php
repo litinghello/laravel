@@ -39,8 +39,11 @@
                     @endcomponent
                         <script type="text/javascript">
                             let info_object = {
-                                'order_src_id':'决定书号',
-                                'order_src_type':'类型',
+                                'order_number':'订单号',
+                                'order_money':'订单金额',
+                                'order_phone_number':'联系电话',
+                                'order_status':'状态',
+                                'updated_at':'时间',
                             };
                             $(document).ready(function() {
                                 $.ajax({
@@ -49,9 +52,10 @@
                                     url:"{{route('wechats.order.data')}}",
                                     data:"",
                                     success:function(data){
+                                        console.log(data);
                                         if(data['status'] === 0){
                                             user_datatables_init(info_object,data['data'],function (data) {
-                                                var info_object = {
+                                                /*var info_object = {
                                                     'order_src_id':'决定数编号',
                                                     'order_src_type':'订单号',
                                                     'order_status':"订单状态"
@@ -73,7 +77,7 @@
                                                     }
                                                     body_text+="<br>";
                                                 }
-                                                user_modal_show("订单信息",body_text);
+                                                user_modal_show("订单信息",body_text);*/
                                             });
                                             user_datatables_show();
                                         }else{

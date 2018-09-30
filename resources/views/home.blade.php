@@ -45,6 +45,13 @@
                                 'order_status':'状态',
                                 'updated_at':'时间',
                             };
+                            var order_status={
+                                'invalid':"无效",
+                                'unpaid':'未支付',
+                                'paid':'已支付',
+                                'processing':'正在处理',
+                                'completed':'处理完成',
+                            };
                             $(document).ready(function() {
                                 $.ajax({
                                     type:"POST",
@@ -52,32 +59,13 @@
                                     url:"{{route('wechats.order.data')}}",
                                     data:"",
                                     success:function(data){
-                                        console.log(data);
                                         if(data['status'] === 0){
+                                            data['data'].forEach(function (value) {
+                                                value['order_status'] = order_status[value.order_status];
+                                            });
+                                            console.log(data);
                                             user_datatables_init(info_object,data['data'],function (data) {
-                                                /*var info_object = {
-                                                    'order_src_id':'决定数编号',
-                                                    'order_src_type':'订单号',
-                                                    'order_status':"订单状态"
-                                                };
-                                                var order_status={
-                                                    'invalid':"无效",
-                                                    'unpaid':'未支付',
-                                                    'paid':'已支付',
-                                                    'processing':'正在处理',
-                                                    'completed':'处理完成',
-                                                };
-                                                var body_text = "";
-                                                for (value in info_object){
-                                                    console.log(value);
-                                                    if(value === 'order_status'){
-                                                        body_text+= info_object[value]+":"+order_status[data[value]];
-                                                    }else{
-                                                        body_text+= info_object[value]+":"+data[value];
-                                                    }
-                                                    body_text+="<br>";
-                                                }
-                                                user_modal_show("订单信息",body_text);*/
+
                                             });
                                             user_datatables_show();
                                         }else{

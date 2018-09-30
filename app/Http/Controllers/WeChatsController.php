@@ -269,6 +269,7 @@ class WeChatsController extends Controller
     //返回当前用户下的订单
     public function wechat_order_data(){
         $table = User::where('id',Auth::id())->first()->wechat_order;
-        return response()->json(['status' => 0,'data' =>  Datatables::of($table)->make(true)]);
+//        return response()->json(['status' => 0,'data' =>  Datatables::of($table)->make(true)]);
+        return response()->json(['status' => 0,'data' =>  $table]);
     }
 }

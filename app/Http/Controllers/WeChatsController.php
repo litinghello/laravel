@@ -173,31 +173,33 @@ class WeChatsController extends Controller
         $validator = Validator::make($request->all(), [
             'order_money' => 'required|numeric',
             'order_src_type' => 'required|alpha_num',
-            'order_src_number' => 'required|alpha_num',
+            'order_src_id' => 'required|alpha_num',
             'order_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
-        $penalty_orders = WechatOrder::where('order_src_number', $request['order_src_number'])->first();
-        if ($penalty_orders != null) {
-            if ($penalty_orders->order_status == "paid" || $penalty_orders->order_status == "processing") {
+        $penalty_order = WechatOrder::where('order_src_id', $request['order_src_id'])->first();
+        if ($penalty_order != null) {
+            if ($penalty_order->order_status == "paid" || $penalty_order->order_status == "processing") {
                 return response()->json(['status' => 1,'data' => "该订单已在处理中"]);
-            } else if ($penalty_orders->order_status == "completed") {
+            } else if ($penalty_order->order_status == "completed") {
                 return response()->json(['status' => 1,'data' => "该订单已经处理完成"]);
-            }else if($penalty_orders->order_user_id != Auth::id() ){
+            }else if($penalty_order->order_user_id != Auth::id() ){
                 return response()->json(['status' => 1,'data' => "该订单已被其他用户关联"]);
             }
+        }else{
+            $penalty_order = WechatOrder::create([
+                'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
+                'order_money'=> $request['order_money'],
+                'order_src_type'=> $request['order_src_type'],
+                'order_src_id'=> $request['order_src_id'],
+                'order_phone_number'=> $request['order_phone_number'],
+                'order_user_id'=> Auth::id(),
+                'order_status'=> 'unpaid',
+            ]);
         }
-        $penalty_order = PenaltyOrder::create([
-            'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
-            'order_money'=> $request['order_money'],
-            'order_src_type'=> $request['order_src_type'],
-            'order_src_number'=> $request['order_src_number'],
-            'order_phone_number'=> $request['order_phone_number'],
-            'order_user_id'=> Auth::id(),
-            'order_status'=> 'unpaid',
-        ]);
+
         $pay = Factory::payment(config('wechat.payment')['default']);
         $result = $pay->order->unify([
             'body' => '缴费',
@@ -207,7 +209,8 @@ class WeChatsController extends Controller
 //            'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
 //            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
-//            'openid' =>  $user['default']['id'],//TODO: 用户openid
+            'openid' =>  $user['default']['id'],//TODO: 用户openid
+//            'openid' =>  "oiGyj0im2uCtxHX3_oFct-BDyOuA",//TODO: 用户openid
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
 //            $config = $pay->jssdk->bridgeConfig($result['prepay_id'],false); //WeixinJSBridge支付 返回 json 字符串，如果想返回数组，传第二个参数 false

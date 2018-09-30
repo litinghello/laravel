@@ -64,7 +64,7 @@
                     }
                 },
                 error:function(error){
-                    user_modal_prompt("支付提交失败");
+                    user_modal_prompt("支付提交失败:"+JSON.stringify(error));
                 }
             });
         }

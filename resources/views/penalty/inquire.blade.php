@@ -77,7 +77,7 @@
                                             var pay_value={
                                                 order_money:data.penalty_money+data.penalty_money_late+10,
                                                 order_src_type:"penalty",
-                                                order_src_number:data.penalty_number,
+                                                order_src_id:data.penalty_number,
                                                 order_phone_number:value,
                                             };
                                             user_wechat_pay(pay_value);

@@ -29,89 +29,71 @@
 
                         </div>
                     <?php endif; ?>
-                        <div class="row center-block">
-                            <table id="table_info" class="table table-striped table-hover table-condensed" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>单号</th>
-                                    <th>金额</th>
-                                    <th>状态</th>
-                                    <th>时间</th>
-                                    
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
+                    <?php $__env->startComponent('layouts.datatables'); ?>
+                    <?php echo $__env->renderComponent(); ?>
+                    <?php $__env->startComponent('layouts.modal'); ?>
+                    <?php echo $__env->renderComponent(); ?>
+                    <?php $__env->startComponent('layouts.wechat'); ?>
+                    <?php echo $__env->renderComponent(); ?>
                         <script type="text/javascript">
+                            let info_object = {
+                                'penalty_number':'决定书号',
+                                'penalty_user_name':'车主姓名',
+                                'penalty_car_number':'车牌号牌',
+                                //'penalty_car_type'=>'车辆类型',
+                                'penalty_money':'罚款额(元)',
+                                'penalty_money_late':'滞纳金(元)',
+                                'penalty_illegal_place':'违法地点',
+                                // 'penalty_illegal_time':'违法时间',
+                                'penalty_process_time':'处理时间',
+                                // 'penalty_behavior':'违法行为',
+                                //'penalty_money_extra':'手续费',
+                                // 'penalty_phone_number':'手机号码',
+                            };
                             $(document).ready(function() {
-                                var datatable = $('#table_info').DataTable( {
-                                    "scrollX": true,
-                                    "scrollY": true,
-                                    "processing": true,
-                                    "serverSide": true,
-                                    "ajax": {
-                                        "url":"<?php echo e(route('penalties.order.data')); ?>",
-                                        "type": "POST",
-                                        "headers": {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
-                                    },
-                                    columns: [
-                                        // { data: 'id', name: 'id' },
-                                        { data: 'order_number', name: 'order_number' },
-                                        { data: 'order_money', name: 'order_money' },
-                                        // { data: 'order_penalty_number', name: 'order_penalty_number' },
-                                        { data: 'order_status', name: 'order_status' },
-                                        { data: 'updated_at', name: 'updated_at' },
-                                        // {data: 'action', name: 'action', orderable: false, searchable: false}
-                                    ],
-                                    language: {
-                                        lengthMenu: '<select class="form-control input-xsmall">' + '<option value="1">1</option>' + '<option value="10">10</option>' + '<option value="20">20</option>' + '<option value="30">30</option>' + '<option value="40">40</option>' + '<option value="50">50</option>' + '</select>条记录',//左上角的分页大小显示。
-                                        search: '<span class="label label-success">搜索：</span>',//右上角的搜索文本，可以写html标签
-                                        paginate: {//分页的样式内容。
-                                            previous: "上一页",
-                                            next: "下一页",
-                                            first: "第一页",
-                                            last: "最后"
-                                        },
-                                        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
-                                        //下面三者构成了总体的左下角的内容。
-                                        info: "总共_PAGES_ 页，显示第_START_ 到第 _END_ ，筛选之后得到 _TOTAL_ 条，初始_MAX_ 条 ",//左下角的信息显示，大写的词为关键字。
-                                        infoEmpty: "0条记录",//筛选为空时左下角的显示。
-                                        infoFiltered: ""//筛选之后的左下角筛选提示，
-                                    },
-                                    paging: true,
-                                    pagingType: "full_numbers"//分页样式的类型
-                                });
-                                $('#table_info tbody').on('click', 'tr', function (row) {
-                                    var data = datatable.row( this ).data();
-                                    var info_object = {
-                                        'order_penalty_number':'决定数编号',
-                                        'order_number':'订单号',
-                                        'order_status':"订单状态"
-                                    };
-                                    var order_status={
-                                        'invalid':"无效",
-                                        'unpaid':'未支付',
-                                        'paid':'已支付',
-                                        'processing':'正在处理',
-                                        'completed':'处理完成',
-                                    };
-                                    var body_text = "";
-                                    for (value in info_object){
-                                        console.log(value);
-                                        if(value === 'order_status'){
-                                            body_text+= info_object[value]+":"+order_status[data[value]];
+                                $.ajax({
+                                    type:"POST",
+                                    headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
+                                    url:"<?php echo e(route('wechats.order.data')); ?>",
+                                    data:post_data,
+                                    success:function(data){
+                                        if(data['status'] === 0){
+                                            user_datatables_init(info_object,data['data'],function (data) {
+                                                var info_object = {
+                                                    'order_src_id':'决定数编号',
+                                                    'order_src_type':'订单号',
+                                                    'order_status':"订单状态"
+                                                };
+                                                var order_status={
+                                                    'invalid':"无效",
+                                                    'unpaid':'未支付',
+                                                    'paid':'已支付',
+                                                    'processing':'正在处理',
+                                                    'completed':'处理完成',
+                                                };
+                                                var body_text = "";
+                                                for (value in info_object){
+                                                    console.log(value);
+                                                    if(value === 'order_status'){
+                                                        body_text+= info_object[value]+":"+order_status[data[value]];
+                                                    }else{
+                                                        body_text+= info_object[value]+":"+data[value];
+                                                    }
+                                                    body_text+="<br>";
+                                                }
+                                                user_modal_show("订单信息",body_text);
+                                            });
+                                            user_datatables_show();
                                         }else{
-                                            body_text+= info_object[value]+":"+data[value];
+                                            user_modal_warning(data['data']);
                                         }
-                                        body_text+="<br>";
+                                    },
+                                    error:function(error){
+                                        user_modal_warning("请再次提交");
                                     }
-                                    modal_show({
-                                        label:"订单信息",
-                                        body:body_text
-                                    });
-                                } );
+                                });
                             });
-                            $("#table_info_filter input[type=search]").css({ width: "auto" });
+                            // $("#table_info_filter input[type=search]").css({ width: "auto" });
                         </script>
                 </div>
             </div>

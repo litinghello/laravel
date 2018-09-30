@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\PenaltyOrder;
+use App\WechatOrder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

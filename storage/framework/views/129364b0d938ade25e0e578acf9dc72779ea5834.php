@@ -20,7 +20,7 @@
         $('#message_info_body').html("");
         $('#message_info').modal('hide');
     }
-    function modal_show(object){
+    function user_modal_show(title,body){
         $("#user_modal_button_confirm").hide();
         $('#message_info_label').text(object.label);
         $('#message_info_body').html(object.body);

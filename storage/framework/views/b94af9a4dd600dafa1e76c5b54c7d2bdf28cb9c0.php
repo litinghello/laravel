@@ -1,6 +1,6 @@
 <script type="text/javascript">
-    var wechat_pay_data = null;
-    var wechat_pay_type = "JSSDK";//WeixinJSBridge or JSSDK
+    let wechat_pay_data = null;
+    let wechat_pay_type = "JSSDK";//WeixinJSBridge or JSSDK
     function wechat_process(data){//微信两种支付方式，
         if(wechat_pay_type === "WeixinJSBridge"){
             WeixinJSBridge.invoke(
@@ -49,9 +49,12 @@
         if(wechat_pay_data !== null){
             wechat_process(wechat_pay_data);
         }else{
+            console.log(order_data);
             $.ajax({
                 headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
-                url:"<?php echo e(route('wechats.penalty.pay')); ?>",type:"POST",data:order_data,
+                url:"<?php echo e(route('wechats.pay')); ?>",
+                type:"POST",
+                data:order_data,
                 success:function(data){
                     if(data['status'] === 0){
                         wechat_pay_data = data['data'];//保存值
@@ -61,9 +64,9 @@
                     }
                 },
                 error:function(error){
-                    user_modal_prompt("请再次提交");
+                    user_modal_prompt("支付提交失败:"+JSON.stringify(error));
                 }
             });
         }
-    };
+    }
 </script>

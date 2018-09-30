@@ -8,6 +8,7 @@ use App\WechatOrder;
 use App\WechatAccount;
 use App\User;
 use GuzzleHttp\Cookie\json_decode;
+use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -265,4 +266,9 @@ class WeChatsController extends Controller
         $response->send(); // return $response;
     }
 
+    //返回当前用户下的订单
+    public function wechat_order_data(){
+        $table = User::where('id',Auth::id())->first()->wechat_order;
+        return response()->json(['status' => 0,'data' =>  Datatables::of($table)->make(true)]);
+    }
 }

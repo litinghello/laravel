@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\PenaltyInfo;
-use App\PenaltyOrder;
+use App\WechatOrder;
 use App\ThirdAccount;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
@@ -224,11 +224,4 @@ class PenaltiesController extends BaseController
         return response()->json(['status' => 0,'data' =>  [$penaltyinfo]]);
     }
 
-    //返回当前用户下的订单
-    public function penalty_order_data(){
-        $table = User::where('id',Auth::id())->first()->penalty_order;
-        return Datatables::of($table)->addColumn('action', function ($table) {
-            return '<a href="" class="btn btn-xs btn-primary">详情</a>';
-        })->make(true);
-    }
  }

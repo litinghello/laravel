@@ -18,7 +18,7 @@
                         <div class="input-group-addon">
                             <select id="violate_car_number_province" class="selectpicker" data-style="btn-info">
                             </select>
-                        </div><input type="text" class="form-control" id="violate_car_number" placeholder="" value="5F795">
+                        </div><input type="text" class="form-control" id="violate_car_number" placeholder="" value="A5F795">
                     </div>
                     <div class="form-group input-group">
                         <div class="input-group-addon" >车辆类型</div>

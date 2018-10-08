@@ -21,7 +21,7 @@
                         <div class="input-group-addon">
                             <select id="violate_car_number_province" class="selectpicker" data-style="btn-info">
                             </select>
-                        </div><input type="text" class="form-control" id="violate_car_number" placeholder="" value="5F795">
+                        </div><input type="text" class="form-control" id="violate_car_number" placeholder="" value="A5F795">
                     </div>
                     <div class="form-group input-group">
                         <div class="input-group-addon" >车辆类型</div>
@@ -59,11 +59,13 @@
                 <script type="text/javascript">
                     $(document).ready(function() {
                         let info_object = {
-                            'penalty_number':'车牌号',
-                            'penalty_user_name':'违法地点',
-                            'penalty_car_number':'违法说明',
-                            //'penalty_car_type'=>'车辆类型',
-                            // 'penalty_phone_number':'手机号码',
+                            'penalty_number':'违章信息',
+                            'penalty_user_name':'违章代码',
+                            'penalty_car_number':'违章时间',
+                            'penalty_car_type':'违章地点',
+                            'penalty_car_sss':'罚款金额（元）',
+                            'penalty_phone_number':'手续费',
+                            'penalty_phone_ddd':'扣分（仅供参考）',
                         };
                         var province_array=["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                         province_array.forEach(function(value){

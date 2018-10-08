@@ -113,14 +113,32 @@ class PenaltiesController extends BaseController
             return redirect()->route('penalties.login.51jfk', ['account_name' => $request['account_name'], 'account_password' => $request['account_password'], 'account_type' => $request['account_type']]);
         }
         //4.验证登录
-        $server_addr = "http://www.51jfk.com/index.php/Index/tclogin.html";
+        $server_addr = "http://www.51jfk.com/index.php/Index/login.html";
         $response = $client->post($server_addr, [
             'headers' => [
                 'X-Requested-With' => 'XMLHttpRequest',
-                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Accept-Encoding' => 'gzip, deflate',
+                'Accept-Language' => 'zh-CN,zh;q=0.9',
+                'Refere'=>'http://www.51jfk.com/index.php/Index/login.html',
                 'Cookie' => $cookies_str
             ],
-            'body' => "username={$request['name']}&userpwd={$request['password']}&verify=" . $verify_code,
+            'body' => "username={$request['name']}&userpwd={$request['password']}&verify=".$verify_code."&autologin=1&exptime=365",
+            'cookies' => $jar //读取cookie
+        ]);
+        $cookies_str = "";
+        foreach ($jar->getIterator() as $item) {
+            $cookies_str = $cookies_str . $item->getName() . "=" . $item->getValue() . "; ";
+        }
+        echo $cookies_str;
+        //记住访问页面
+        $server_addr = "http://www.51jfk.com/index.php/Member/index.html";
+        $response = $client->get($server_addr, [
+            'headers' => [
+                'X-Requested-With' => 'XMLHttpRequest',
+                'Cookie' => $cookies_str
+            ],
+            'body' => "",
             'cookies' => $jar //读取cookie
         ]);
         $cookies_str = "";
@@ -271,7 +289,8 @@ class PenaltiesController extends BaseController
             return response()->json(['status' => 1,'data' => "系统异常"]);
         }
         $response_body = json_decode($response->getBody(), true);
-//        return $response_body;
+        return $response_body;
+
 
         preg_match_all("/<ul.*?>.*?<\/ul>/ism", $response_body, $matches);
         $key = array('xh','info','dm','time','address','address','feiyong','koufen');

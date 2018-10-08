@@ -117,10 +117,7 @@ class PenaltiesController extends BaseController
         $response = $client->post($server_addr, [
             'headers' => [
                 'X-Requested-With' => 'XMLHttpRequest',
-                'Content-Type' => 'application/x-www-form-urlencoded',
-                'Accept-Encoding' => 'gzip, deflate',
-                'Accept-Language' => 'zh-CN,zh;q=0.9',
-                'Refere'=>'http://www.51jfk.com/index.php/Index/login.html',
+                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Cookie' => $cookies_str
             ],
             'body' => "username={$request['name']}&userpwd={$request['password']}&verify=".$verify_code."&autologin=1&exptime=365",
@@ -130,7 +127,6 @@ class PenaltiesController extends BaseController
         foreach ($jar->getIterator() as $item) {
             $cookies_str = $cookies_str . $item->getName() . "=" . $item->getValue() . "; ";
         }
-        echo $cookies_str;
         //记住访问页面
         $server_addr = "http://www.51jfk.com/index.php/Member/index.html";
         $response = $client->get($server_addr, [
@@ -280,17 +276,18 @@ class PenaltiesController extends BaseController
             'headers' => [
                 'X-Requested-With' => 'XMLHttpRequest',
                 'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Cookie' => $cookies
+                'Cookie' => "user=think%3A%7B%22memberid%22%3A%22116%22%2C%22nickname%22%3A%22%22%2C%22membername%22%3A%22123456%22%2C%22weixin%22%3A%22%22%2C%22auto_login%22%3A%221%22%2C%22exp_time%22%3A%22365%22%7D;"
             ],
-            'body' => $body
+            'body' => "lsprefix=川&lsnum=A5F795&lstype=02&frameno=010304&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser="
         ]);
         $response_code = $response->getStatusCode();
         if ($response_code != 200) {
             return response()->json(['status' => 1,'data' => "系统异常"]);
         }
-        $response_body = json_decode($response->getBody(), true);
-        return $response_body;
+//        $response_body = json_decode($response->getBody(), true);
+        $response_body = $response->getBody();
 
+//        return $response->getBody();
 
         preg_match_all("/<ul.*?>.*?<\/ul>/ism", $response_body, $matches);
         $key = array('xh','info','dm','time','address','address','feiyong','koufen');

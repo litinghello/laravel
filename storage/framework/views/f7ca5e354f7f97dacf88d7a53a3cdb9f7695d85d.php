@@ -56,6 +56,13 @@
                 </div>
                 <script type="text/javascript">
                     $(document).ready(function() {
+                        let info_object = {
+                            'penalty_number':'车牌号',
+                            'penalty_user_name':'违法地点',
+                            'penalty_car_number':'违法说明',
+                            //'penalty_car_type'=>'车辆类型',
+                            // 'penalty_phone_number':'手机号码',
+                        };
                         var province_array=["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                         province_array.forEach(function(value){
                             $("#violate_car_number_province").append("<option value='"+value+"'>"+value+"</option>");
@@ -70,23 +77,35 @@
                                 violate_car_engine_number:$("#violate_car_engine_number").val(),
                             };
                             console.log(post_data);
-/*
+                            /*
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                 url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
                                 success:function(data){
                                     if(data['status'] === 0){
-                                        //wechat_pay_data = data['data'];//保存值
-                                        // document.getElementById("text").innerText = JSON.stringify(wechat_pay_data);
-                                        //wechat_pay(wechat_pay_data);//采用微信网页支付
+                                        user_datatables_init(info_object,data['data'],function (data) {
+                                            user_modal_input("手机号码",function (value) {
+                                                let pay_value={
+                                                    order_money:data.penalty_money+data.penalty_money_late+10,
+                                                    order_src_type:"violate",
+                                                    order_src_id:data.penalty_number,
+                                                    order_phone_number:value,
+                                                };
+                                                user_modal_hide();//关闭弹出框
+                                                user_wechat_pay(pay_value);
+                                            });
+                                        });
+                                        user_datatables_show();
+                                        $("#card_body_input").hide();
                                     }else{
-                                        alert(data['data']);
+                                        user_modal_warning(data['data']);
                                     }
                                 },
                                 error:function(error){
-                                    alert("请再次提交");
+                                    user_modal_warning("请再次提交");
                                 }
-                            });*/
+                            });
+                            */
                         });
                     });
                 </script>

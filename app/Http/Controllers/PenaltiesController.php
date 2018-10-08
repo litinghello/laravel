@@ -233,7 +233,7 @@ class PenaltiesController extends BaseController
             'violate_car_number' => 'required|alpha_num',//号牌  A5F795
 //            'violate_car_number_type' => 'required|alpha_num',//车辆种类  02 暂时支持小车
             'violate_car_frame_number' => 'required|alpha_num',//车架号后6位  010304
-            'violate_car_engine_number' => 'required|alpha_num',//车架号后6位  010304
+//            'violate_car_engine_number' => 'required|alpha_num',//车架号后6位  010304
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);

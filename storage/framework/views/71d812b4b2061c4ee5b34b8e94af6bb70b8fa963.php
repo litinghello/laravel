@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('决定书编号')); ?></div>
-                            <input id="penalty_number" type="text" class="form-control" name="penalty_number" placeholder="请输入15-16位处罚决定书编号" value="5101041204594064" required>
+                            <input id="penalty_number" type="text" class="form-control" name="penalty_number" placeholder="请输入15-16位处罚决定书编号" value="" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -43,7 +43,7 @@
                 <?php echo $__env->renderComponent(); ?>
             </div>
             <script type="text/javascript">
-                var info_object = {
+                let info_object = {
                     'penalty_number':'决定书号',
                     'penalty_user_name':'车主姓名',
                     'penalty_car_number':'车牌号牌',
@@ -60,7 +60,7 @@
                 $(document).ready(function() {
                     // user_datatables_show();
                     $("#penalty_submit").click(function () {
-                        var post_data = {penalty_number:$("#penalty_number").val()};//获取数据
+                        let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
                         $.ajax({
                             type:"POST",
                             headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
@@ -69,14 +69,14 @@
                             success:function(data){
                                 if(data['status'] === 0){
                                     user_datatables_init(info_object,data['data'],function (data) {
-                                        // user_modal_warning(JSON.stringify(data));
                                         user_modal_input("手机号码",function (value) {
-                                            var pay_value={
+                                            let pay_value={
                                                 order_money:data.penalty_money+data.penalty_money_late+10,
                                                 order_src_type:"penalty",
-                                                order_src_number:data.penalty_number,
+                                                order_src_id:data.penalty_number,
                                                 order_phone_number:value,
                                             };
+                                            user_modal_hide();//关闭弹出框
                                             user_wechat_pay(pay_value);
                                         });
                                     });

@@ -229,19 +229,20 @@ class PenaltiesController extends BaseController
      */
     public function penalty_car_info(Request $request){
         $validator = Validator::make($request->all(), [
-            'lsprefix' => 'required',//省份  川
-            'lsnum' => 'required',//号牌  A5F795
-//            'lstype' => 'required',//车辆种类  02 暂时支持小车
-            'frameno' => 'required',//车架号后6位  010304
+            'violate_car_number_province' => 'required',//省份  川
+            'violate_car_number' => 'required|alpha_num',//号牌  A5F795
+//            'violate_car_number_type' => 'required|alpha_num',//车辆种类  02 暂时支持小车
+            'violate_car_frame_number' => 'required|alpha_num',//车架号后6位  010304
+            'violate_car_engine_number' => 'required|alpha_num',//车架号后6位  010304
         ]);
         if ($validator->fails()) {
-            return response()->json(['status' => 1,'data' => "参数错误"]);
+            return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
 
-        $lsprefix = $request['lsprefix'];
-        $lsnum = $request['lsnum'];
-//        $lstype = $request['lstype'];
-        $frameno = $request['frameno'];
+        $lsprefix = $request['violate_car_number_province'];
+        $lsnum = $request['violate_car_number'];
+//        $lstype = $request['violate_car_number_type'];
+        $frameno = $request['violate_car_frame_number'];
 
 
         $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
@@ -250,7 +251,7 @@ class PenaltiesController extends BaseController
             if ($account) {
                 return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
             } else {
-                return back()->withErrors(['penalty_number' => '请添加账户！']);
+                return response()->json(['status' => 1,'data' => '请添加账户！']);
             }
         }
         $url = 'http://www.51jfk.com/index.php/Weizhang/index.html';

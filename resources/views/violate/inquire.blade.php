@@ -80,7 +80,7 @@
                                 violate_car_frame_number:$("#violate_car_frame_number").val(),
                                 violate_car_engine_number:$("#violate_car_engine_number").val(),
                             };
-                            console.log(post_data);
+                            user_modal_warning("暂未开通");
                             /*
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},

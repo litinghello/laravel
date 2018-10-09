@@ -41,7 +41,7 @@ Route::post('/wechats/order/data','WeChatsController@wechat_order_data')->name('
 //界面 违章查询
 Route::get('/violates/inquire','HomeController@views_violate_inquire')->name('views.violate.inquire');
 //接口 违章查询
-Route::post('/violates/inquire','HomeController@views_violate_inquire')->name('violates.info');
+Route::post('/violates/inquire','PenaltiesController@penalty_car_info')->name('violates.info');
 
 //添加第三方账户
 Route::any('/penalties/account/add','PenaltiesController@add_third_account')->name('penalties.account.add');

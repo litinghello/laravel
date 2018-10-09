@@ -67,22 +67,23 @@ class WeChatsController extends Controller
             $message['CreateTime']    消息创建时间（时间戳）
             $message['MsgId']         消息 ID（64位整型）
             */
+
             switch ($message['MsgType']) {
                 case 'event':
-                    return '收到事件消息';
+//                    return '收到事件消息';
                     break;
                 case 'text':
                     //new Text('您好！');
-                    return '收到文字消息';
+//                    return '收到文字消息';
                     break;
                 case 'image':
-                    return '收到图片消息';
+//                    return '收到图片消息';
                     break;
                 case 'voice':
-                    return '收到语音消息';
+//                    return '收到语音消息';
                     break;
                 case 'video':
-                    return '收到视频消息';
+//                    return '收到视频消息';
                     break;
                 case 'location':
                     /*
@@ -92,16 +93,16 @@ class WeChatsController extends Controller
                     $message->Scale       地图缩放大小
                     $message->Label       地理位置信息
                     */
-                    return '收到坐标消息';
+//                    return '收到坐标消息';
                     break;
                 case 'link':
-                    return '收到链接消息';
+//                    return '收到链接消息';
                     break;
                 case 'file':
-                    return '收到文件消息';
+//                    return '收到文件消息';
                 // ... 其它消息
                 default:
-                    return '收到其它消息';
+//                    return '收到其它消息';
                     break;
             }
         });
@@ -118,7 +119,7 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"违章处理",
-                        "url"=>"http://www.cttx-zbx.com/",
+                        "url"=>"http://www.cttx-zbx.com/violates/inquire",
                     ],
                     [
                         "type" => "view",
@@ -153,7 +154,7 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"订单信息",
-                        "url"=>"http://www.cttx-zbx.com/home",
+                        "url"=>"http://www.cttx-zbx.com/",
                     ],
                     [
                         "type" => "view",

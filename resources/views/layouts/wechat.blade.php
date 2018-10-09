@@ -49,13 +49,14 @@
         if(wechat_pay_data !== null){
             wechat_process(wechat_pay_data);
         }else{
-            console.log(order_data);
+            // console.log(order_data);
             $.ajax({
                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                 url:"{{route('wechats.pay')}}",
                 type:"POST",
                 data:order_data,
                 success:function(data){
+                    // user_modal_warning(data);
                     if(data['status'] === 0){
                         wechat_pay_data = data['data'];//保存值
                         wechat_process(wechat_pay_data);//采用微信网页支付

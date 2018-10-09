@@ -86,7 +86,7 @@
                         $("#violate_inquire_button").click(function (){
                             let post_data = {
                                 car_province:$("#car_province").val(),
-                                car_number:$("#car_number").val(),
+                                car_number:$("#car_number").val().toLocaleUpperCase(),
                                 car_type:$("#car_type").val(),
                                 car_frame_number:$("#car_frame_number").val(),
                                 car_engine_number:$("#car_engine_number").val(),

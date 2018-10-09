@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\CarviolateInfo;
+use App\CarViolateInfo;
 use App\PenaltyInfo;
 use App\WechatOrder;
 use App\ThirdAccount;
@@ -261,7 +261,6 @@ class PenaltiesController extends BaseController
         $lstype = $request['car_type'];
         $frameno = $request['car_frame_number'];
 
-
 //        $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
 //        if (!$account) {
 //            $account = ThirdAccount::where("account_type", '51jfk')->first();
@@ -287,6 +286,7 @@ class PenaltiesController extends BaseController
         if ($response_code != 200) {
             return response()->json(['status' => 1, 'data' => "系统异常"]);
         }
+
         $form_str = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form')[0];
         unset($response);
         $carviolates = array();
@@ -306,7 +306,7 @@ class PenaltiesController extends BaseController
                 unset($infos[0]);
                 foreach ($infos as $info) {
                     if ($info != null) {
-                        $carviolate = CarviolateInfo::create([
+                        $carviolate = CarViolateInfo::create([
                                 'car_type' => $lstype,
                                 'car_province' => $lsprefix,
                                 'car_number' => $lsnum,

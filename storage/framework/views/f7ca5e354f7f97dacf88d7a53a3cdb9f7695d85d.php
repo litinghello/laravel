@@ -26,7 +26,7 @@
                             <div class="input-group-addon">
                                 <select id="car_province" class="selectpicker" data-style="btn-info">
                                 </select>
-                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="A5F795">
+                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon" >车辆类型</div>
@@ -40,11 +40,11 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车架号码</div>
-                            <input type="text" class="form-control" id="car_frame_number" placeholder="后六位" value="010304">
+                            <input type="text" class="form-control" id="car_frame_number" placeholder="后六位" value="">
                         </div>
                         <div class="form-group input-group hidden">
                             <div class="input-group-addon">发动机号</div>
-                            <input type="text" class="form-control" id="car_engine_number" placeholder="后六位" value="010304">
+                            <input type="text" class="form-control" id="car_engine_number" placeholder="后六位" value="">
                         </div>
                         <div class="form-group">
                             <div class="text-center">
@@ -92,7 +92,7 @@
                             $("#violate_inquire_button").attr('disabled',true);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
-                                url:"<?php echo e(route('penalties.car.info')); ?>",type:"POST",data:post_data,
+                                url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
                                 success:function(data){
                                     console.log(data);
                                     if(data['status'] === 0){
@@ -116,7 +116,7 @@
                                 },
                                 error:function(error){
                                     user_modal_warning("请再次提交");
-                                    $("#violate_inquire_button").attr('disabled',false);
+                                    $("#violate_inquire_button").attr('disabled',false);//开启再次点击按键
                                 }
                             });
                         });

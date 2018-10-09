@@ -244,9 +244,7 @@ class PenaltiesController extends BaseController
      * @param Request $request
      * @return string
      */
-    public function penalty_car_info(Request $request)
-    {
-
+    public function penalty_car_info(Request $request){
         $validator = Validator::make($request->all(), [
             'violate_car_number_province' => 'required',//省份  川
             'violate_car_number' => 'required|alpha_num',//号牌  A5F795

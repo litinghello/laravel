@@ -17,6 +17,7 @@ class CreateCarViolateInfo extends Migration
             $table->string('car_type')->comment('号牌种类');//
             $table->string('car_province')->comment('车辆省份');//
             $table->string('car_number')->comment('号牌号码');//
+            $table->string('car_frame_number')->comment('车架号后6位');//
             $table->string('violate_info')->comment('违章信息');//
             $table->string('violate_code')->comment('违章代码');//
             $table->string('violate_time')->comment('违章时间');//

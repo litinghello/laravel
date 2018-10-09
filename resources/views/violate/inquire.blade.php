@@ -94,7 +94,7 @@
                             $("#violate_inquire_button").attr('disabled',true);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
-                                url:"{{route('penalties.car.info')}}",type:"POST",data:post_data,
+                                url:"{{route('violates.info')}}",type:"POST",data:post_data,
                                 success:function(data){
                                     console.log(data);
                                     if(data['status'] === 0){

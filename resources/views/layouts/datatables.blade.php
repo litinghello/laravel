@@ -1,7 +1,7 @@
 
 <div id="card_body_datatables" class="card-body" hidden>
     <div class="row center-block">
-        <table id="datalables_body" class="table table-striped table-hover table-condensed" style="width:100%">
+        <table id="datalables_body" class="dataTables_wrapper form-inline" style="width:100%">
             <thead id="datalables_body_thead">
             <tr id="datalables_body_thead_tr"></tr>
             </thead>

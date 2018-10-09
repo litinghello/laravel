@@ -59,13 +59,15 @@
                 <script type="text/javascript">
                     $(document).ready(function() {
                         let info_object = {
-                            'penalty_number':'违章信息',
-                            'penalty_user_name':'违章代码',
-                            'penalty_car_number':'违章时间',
-                            'penalty_car_type':'违章地点',
-                            'penalty_car_sss':'罚款金额（元）',
-                            'penalty_phone_number':'手续费',
-                            'penalty_phone_ddd':'扣分（仅供参考）',
+                            'car_type':'车辆种类',
+                            'car_province':'车辆省份',
+                            'car_number':'车牌号',
+                            'violate_code':'违章代码',
+                            'violate_time':'违章时间',
+                            'violate_address':'违章地点',
+                            'violate_money':'罚款金额（元）',
+                            // 'penalty_phone_number':'手续费',
+                            'violate_marks':'扣分（仅供参考）',
                         };
                         var province_array=["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                         province_array.forEach(function(value){
@@ -81,35 +83,36 @@
                                 violate_car_engine_number:$("#violate_car_engine_number").val(),
                             };
                             user_modal_warning("暂未开通");
-                            /*
+
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                 url:"{{route('violates.info')}}",type:"POST",data:post_data,
                                 success:function(data){
-                                    if(data['status'] === 0){
-                                        user_datatables_init(info_object,data['data'],function (data) {
-                                            user_modal_input("手机号码",function (value) {
-                                                let pay_value={
-                                                    order_money:data.penalty_money+data.penalty_money_late+10,
-                                                    order_src_type:"violate",
-                                                    order_src_id:data.penalty_number,
-                                                    order_phone_number:value,
-                                                };
-                                                user_modal_hide();//关闭弹出框
-                                                user_wechat_pay(pay_value);
-                                            });
-                                        });
-                                        user_datatables_show();
-                                        $("#card_body_input").hide();
-                                    }else{
-                                        user_modal_warning(data['data']);
-                                    }
+                                    console.log(data);
+                                    // if(data['status'] === 0){
+                                    //     user_datatables_init(info_object,data['data'],function (data) {
+                                    //         user_modal_input("手机号码",function (value) {
+                                    //             let pay_value={
+                                    //                 order_money:data.penalty_money+data.penalty_money_late+10,
+                                    //                 order_src_type:"violate",
+                                    //                 order_src_id:data.penalty_number,
+                                    //                 order_phone_number:value,
+                                    //             };
+                                    //             user_modal_hide();//关闭弹出框
+                                    //             user_wechat_pay(pay_value);
+                                    //         });
+                                    //     });
+                                    //     user_datatables_show();
+                                    //     $("#card_body_input").hide();
+                                    // }else{
+                                    //     user_modal_warning(data['data']);
+                                    // }
                                 },
                                 error:function(error){
                                     user_modal_warning("请再次提交");
                                 }
                             });
-                            */
+
                         });
                     });
                 </script>

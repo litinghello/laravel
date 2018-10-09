@@ -8,9 +8,9 @@ use App\WechatOrder;
 use App\ThirdAccount;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Cookie\json_decode;
 use Yajra\Datatables\Datatables;
 use Intervention\Image\Facades\Image;
+use Ammadeuss\LaravelHtmlDomParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -242,6 +242,7 @@ class PenaltiesController extends BaseController
      * @return string
      */
     public function penalty_car_info(Request $request){
+
         $validator = Validator::make($request->all(), [
             'violate_car_number_province' => 'required',//省份  川
             'violate_car_number' => 'required|alpha_num',//号牌  A5F795
@@ -286,6 +287,9 @@ class PenaltiesController extends BaseController
         }
 //        $response_body = json_decode($response->getBody(), true);
         $response_body = $response->getBody();
+
+        $name = LaravelHtmlDomParser\Facade::str_get_html($response_body)->find('div.chaxun_jg > form > ul')[1];
+        return $name;
 
 //        return $response->getBody();
 

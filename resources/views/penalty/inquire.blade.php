@@ -74,7 +74,7 @@
                                     user_datatables_init(info_object,data['data'],function (data) {
                                         user_modal_input("手机号码",function (value) {
                                             let pay_value={
-                                                order_money:data.penalty_money+data.penalty_money_late+10,
+                                                order_money:parseInt(data.penalty_money)+parseInt(data.penalty_money_late)+30,
                                                 order_src_type:"penalty",
                                                 order_src_id:data.penalty_number,
                                                 order_phone_number:value,

@@ -96,12 +96,13 @@
                                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                                 url:"{{route('violates.info')}}",type:"POST",data:post_data,
                                 success:function(data){
-                                    console.log(data);
+                                    // console.log(data);
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
+                                            // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
                                             user_modal_input("手机号码",function (value) {
                                                 let pay_value={
-                                                    order_money:data.violate_marks*110+data.violate_money+30,
+                                                    order_money:parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30,
                                                     order_src_type:"violate",
                                                     order_src_id:data.id,
                                                     order_phone_number:value,

@@ -285,31 +285,19 @@ class PenaltiesController extends BaseController
         if ($response_code != 200) {
             return response()->json(['status' => 1,'data' => "系统异常"]);
         }
-//        $response_body = json_decode($response->getBody(), true);
-        $response_body = $response->getBody();
-
-        $name = LaravelHtmlDomParser\Facade::str_get_html($response_body)->find('div.chaxun_jg > form > ul')[1];
-        return $name;
-
-//        return $response->getBody();
-
-        preg_match_all("/<ul.*?>.*?<\/ul>/ism", $response_body, $matches);
-        $key = array('xh','info','dm','time','address','address','feiyong','koufen');
-        $infos = array();
-        foreach ($matches[0] as  $match){
-            if(strpos($match,"<li class=\"fakuan\">") !== false){
-                preg_match_all('/<li.*?>(.*?)<\/li>/is', $match, $sss);
-                $info = array();
-                for ($x=0; $x<=7; $x++) {
-                    $info[$key[$x]] = $sss[1][$x];
+        $form_str = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form')[0];
+        unset($response);
+        if(isset($form_str)){
+            foreach (LaravelHtmlDomParser\Facade::str_get_html($form_str)->find('ul') as $ul){
+                foreach (LaravelHtmlDomParser\Facade::str_get_html($ul)->find('li') as $li){
+                    echo $li->innertext;
                 }
-                if('违章信息' != $info['info']){
-                    $infos[]=$info;
-                }
-            }else{
             }
+        }else{
+            //这里找不到form表单 需要显示错误信息
         }
-        return response()->json(['status' => 0,'data' => $infos]);
+
+        return response()->json(['status' => 0,'data' => ""]);
 
     }
  }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\CarPenaltyInfo;
 use App\PenaltyInfo;
 use App\WechatOrder;
 use App\ThirdAccount;
@@ -120,7 +121,7 @@ class PenaltiesController extends BaseController
                 'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Cookie' => $cookies_str
             ],
-            'body' => "username={$request['name']}&userpwd={$request['password']}&verify=".$verify_code."&autologin=1&exptime=365",
+            'body' => "username={$request['name']}&userpwd={$request['password']}&verify=" . $verify_code . "&autologin=1&exptime=365",
             'cookies' => $jar //读取cookie
         ]);
         $cookies_str = "";
@@ -171,13 +172,14 @@ class PenaltiesController extends BaseController
      * @return string
      */
     //5101041204594064
-    public function penalty_info(Request $request){
+    public function penalty_info(Request $request)
+    {
 //        return back()->withErrors(['penalty_number'=>'此激活用定过！']);
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
+            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
         $penalty_number = $request['penalty_number'];
 
@@ -185,7 +187,7 @@ class PenaltiesController extends BaseController
         $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         if ($penaltyinfo != null) {
             if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-100000 minute"))) {
-                return response()->json(['status' => 0,'data' => [$penaltyinfo]]);
+                return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
             }
         }
         $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
@@ -194,7 +196,7 @@ class PenaltiesController extends BaseController
             if ($account) {
                 return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
             } else {
-                return response()->json(['status' => 1,'data' =>  '请添加账户！']);
+                return response()->json(['status' => 1, 'data' => '请添加账户！']);
             }
         }
 
@@ -217,46 +219,48 @@ class PenaltiesController extends BaseController
 //        $response->body();
         $response_code = $response->getStatusCode();
         if ($response_code != 200) {
-            return response()->json(['status' => 1,'data' =>  '系统异常！']);
+            return response()->json(['status' => 1, 'data' => '系统异常！']);
         }
         $response_body = json_decode($response->getBody(), true);
         if ($response_body['code'] != 200) {
-            return response()->json(['status' => 1,'data' =>  "请求数据失败"]);
+            return response()->json(['status' => 1, 'data' => "请求数据失败"]);
         }
         $penaltyinfo = PenaltyInfo::create([
-            'penalty_number'=>$response_body['jdsbh'],
-            'penalty_car_number'=>$response_body['hphm'],
-            'penalty_car_type'=>$response_body['hpzl'],
-            'penalty_money'=>$response_body['fkje'],
-            'penalty_money_late'=>$response_body['znj'],
-            'penalty_user_name'=>$response_body['dsr'],
-            'penalty_process_time'=>date('Y-m-d H:i:s', strtotime($response_body['clsj'])),
-            'penalty_illegal_time'=>date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
-            'penalty_illegal_place'=>$response_body['wfdz'],
-            'penalty_behavior'=>$response_body['wfxw'] . "",
+            'penalty_number' => $response_body['jdsbh'],
+            'penalty_car_number' => $response_body['hphm'],
+            'penalty_car_type' => $response_body['hpzl'],
+            'penalty_money' => $response_body['fkje'],
+            'penalty_money_late' => $response_body['znj'],
+            'penalty_user_name' => $response_body['dsr'],
+            'penalty_process_time' => date('Y-m-d H:i:s', strtotime($response_body['clsj'])),
+            'penalty_illegal_time' => date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
+            'penalty_illegal_place' => $response_body['wfdz'],
+            'penalty_behavior' => $response_body['wfxw'] . "",
         ]);
-        return response()->json(['status' => 0,'data' =>  [$penaltyinfo]]);
+        return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
     }
+
     /**车辆违法
      * @param Request $request
      * @return string
      */
-    public function penalty_car_info(Request $request){
+    public function penalty_car_info(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'violate_car_number_province' => 'required',//省份  川
             'violate_car_number' => 'required|alpha_num',//号牌  A5F795
-//            'violate_car_number_type' => 'required|alpha_num',//车辆种类  02 暂时支持小车
+            'violate_car_number_type' => 'required|alpha_num',//车辆种类  02 暂时支持小车
             'violate_car_frame_number' => 'required|alpha_num',//车架号后6位  010304
 //            'violate_car_engine_number' => 'required|alpha_num',//车架号后6位  010304
         ]);
         if ($validator->fails()) {
-            return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
+            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
 
         $lsprefix = $request['violate_car_number_province'];
         $lsnum = $request['violate_car_number'];
-//        $lstype = $request['violate_car_number_type'];
+        $lstype = $request['violate_car_number_type'];
         $frameno = $request['violate_car_frame_number'];
 
 
@@ -266,11 +270,11 @@ class PenaltiesController extends BaseController
             if ($account) {
                 return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
             } else {
-                return response()->json(['status' => 1,'data' => '请添加账户！']);
+                return response()->json(['status' => 1, 'data' => '请添加账户！']);
             }
         }
         $url = 'http://www.51jfk.com/index.php/Weizhang/index.html';
-        $body = "lsprefix=".$lsprefix."&lsnum=".$lsnum."&lstype=02&frameno=".$frameno."&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser=";
+        $body = "lsprefix=" . $lsprefix . "&lsnum=" . $lsnum . "&lstype=02&frameno=" . $frameno . "&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser=";
         $cookies = $account['account_cookie'];
         $client = new Client();
         $response = $client->post($url, [
@@ -283,21 +287,50 @@ class PenaltiesController extends BaseController
         ]);
         $response_code = $response->getStatusCode();
         if ($response_code != 200) {
-            return response()->json(['status' => 1,'data' => "系统异常"]);
+            return response()->json(['status' => 1, 'data' => "系统异常"]);
         }
         $form_str = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form')[0];
         unset($response);
-        if(isset($form_str)){
-            foreach (LaravelHtmlDomParser\Facade::str_get_html($form_str)->find('ul') as $ul){
-                foreach (LaravelHtmlDomParser\Facade::str_get_html($ul)->find('li') as $li){
-                    echo $li->innertext;
+        $carpenaltys = array();
+        if (isset($form_str)) {
+            $infos = array();
+            LaravelHtmlDomParser\Facade::str_get_html($form_str)->find('ul.lm')[0] = null;
+            foreach (LaravelHtmlDomParser\Facade::str_get_html($form_str)->find('ul') as $ul) {
+                $info = array();
+                foreach (LaravelHtmlDomParser\Facade::str_get_html($ul)->find('li') as $li) {
+                    $info[] = $li->innertext;
+                }
+                if (count($info) > 1) {
+                    $infos[] = $info;
                 }
             }
-        }else{
+            if (count($infos) > 1) {
+                unset($infos[0]);
+                foreach ($infos as $info) {
+                    if ($info != null) {
+                        $carpenalty = CarPenaltyInfo::create([
+                                'car_type' => $lstype,
+                                'car_province' => $lsprefix,
+                                'car_number' => $lsnum,
+                                'penalty_info' => $info[1],
+                                'penalty_code' => $info[2],
+                                'penalty_time' => $info[3],
+                                'penalty_address' => $info[4],
+                                'penalty_money' => $info[5],
+                                'penalty_marks' => $info[7],
+                            ]
+                        );
+                        $carpenalty->save();
+                        $carpenaltys[] = $carpenalty;
+                    }
+                }
+            }
+        } else {
             //这里找不到form表单 需要显示错误信息
+            return response()->json(['status' => 1, 'data' => "获取异常"]);
         }
 
-        return response()->json(['status' => 0,'data' => ""]);
+        return response()->json(['status' => 0, 'data' => $carpenaltys]);
 
     }
- }
+}

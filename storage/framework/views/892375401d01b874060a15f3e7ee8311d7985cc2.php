@@ -2,8 +2,8 @@
 <div id="card_body_datatables" class="card-body" hidden>
     <div class="row center-block">
         <table id="datalables_body" class="dataTables_wrapper form-inline" style="width:100%">
-            <thead id="datalables_body_thead" role="row">
-            <tr id="datalables_body_thead_tr" ></tr>
+            <thead id="datalables_body_thead">
+            <tr id="datalables_body_thead_tr"></tr>
             </thead>
         </table>
     </div>

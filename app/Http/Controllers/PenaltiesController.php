@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\CarPenaltyInfo;
+use App\CarviolateInfo;
 use App\PenaltyInfo;
 use App\WechatOrder;
 use App\ThirdAccount;
@@ -248,34 +248,34 @@ class PenaltiesController extends BaseController
     {
 
         $validator = Validator::make($request->all(), [
-            'violate_car_number_province' => 'required',//省份  川
-            'violate_car_number' => 'required|alpha_num',//号牌  A5F795
-            'violate_car_number_type' => 'required|alpha_num',//车辆种类  02 暂时支持小车
-            'violate_car_frame_number' => 'required|alpha_num',//车架号后6位  010304
-//            'violate_car_engine_number' => 'required|alpha_num',//车架号后6位  010304
+            'car_province' => 'required',//省份  川
+            'car_number' => 'required|alpha_num',//号牌  A5F795
+            'car_type' => 'required|alpha_num',//车辆种类  02 暂时支持小车
+            'car_frame_number' => 'required|alpha_num',//车架号后6位  010304
+//            'car_engine_number' => 'required|alpha_num',//车架号后6位  010304
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
 
-        $lsprefix = $request['violate_car_number_province'];
-        $lsnum = $request['violate_car_number'];
-        $lstype = $request['violate_car_number_type'];
-        $frameno = $request['violate_car_frame_number'];
+        $lsprefix = $request['car_province'];
+        $lsnum = $request['car_number'];
+        $lstype = $request['car_type'];
+        $frameno = $request['car_frame_number'];
 
 
-        $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
-        if (!$account) {
-            $account = ThirdAccount::where("account_type", '51jfk')->first();
-            if ($account) {
-                return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
-            } else {
-                return response()->json(['status' => 1, 'data' => '请添加账户！']);
-            }
-        }
+//        $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
+//        if (!$account) {
+//            $account = ThirdAccount::where("account_type", '51jfk')->first();
+//            if ($account) {
+//                return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
+//            } else {
+//                return response()->json(['status' => 1, 'data' => '请添加账户！']);
+//            }
+//        }
         $url = 'http://www.51jfk.com/index.php/Weizhang/index.html';
-        $body = "lsprefix=" . $lsprefix . "&lsnum=" . $lsnum . "&lstype=02&frameno=" . $frameno . "&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser=";
-        $cookies = $account['account_cookie'];
+        $body = "lsprefix=" . $lsprefix . "&lsnum=" . $lsnum . "&lstype=".$lstype."&frameno=" . $frameno . "&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser=";
+//        $cookies = $account['account_cookie'];
         $client = new Client();
         $response = $client->post($url, [
             'headers' => [
@@ -283,7 +283,7 @@ class PenaltiesController extends BaseController
                 'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Cookie' => "user=think%3A%7B%22memberid%22%3A%22116%22%2C%22nickname%22%3A%22%22%2C%22membername%22%3A%22123456%22%2C%22weixin%22%3A%22%22%2C%22auto_login%22%3A%221%22%2C%22exp_time%22%3A%22365%22%7D;"
             ],
-            'body' => "lsprefix=川&lsnum=A5F795&lstype=02&frameno=010304&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser="
+            'body' => $body
         ]);
         $response_code = $response->getStatusCode();
         if ($response_code != 200) {
@@ -291,7 +291,7 @@ class PenaltiesController extends BaseController
         }
         $form_str = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form')[0];
         unset($response);
-        $carpenaltys = array();
+        $carviolates = array();
         if (isset($form_str)) {
             $infos = array();
             LaravelHtmlDomParser\Facade::str_get_html($form_str)->find('ul.lm')[0] = null;
@@ -308,20 +308,21 @@ class PenaltiesController extends BaseController
                 unset($infos[0]);
                 foreach ($infos as $info) {
                     if ($info != null) {
-                        $carpenalty = CarPenaltyInfo::create([
+                        $carviolate = CarviolateInfo::create([
                                 'car_type' => $lstype,
                                 'car_province' => $lsprefix,
                                 'car_number' => $lsnum,
-                                'penalty_info' => $info[1],
-                                'penalty_code' => $info[2],
-                                'penalty_time' => $info[3],
-                                'penalty_address' => $info[4],
-                                'penalty_money' => $info[5],
-                                'penalty_marks' => $info[7],
+                                'car_frame_number' => $frameno,
+                                'violate_info' => $info[1],
+                                'violate_code' => $info[2],
+                                'violate_time' => $info[3],
+                                'violate_address' => $info[4],
+                                'violate_money' => $info[5],
+                                'violate_marks' => $info[7],
                             ]
                         );
-                        $carpenalty->save();
-                        $carpenaltys[] = $carpenalty;
+//                        $carviolate->save();
+                        $carviolates[] = $carviolate;
                     }
                 }
             }
@@ -330,7 +331,7 @@ class PenaltiesController extends BaseController
             return response()->json(['status' => 1, 'data' => "获取异常"]);
         }
 
-        return response()->json(['status' => 0, 'data' => $carpenaltys]);
+        return response()->json(['status' => 0, 'data' => $carviolates]);
 
     }
 }

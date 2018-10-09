@@ -13,6 +13,7 @@ class CarViolateInfo extends Model
         'car_type',
         'car_province',
         'car_number',
+        'car_frame_number',
         'violate_info',
         'violate_code',
         'violate_time',

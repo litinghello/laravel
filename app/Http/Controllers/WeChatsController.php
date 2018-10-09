@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\DB;
 use EasyWeChat\Factory;
 
 use Monolog\Logger;
@@ -268,7 +268,22 @@ class WeChatsController extends Controller
 
     //返回当前用户下的订单
     public function wechat_order_data(){
-        $table = User::where('id',Auth::id())->first()->wechat_order;
+
+        $user = Auth::user();
+
+        //普通用户
+        if($user['authorize']=='0')
+        {
+            $table = User::where('id',Auth::id())->first()->wechat_order;
+        }
+        else if($user['authorize']=='1'){
+            $table = DB::select('select * from wechat_order');
+        }else{
+            return response()->json(['status' => 1,'msg' =>  '非法操作']);
+        }
+
+//        var_dump($table);
+//        die;
 //        return response()->json(['status' => 0,'data' =>  Datatables::of($table)->make(true)]);
         return response()->json(['status' => 0,'data' =>  $table]);
     }

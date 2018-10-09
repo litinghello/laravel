@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','authorize',
     ];
 
     /**
@@ -33,4 +33,5 @@ class User extends Authenticatable
         return $this->hasMany('App\WechatOrder', 'order_user_id','id');
 //        return $this->hasOne('App\PenaltyOrder', 'order_user_id');
     }
+
 }

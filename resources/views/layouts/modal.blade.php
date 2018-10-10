@@ -22,8 +22,8 @@
     }
     function user_modal_show(title,body){
         $("#user_modal_button_confirm").hide();
-        $('#message_info_label').text(object.label);
-        $('#message_info_body').html(object.body);
+        $('#message_info_label').text(title);
+        $('#message_info_body').html(body);
         $('#message_info').modal('show');
     }
     function user_modal_prompt(html){

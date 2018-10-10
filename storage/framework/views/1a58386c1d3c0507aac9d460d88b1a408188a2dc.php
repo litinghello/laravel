@@ -1,7 +1,16 @@
 <?php $__env->startSection('content_header'); ?>
     <h1>代缴订单</h1>
 <?php $__env->stopSection(); ?>
-
+<?php $__env->startSection('css'); ?>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+    
+<?php echo $__env->yieldSection(); ?>
+<?php $__env->startSection('js'); ?>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+<?php echo $__env->yieldSection(); ?>
 <?php $__env->startSection('content'); ?>
     <p>:</p>
     <div class="row center-block">
@@ -21,22 +30,12 @@
             </thead>
         </table>
     </div>
-<?php $__env->stopSection(); ?>
-
-<?php $__env->startSection('css'); ?>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-<?php $__env->stopSection(); ?>
-
-<?php $__env->startSection('js'); ?>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <?php $__env->startComponent('layouts.modal'); ?>
+    <?php echo $__env->renderComponent(); ?>
     <script type="text/javascript" >
+
         $(document).ready(function() {
-            $('#table_info').DataTable( {
+            var user_datatables_object = $('#table_info').DataTable( {
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -48,7 +47,7 @@
                     { data: 'id', name: 'id' },
                     { data: 'order_number', name: 'name' },
                     { data: 'order_money', name: 'email' },
-                    { data: 'order_penalty_number', name: 'order_penalty_number' },
+                    { data: 'order_src_id', name: 'order_src_id' },
                     { data: 'order_user_id', name: 'order_user_id' },
                     { data: 'order_status', name: 'order_status' },
                     { data: 'created_at', name: 'created_at' },
@@ -72,7 +71,44 @@
                 },
                 paging: true,
                 pagingType: "full_numbers",//分页样式的类型
+            }).on('click', 'tr', function () {
+                console.log(user_datatables_object.row( this ).data());
+
+                var info = user_datatables_object.row( this ).data()
+
+                $.ajax({
+                    type:"POST",
+                    headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
+                    url:"<?php echo e(route('penalties.order.detail')); ?>",
+                    data:{'order_src_id':info['order_src_id']},
+                    success:function(data){
+                        if(data['status'] === 0){
+
+//                            console.log(JSON.stringify(data));
+                            data = data['data'][0]
+//                            data = JSON.parse(data)
+
+                            var html="<div>订单号:"+data['penalty_number']+"</div>"
+                            html+= "<div>车牌号:"+data['penalty_car_number']+"</div>"
+                            html+= "<div>金额:"+data['penalty_money']+"</div>"
+                            html+= "<div>姓名:"+data['penalty_user_name']+"</div>"
+                            html+= "<div>违法时间:"+data['penalty_illegal_time']+"</div>"
+                            html+= "<div>违法地点:"+data['penalty_illegal_place']+"</div>"
+                            user_modal_show('详情',html)
+
+
+
+
+                        }else{
+                            user_modal_warning(data['data']);
+                        }
+                    },
+                    error:function(error){
+                        user_modal_warning("请再次提交");
+                    }
                 });
+
+            });
         });
     </script>
 <?php $__env->stopSection(); ?>

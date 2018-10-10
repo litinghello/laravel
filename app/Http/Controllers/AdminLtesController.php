@@ -7,6 +7,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+
 class AdminLtesController extends Controller
 {
     /**
@@ -29,8 +30,7 @@ class AdminLtesController extends Controller
     }
 
     public function get_penalty_order_data(){
-        $table = PenaltyOrder::all();
-//        $table = DB::select('select * from wechat_order');
+        $table = WechatOrder::all();
         return Datatables::of($table)
             ->addColumn('action', function ($table) {
                 return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';
@@ -47,7 +47,7 @@ class AdminLtesController extends Controller
         if ($validator->fails()) {
             return $validator->errors()->first();
         }
-        PenaltyOrder::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
+        WechatOrder::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
         return view('adminlte.home');
     }
 }

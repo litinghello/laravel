@@ -29,7 +29,7 @@
                 <?php echo $__env->renderComponent(); ?>
                 <?php $__env->startComponent('layouts.modal'); ?>
                 <?php echo $__env->renderComponent(); ?>
-                <?php $__env->startComponent('layouts.wechat'); ?>
+                <?php $__env->startComponent('layouts.order'); ?>
                 <?php echo $__env->renderComponent(); ?>
             </div>
             <script type="text/javascript">
@@ -60,14 +60,13 @@
                                 if(data['status'] === 0){
                                     user_datatables_init(info_object,data['data'],function (data) {
                                         user_modal_input("手机号码",function (value) {
-                                            let pay_value={
+                                            let order_value={
                                                 order_money:parseInt(data.penalty_money)+parseInt(data.penalty_money_late)+30,
                                                 order_src_type:"penalty",
                                                 order_src_id:data.penalty_number,
                                                 order_phone_number:value,
                                             };
-                                            user_modal_hide();//关闭弹出框
-                                            user_wechat_pay(pay_value);
+                                            user_order_create(order_value);
                                         });
                                     });
                                     user_datatables_show();

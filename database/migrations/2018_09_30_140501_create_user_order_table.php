@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWechatOrderTable extends Migration
+class CreateUserOrderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWechatOrderTable extends Migration
      */
     public function up()
     {
-        Schema::create('wechat_order', function (Blueprint $table) {
+        Schema::create('user_order', function (Blueprint $table) {
             $table->increments('id');
             $table->string('order_number')->unique()->comment('订单编号');//订单编号
             $table->double('order_money')->default(0)->comment('订单金额');//订单金额
@@ -33,6 +33,6 @@ class CreateWechatOrderTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wechat_order');
+        Schema::dropIfExists('user_order');
     }
 }

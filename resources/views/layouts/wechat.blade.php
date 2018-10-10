@@ -52,7 +52,7 @@
             // console.log(order_data);
             $.ajax({
                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
-                url:"{{route('wechats.pay')}}",
+                url:"{{route('order.pay.wechat')}}",
                 type:"POST",
                 data:order_data,
                 success:function(data){

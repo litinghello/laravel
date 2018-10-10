@@ -19,6 +19,13 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router
 //    Route::get('/wechats/auth','WeChatsController@login_auth')->name("wechats.auth");
     Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');//微信一键登录
 });
+
+//接口 创建订单
+Route::any('/order/create','UserOrderController@create_user_order')->name('order.create');
+Route::any('/order/get','UserOrderController@get_user_order')->name('order.get');
+
+Route::any('/order/pay/wechat','WeChatsController@order_pay_wechat')->name('order.pay.wechat');
+
 //界面 主页面
 Route::get('/', 'HomeController@views_home')->name('views.home');
 //接口 微信认证接口 回调token 官方需要
@@ -37,8 +44,6 @@ Route::post('/penalties/order/detail','PenaltiesController@penalty_detail_by_ord
 Route::get('/wechats/pay/penalty', 'HomeController@views_penalty_pay')->name('views.penalty.pay');
 //接口 支付接口
 Route::post('/wechats/pay','WeChatsController@wechat_pay')->name('wechats.pay');
-//接口 用户查看订单号
-Route::post('/wechats/order/data','WeChatsController@wechat_order_data')->name('wechats.order.data');
 
 //界面 违章查询
 Route::get('/violates/inquire','HomeController@views_violate_inquire')->name('views.violate.inquire');
@@ -54,6 +59,9 @@ Route::any('/penalties/login/51jfk','PenaltiesController@login_51jfk_account')->
 Route::get('/adminltes/table/home', 'AdminLtesController@penalty_order_table_home')->name('adminltes.table.home');
 Route::post('/adminltes/table/data', 'AdminLtesController@get_penalty_order_data')->name('adminltes.table.data');
 Route::get('/adminltes/table/complete', 'AdminLtesController@set_penalty_order_data')->name('adminltes.table.complete');
+
+
+
 
 
 

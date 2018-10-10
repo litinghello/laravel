@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\CarViolateInfo;
 use App\PenaltyInfo;
-use App\WechatOrder;
+use App\UserOrder;
 use App\ThirdAccount;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
@@ -179,7 +179,7 @@ class PenaltiesController extends BaseController
 
         $order_src_id = $request['order_src_id'];
 
-        $order_info = WechatOrder::get_one_order_by_order_id($order_src_id);
+        $order_info = UserOrder::get_one_order_by_order_id($order_src_id);
 
         if ($order_info != null) {
             return response()->json(['status' => 0, 'data' => [$order_info]]);

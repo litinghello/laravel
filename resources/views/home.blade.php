@@ -44,7 +44,7 @@
                                 $.ajax({
                                     type:"POST",
                                     headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
-                                    url:"{{route('wechats.order.data')}}",
+                                    url:"{{route('order.get')}}",
                                     data:"",
                                     success:function(data){
                                         if(data['status'] === 0){
@@ -52,7 +52,18 @@
                                                 value.order_status = order_status[value.order_status];
                                             });
                                             user_datatables_init(info_object,data['data'],function (data) {
-                                                user_modal_warning("订单处理");
+                                                user_modal_comfirm(JSON.stringify(data),function () {
+                                                    // user_modal_warning("订单处理");
+                                                    // console.log(data);
+                                                    let pay_value={
+                                                        order_money:parseInt(data.order_money),
+                                                        order_src_type:data.order_src_type,
+                                                        order_src_id:data.order_src_id,
+                                                        order_phone_number:data.order_phone_number,
+                                                    };
+                                                    user_modal_hide();//关闭弹出框
+                                                    user_wechat_pay(pay_value);
+                                                });
                                             });
                                             user_datatables_show();
                                         }else{

@@ -14,7 +14,7 @@
     </div><!-- /.modal -->
 </div>
 <script type="text/javascript">
-    function user_modal_hide(object){
+    function user_modal_hide(){
         $("#user_modal_button_confirm").hide();
         $('#message_info_label').text("");
         $('#message_info_body').html("");
@@ -31,6 +31,15 @@
         $('#message_info_label').text("提示");
         $('#message_info_body').html(html);
         $('#message_info').modal('show');
+    }
+    function user_modal_comfirm(html,event){
+        $("#user_modal_button_confirm").hide();
+        $('#message_info_label').text("提示");
+        $('#message_info_body').html(html);
+        $('#message_info').modal('show');
+        $("#user_modal_button_confirm").show().click(function () {
+            event();
+        });
     }
     function user_modal_warning(html){
         $("#user_modal_button_confirm").hide();

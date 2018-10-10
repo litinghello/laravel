@@ -1,18 +1,8 @@
 <?php $__env->startSection('content_header'); ?>
     <h1>支付订单</h1>
 <?php $__env->stopSection(); ?>
-<?php $__env->startSection('css'); ?>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-    
-<?php echo $__env->yieldSection(); ?>
-<?php $__env->startSection('js'); ?>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
-    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
-<?php echo $__env->yieldSection(); ?>
-
+<?php $__env->startComponent('layouts.resources'); ?>
+<?php echo $__env->renderComponent(); ?>
 <?php $__env->startSection('content'); ?>
 <div class="container">
     <div class="row justify-content-center">
@@ -51,7 +41,7 @@
                                 $.ajax({
                                     type:"POST",
                                     headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
-                                    url:"<?php echo e(route('wechats.order.data')); ?>",
+                                    url:"<?php echo e(route('order.get')); ?>",
                                     data:"",
                                     success:function(data){
                                         if(data['status'] === 0){
@@ -59,7 +49,18 @@
                                                 value.order_status = order_status[value.order_status];
                                             });
                                             user_datatables_init(info_object,data['data'],function (data) {
-                                                user_modal_warning("订单处理");
+                                                user_modal_comfirm(JSON.stringify(data),function () {
+                                                    // user_modal_warning("订单处理");
+                                                    // console.log(data);
+                                                    let pay_value={
+                                                        order_money:parseInt(data.order_money),
+                                                        order_src_type:data.order_src_type,
+                                                        order_src_id:data.order_src_id,
+                                                        order_phone_number:data.order_phone_number,
+                                                    };
+                                                    user_modal_hide();//关闭弹出框
+                                                    user_wechat_pay(pay_value);
+                                                });
                                             });
                                             user_datatables_show();
                                         }else{

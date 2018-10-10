@@ -6,7 +6,7 @@ use App\WechatOrder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\DB;
 class AdminLtesController extends Controller
 {
     /**
@@ -30,6 +30,7 @@ class AdminLtesController extends Controller
 
     public function get_penalty_order_data(){
         $table = PenaltyOrder::all();
+//        $table = DB::select('select * from wechat_order');
         return Datatables::of($table)
             ->addColumn('action', function ($table) {
                 return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';

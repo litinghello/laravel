@@ -27,7 +27,10 @@ class WechatAccount extends Model
     ];
     //获取决定书编号相关的 决定书相关信息
     public function order_info(){
-        return $this->belongsTo('App\User', 'wechat_account', 'wechat_main_account');
+        return $this->hasOne('App\User', 'wechat_account', 'wechat_main_account');
+    }
+    public function user_info(){
+        return $this->hasOne('App\User', 'id', 'wechat_main_account');
     }
 
 }

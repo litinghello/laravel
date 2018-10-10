@@ -31,6 +31,8 @@ Route::any('/wechats/paycall','WeChatsController@wechat_paycall')->name('penalti
 Route::get('/penalties/inquire','HomeController@views_penalty_inquire')->name('views.penalty.inquire');
 //接口 决定书编号
 Route::post('/penalties/info','PenaltiesController@penalty_info')->name('penalties.info');
+//接口 根据微信order_source_id获取详情
+Route::post('/penalties/order/detail','PenaltiesController@penalty_detail_by_order')->name('penalties.order.detail');
 //界面 支付页面界面
 Route::get('/wechats/pay/penalty', 'HomeController@views_penalty_pay')->name('views.penalty.pay');
 //接口 支付接口

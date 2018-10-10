@@ -23,7 +23,15 @@ class HomeController extends Controller
      */
     public function views_home(){
         if (Auth::check()) {
-            return view('home');
+
+            $user = Auth::user();
+
+            if($user['authorize']=='1')
+            {
+                return view('adminlte.home');
+            }else{
+                return view('home');
+            }
         }else{
             return view('auth.login');
         }

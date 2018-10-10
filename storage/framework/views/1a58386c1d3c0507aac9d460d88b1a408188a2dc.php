@@ -1,21 +1,17 @@
-{{-- resources/views/admin/dashboard.blade.php --}}
-
-@extends('adminlte::page')
-
-@section('content_header')
+<?php $__env->startSection('content_header'); ?>
     <h1>代缴订单</h1>
-@stop
-@section('css')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('css'); ?>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-    {{--<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css"/>--}}
-@show
-@section('js')
+    
+<?php echo $__env->yieldSection(); ?>
+<?php $__env->startSection('js'); ?>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    {{--<script type="text/javascript" src="http://cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.js"></script>--}}
-@show
-@section('content')
+    
+<?php echo $__env->yieldSection(); ?>
+<?php $__env->startSection('content'); ?>
     <p>:</p>
     <div class="row center-block">
         <table id="table_info" class="table table-striped table-hover table-condensed">
@@ -34,8 +30,8 @@
             </thead>
         </table>
     </div>
-    @component('layouts.modal')
-    @endcomponent
+    <?php $__env->startComponent('layouts.modal'); ?>
+    <?php echo $__env->renderComponent(); ?>
     <script type="text/javascript" >
 
         $(document).ready(function() {
@@ -43,9 +39,9 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"{{ route('adminltes.table.data') }}",
+                    "url":"<?php echo e(route('adminltes.table.data')); ?>",
                     "type": "POST",
-                    "headers": {'X-CSRF-TOKEN': "{{csrf_token()}}"},
+                    "headers": {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
                 },
                 columns: [
                     { data: 'id', name: 'id' },
@@ -82,8 +78,8 @@
 
                 $.ajax({
                     type:"POST",
-                    headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
-                    url:"{{route('penalties.order.detail')}}",
+                    headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
+                    url:"<?php echo e(route('penalties.order.detail')); ?>",
                     data:{'order_src_id':info['order_src_id']},
                     success:function(data){
                         if(data['status'] === 0){
@@ -92,7 +88,7 @@
                             data = data['data'][0]
 //                            data = JSON.parse(data)
 
-                            var html="<div>决定书编号:"+data['penalty_number']+"</div>"
+                            var html="<div>订单号:"+data['penalty_number']+"</div>"
                             html+= "<div>车牌号:"+data['penalty_car_number']+"</div>"
                             html+= "<div>金额:"+data['penalty_money']+"</div>"
                             html+= "<div>姓名:"+data['penalty_user_name']+"</div>"
@@ -113,4 +109,5 @@
             });
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('adminlte::page', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

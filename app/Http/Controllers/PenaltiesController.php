@@ -166,6 +166,27 @@ class PenaltiesController extends BaseController
         return ['status' => 0, 'cookie' => $cookies_str];
     }
 
+    //根据微信order_src_id获取订单详情
+    public function penalty_detail_by_order(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_src_id' => 'required|alpha_num',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
+        }
+
+        $order_src_id = $request['order_src_id'];
+
+        $order_info = WechatOrder::get_one_order_by_order_id($order_src_id);
+
+        if ($order_info != null) {
+            return response()->json(['status' => 0, 'data' => [$order_info]]);
+        }
+
+        return response()->json(['status' => 1, 'data' => "请求数据失败"]);
+    }
 
     /**决定书编号查询违法信息
      * @param Request $request

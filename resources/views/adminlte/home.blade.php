@@ -92,7 +92,7 @@
                             data = data['data'][0]
 //                            data = JSON.parse(data)
 
-                            var html="<div>订单号:"+data['penalty_number']+"</div>"
+                            var html="<div>决定书编号:"+data['penalty_number']+"</div>"
                             html+= "<div>车牌号:"+data['penalty_car_number']+"</div>"
                             html+= "<div>金额:"+data['penalty_money']+"</div>"
                             html+= "<div>姓名:"+data['penalty_user_name']+"</div>"

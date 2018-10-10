@@ -308,12 +308,25 @@ class PenaltiesController extends BaseController
             return response()->json(['status' => 1, 'data' => "系统异常"]);
         }
 
-        $form_str = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form')[0];
+
+        $form_strs = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form');
+        if($form_strs!= null && count($form_strs)>0){
+            $form_str = $form_strs[0];
+        }else{
+            $form_strs = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg');
+            unset($response);
+            if($form_strs!= null && count($form_strs)>0){
+               $error = LaravelHtmlDomParser\Facade::str_get_html($form_strs[0])->find('div.tishi');
+               if($error!= null && count($error)>1){
+                    return response()->json(['status' => 1, 'data' => $error[1]->innertext]);
+               }
+            }
+            return response()->json(['status' => 1, 'data' => "查询异常"]);
+        }
         unset($response);
         $carviolates = array();
         if (isset($form_str)) {
             $infos = array();
-            LaravelHtmlDomParser\Facade::str_get_html($form_str)->find('ul.lm')[0] = null;
             foreach (LaravelHtmlDomParser\Facade::str_get_html($form_str)->find('ul') as $ul) {
                 $info = array();
                 foreach (LaravelHtmlDomParser\Facade::str_get_html($ul)->find('li') as $li) {

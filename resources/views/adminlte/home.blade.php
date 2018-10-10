@@ -100,7 +100,7 @@
                             html+= "<div>违法地点:"+data['penalty_illegal_place']+"</div>"
                             user_modal_show('详情',html)
 
-                            
+
                         }else{
                             user_modal_warning(data['data']);
                         }

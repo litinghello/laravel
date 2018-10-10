@@ -20,6 +20,7 @@ class WechatOrder extends Model
     ];
     //获取决定书编号相关的 决定书相关信息
     public function penalty_info(){
+
         return $this->hasOne('App\PenaltyInfo', 'penalty_number', 'order_src_id');
     }
     //获取决定书编号绑定的 用户相关信息
@@ -31,4 +32,5 @@ class WechatOrder extends Model
     {
         return WechatOrder::where('order_src_id', $order_src_id)->first()->penalty_info;
     }
+
 }

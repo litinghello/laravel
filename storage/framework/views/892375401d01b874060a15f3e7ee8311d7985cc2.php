@@ -1,9 +1,9 @@
 
-<div id="card_body_datatables" class="card-body" hidden>
+<div id="card_body_datatables" class="card-body">
     <div class="row center-block">
         <table id="datalables_body" class="dataTables_wrapper form-inline" style="width:100%">
-            <thead id="datalables_body_thead" role="row">
-            <tr id="datalables_body_thead_tr" ></tr>
+            <thead id="datalables_body_thead" hidden>
+            <tr id="datalables_body_thead_tr"></tr>
             </thead>
         </table>
     </div>
@@ -11,9 +11,9 @@
 <script type="text/javascript">
     // var user_datatables_object;
     function user_datatables_hidden() {
-        $("#card_body_datatables").hide();
+        $("#datalables_body_thead").hide();
     }function user_datatables_show() {
-        $("#card_body_datatables").show();
+        $("#datalables_body_thead").show();
     }
     function user_datatables_init(object,data,click_event) {
         //var info_object_key = new Array();

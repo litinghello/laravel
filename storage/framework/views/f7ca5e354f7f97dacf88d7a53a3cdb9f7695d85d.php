@@ -2,16 +2,14 @@
     <h1>违章查询</h1>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('css'); ?>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css"/>
 <?php echo $__env->yieldSection(); ?>
 <?php $__env->startSection('js'); ?>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/fh-3.1.4/kt-2.4.0/r-2.2.2/rg-1.0.3/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 <?php echo $__env->yieldSection(); ?>
 <?php $__env->startSection('content'); ?>
@@ -84,7 +82,7 @@
                         $("#violate_inquire_button").click(function (){
                             let post_data = {
                                 car_province:$("#car_province").val(),
-                                car_number:$("#car_number").val(),
+                                car_number:$("#car_number").val().toLocaleUpperCase(),
                                 car_type:$("#car_type").val(),
                                 car_frame_number:$("#car_frame_number").val(),
                                 car_engine_number:$("#car_engine_number").val(),
@@ -94,12 +92,13 @@
                                 headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
                                 url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
                                 success:function(data){
-                                    console.log(data);
+                                    // console.log(data);
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
+                                            // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
                                             user_modal_input("手机号码",function (value) {
                                                 let pay_value={
-                                                    order_money:data.violate_marks*110+data.violate_money+30,
+                                                    order_money:parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30,
                                                     order_src_type:"violate",
                                                     order_src_id:data.id,
                                                     order_phone_number:value,

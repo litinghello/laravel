@@ -282,24 +282,24 @@ class PenaltiesController extends BaseController
         $lstype = $request['car_type'];
         $frameno = $request['car_frame_number'];
 
-//        $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
-//        if (!$account) {
-//            $account = ThirdAccount::where("account_type", '51jfk')->first();
-//            if ($account) {
-//                return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
-//            } else {
-//                return response()->json(['status' => 1, 'data' => '请添加账户！']);
-//            }
-//        }
+        $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
+        if (!$account) {
+            $account = ThirdAccount::where("account_type", '51jfk')->first();
+            if ($account) {
+                return redirect()->route('penalties.login.51jfk', ['name' => $account['account_name'], 'password' => $account['account_password']]);//echo "验证失败";
+            } else {
+                return response()->json(['status' => 1, 'data' => '请添加账户！']);
+            }
+        }
         $url = 'http://www.51jfk.com/index.php/Weizhang/index.html';
         $body = "lsprefix=" . $lsprefix . "&lsnum=" . $lsnum . "&lstype=".$lstype."&frameno=" . $frameno . "&engineno=&mobileno=&category=geren&cartype=feiyingyun&verify=3240&memberid=116&carorg=&api=CHETAIJI&addr=&isdirect=&is_dangerousgoods=1&checkcode=&postcphm=&tempuser=";
-//        $cookies = $account['account_cookie'];
+        $cookies = $account['account_cookie'];
         $client = new Client();
         $response = $client->post($url, [
             'headers' => [
                 'X-Requested-With' => 'XMLHttpRequest',
                 'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Cookie' => "user=think%3A%7B%22memberid%22%3A%22116%22%2C%22nickname%22%3A%22%22%2C%22membername%22%3A%22123456%22%2C%22weixin%22%3A%22%22%2C%22auto_login%22%3A%221%22%2C%22exp_time%22%3A%22365%22%7D;"
+                'Cookie' =>$cookies
             ],
             'body' => $body
         ]);

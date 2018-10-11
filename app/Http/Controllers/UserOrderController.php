@@ -45,7 +45,13 @@ class UserOrderController extends Controller
                 $user_order->order_src_type != $request['order_src_type'] ||
                 $user_order->order_phone_number != $request['order_phone_number'])
             {
-                return response()->json(['status' => 1,'data' => "订单已经存在，请在订单页面删除再试。"]);
+                if ($user_order->updated_at > date("Y-m-d H:i:s", strtotime("-100000 minute"))) {
+                    //return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
+                    $user_order->order_user_id = Auth::id();
+                    $user_order->save();
+                }else{
+                    return response()->json(['status' => 1,'data' => "订单已经存在，10分钟不付款将自动删除。"]);
+                }
             }
             if ($user_order->order_status == "paid" || $user_order->order_status == "processing") {
                 return response()->json(['status' => 1,'data' => "该订单已在处理中"]);

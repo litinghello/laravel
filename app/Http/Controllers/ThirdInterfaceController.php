@@ -201,6 +201,8 @@ class ThirdInterfaceController extends BaseController
                 return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
             }
         }
+//        return response()->json(['status' => 1, 'data' => $penaltyinfo]);
+        
         $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
         if (!$account) {
             $account = ThirdAccount::where("account_type", '51jfk')->first();

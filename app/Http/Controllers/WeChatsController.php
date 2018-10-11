@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Log;
 use App\PenaltyInfo;
-use App\UserOrder;
+use App\UserOrderInfo;
 use App\WechatAccount;
 use App\User;
 use GuzzleHttp\Cookie\json_decode;
@@ -180,7 +180,7 @@ class WeChatsController extends Controller
         }
 
         $user = session('wechat.oauth_user'); //拿到授权用户资料
-        $user_order = UserOrder::where('order_src_id', $request['order_src_id'])->first();
+        $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
         $pay = Factory::payment(config('wechat.payment')['default']);
         $result = $pay->order->unify([
             'body' => '缴费',
@@ -209,7 +209,7 @@ class WeChatsController extends Controller
         $response = $app->handlePaidNotify(function($message, $fail){
             Log::info( 'message:'.json_encode($message));
             // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
-            $order = PenaltyOrder::where('order_number', $message['out_trade_no'])->first();
+            $order = PenaltyInfo::where('order_number', $message['out_trade_no'])->first();
             if (!$order) { // 如果订单不存在 或者 订单已经支付过了
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
             }

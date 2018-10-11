@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\UserOrder;
+use App\UserOrderInfo;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +30,7 @@ class AdminLtesController extends Controller
     }
 
     public function get_penalty_order_data(){
-        $table = UserOrder::all();
+        $table = UserOrderInfo::all();
         return Datatables::of($table)
             ->addColumn('action', function ($table) {
                 return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';
@@ -46,7 +46,7 @@ class AdminLtesController extends Controller
         if ($validator->fails()) {
             return $validator->errors()->first();
         }
-        UserOrder::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
+        UserOrderInfo::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
         return view('adminlte.home');
     }
 }

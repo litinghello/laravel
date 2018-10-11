@@ -173,8 +173,7 @@ class ThirdInterfaceController extends BaseController
         if ($validator->fails()) {
             return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
-        $order_src_id = $request['order_src_id'];
-        $order_info = UserOrderInfo::where('order_src_id', $order_src_id)->first()->penalty_info;
+        $order_info = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first()->penalty_info;
         if ($order_info != null) {
             return response()->json(['status' => 0, 'data' => [$order_info]]);
         }

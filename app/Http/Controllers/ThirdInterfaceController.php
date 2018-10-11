@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\CarViolateInfo;
 use App\PenaltyInfo;
-use App\UserOrder;
 use App\ThirdAccount;
+use App\UserOrderInfo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use Yajra\Datatables\Datatables;
@@ -22,7 +22,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use EasyWeChat\Payment\Order;
 
-class PenaltiesController extends BaseController
+class ThirdInterfaceController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
@@ -54,8 +54,7 @@ class PenaltiesController extends BaseController
     }
 
     //登录第三方账户
-    public function login_51jfk_account(Request $request)
-    {
+    public function login_51jfk_account(Request $request){
         $validator = Validator::make($request->all(), [
             'account_type' => 'required|alpha_num|in:51jfk',
             'account_name' => 'required|alpha_num',
@@ -167,24 +166,18 @@ class PenaltiesController extends BaseController
     }
 
     //根据微信order_src_id获取订单详情
-    public function penalty_detail_by_order(Request $request)
-    {
+    public function penalty_detail_by_order(Request $request){
         $validator = Validator::make($request->all(), [
             'order_src_id' => 'required|alpha_num',
         ]);
-
         if ($validator->fails()) {
             return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
-
         $order_src_id = $request['order_src_id'];
-
-        $order_info = UserOrder::get_one_order_by_order_id($order_src_id);
-
+        $order_info = UserOrderInfo::where('order_src_id', $order_src_id)->first()->penalty_info;
         if ($order_info != null) {
             return response()->json(['status' => 0, 'data' => [$order_info]]);
         }
-
         return response()->json(['status' => 1, 'data' => "请求数据失败"]);
     }
 
@@ -193,9 +186,7 @@ class PenaltiesController extends BaseController
      * @return string
      */
     //5101041204594064
-    public function penalty_info(Request $request)
-    {
-//        return back()->withErrors(['penalty_number'=>'此激活用定过！']);
+    public function penalty_info(Request $request){
         $validator = Validator::make($request->all(), [
             'penalty_number' => 'required|alpha_num|between:15,16',
         ]);
@@ -203,7 +194,6 @@ class PenaltiesController extends BaseController
             return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
         $penalty_number = $request['penalty_number'];
-
         // 这里需要实现 已经存在直接返回（10分钟内）
         $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         if ($penaltyinfo != null) {
@@ -220,10 +210,7 @@ class PenaltiesController extends BaseController
                 return response()->json(['status' => 1, 'data' => '请添加账户！']);
             }
         }
-
         $url = 'http://www.51jfk.com/index.php/Fakuan/fkdjg';
-//        $cookies = 'PHPSESSID=rf6jd40r10mq2djftcfgsrtpl7; temp_user=think%3A%7B%22username%22%3A%22temp_user222.211.251.209%22%2C%22day%22%3A%222018-07-11%22%2C%22day_query_count%22%3A%2220%22%7D; UM_distinctid=1648810ae8d31a-0c671bc72b0985-f373567-13c680-1648810ae8e5ac; CNZZDATA1000345804=1917868247-1531286351-null%7C1531286351; user=think%3A%7B%22memberid%22%3A%2250959%22%2C%22nickname%22%3A%22%22%2C%22membername%22%3A%2215228949671%22%2C%22weixin%22%3A%22%22%7D; Hm_lvt_f06eee151ce72cc27662fae694f526b8=1531291152,1531291535; Hm_lpvt_f06eee151ce72cc27662fae694f526b8=1531291535';
-        //       $cookies = 'yunsuo_session_verify=4164ba9853b8fa004df7f1487ee107fc; temp_user=think%3A%7B%22username%22%3A%22temp_user222.211.235.249%22%2C%22day%22%3A%222018-09-05%22%2C%22day_query_count%22%3A%2220%22%7D; CNZZDATA1000345804=1169833295-1536113091-%7C1536113091; user=think%3A%7B%22memberid%22%3A%2258276%22%2C%22nickname%22%3A%22%22%2C%22membername%22%3A%2215228867020%22%2C%22weixin%22%3A%22%22%7D; PHPSESSID=ehtung44o0jb7c6ch7mnll77t5; UM_distinctid=165a7bf1b2633d-00856ede20d123-784a5037-1fa400-165a7bf1b2710c5; Hm_lvt_f06eee151ce72cc27662fae694f526b8=1536117644; Hm_lpvt_f06eee151ce72cc27662fae694f526b8=1536117644';
         $cookies = $account['account_cookie'];
         $body = "fkdbh=" . $penalty_number . "&type=outoinput";
         $client = new Client();
@@ -276,12 +263,10 @@ class PenaltiesController extends BaseController
         if ($validator->fails()) {
             return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
-
         $lsprefix = $request['car_province'];
         $lsnum = $request['car_number'];
         $lstype = $request['car_type'];
         $frameno = $request['car_frame_number'];
-
         $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
         if (!$account) {
             $account = ThirdAccount::where("account_type", '51jfk')->first();
@@ -307,8 +292,6 @@ class PenaltiesController extends BaseController
         if ($response_code != 200) {
             return response()->json(['status' => 1, 'data' => "系统异常"]);
         }
-
-
         $form_strs = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form');
         if($form_strs!= null && count($form_strs)>0){
             $form_str = $form_strs[0];
@@ -353,7 +336,6 @@ class PenaltiesController extends BaseController
                                 'violate_marks' => $info[7],
                             ]
                         );
-//                        $carviolate->save();
                         $carviolates[] = $carviolate;
                     }
                 }
@@ -362,8 +344,6 @@ class PenaltiesController extends BaseController
             //这里找不到form表单 需要显示错误信息
             return response()->json(['status' => 1, 'data' => "获取异常"]);
         }
-
         return response()->json(['status' => 0, 'data' => $carviolates]);
-
     }
 }

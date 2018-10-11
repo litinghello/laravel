@@ -24,6 +24,7 @@
                 jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
             });
             wx.ready(function(){
+                wechat_pay_data = null;
                 wx.chooseWXPay({
                     debug: false,timestamp:data['timestamp'] ,nonceStr: data['nonceStr'] ,
                     package: data['package'] ,signType: data['signType'] ,paySign: data['paySign'] , // 支付签名

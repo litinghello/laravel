@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserOrderInfo extends Model
 {
-
     //protected $connection = 'connection-name';//数据库连接
-    protected $table = 'user_order';//数据表名
+    protected $table = 'user_order_info';//数据表名
 
     protected $fillable = [
         'order_number',
@@ -27,9 +26,4 @@ class UserOrderInfo extends Model
     public function user_info(){
         return $this->hasOne('App\User', 'id', 'order_user_id');
     }
-    //获取一条订单的详情
-    public static function get_one_order_by_order_id($order_src_id){
-        return UserOrder::where('order_src_id', $order_src_id)->first()->penalty_info;
-    }
-
 }

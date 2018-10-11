@@ -13,7 +13,7 @@ class CreateUserOrderTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_order', function (Blueprint $table) {
+        Schema::create('user_order_info', function (Blueprint $table) {
             $table->increments('id');
             $table->string('order_number')->unique()->comment('订单编号');//订单编号
             $table->double('order_money')->default(0)->comment('订单金额');//订单金额
@@ -33,6 +33,6 @@ class CreateUserOrderTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_order');
+        Schema::dropIfExists('user_order_info');
     }
 }

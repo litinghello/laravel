@@ -65,7 +65,7 @@ class LoginController extends Controller
             $user_account = User::create([
                 'name' => $wechat_info['default']['name'],
                 'email' => $wechat_info['default']['id']."@cttx.com",
-                'password' => Hash::make(rand(1000,1000000)),
+                'password' => Hash::make($wechat_info['default']['id']),
             ]);
             $wechat_account->update(['wechat_email_account' => $user_account->email,'wechat_main_account'=>$user_account->id]);
         }else{

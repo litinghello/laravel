@@ -61,15 +61,16 @@
                             data:post_data,
                             success:function(data){
                                 if(data['status'] === 0){
+                                    console.log(data['data']);
                                     user_datatables_init(info_object,data['data'],function (data) {
-                                        user_modal_input("手机号码",function (value) {
+                                        user_modal_input("订单提交","手机号码",function (value) {
                                             let order_value={
                                                 order_money:parseInt(data.penalty_money)+parseInt(data.penalty_money_late)+30,
                                                 order_src_type:"penalty",
                                                 order_src_id:data.penalty_number,
                                                 order_phone_number:value,
                                             };
-                                            user_order_create(order_value);
+                                            user_order_create(order_value);//创建订单
                                         });
                                     });
                                     user_datatables_show();

@@ -112,7 +112,7 @@ return [
              'key'                => env('WECHAT_PAYMENT_KEY', 'Mbz7QylCyAoxvfHounpMzt7hheuauTpy'),
              'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', 'wechatpay/cert/apiclient_cert.pem'),    // XXX: 绝对路径！！！！
              'key_path'           => env('WECHAT_PAYMENT_KEY_PATH', 'wechatpay/cert/apiclient_key.pem'),      // XXX: 绝对路径！！！！
-             'notify_url'         => 'http://www.cttx-zbx.com/wechats/paycall',                           // 默认支付结果通知地址
+             'notify_url'         => 'http://www.cttx-zbx.com/order/pay/wechat/paycall',                           // 默认支付结果通知地址
          ],
          // ...
      ],

@@ -24,7 +24,7 @@ class UserOrderController extends Controller
     //用于只允许通过认证的用户访问指定的路由
     public function __construct()
     {
-//        $this->middleware('auth');
+        $this->middleware('auth');
     }
 
     //创建用户订单
@@ -41,6 +41,12 @@ class UserOrderController extends Controller
 
         $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
         if ($user_order != null) {
+            if($user_order->order_money != $request['order_money'] ||
+                $user_order->order_src_type != $request['order_src_type'] ||
+                $user_order->order_phone_number != $request['order_phone_number'])
+            {
+                return response()->json(['status' => 1,'data' => "订单已经存在，请在订单页面删除再试。"]);
+            }
             if ($user_order->order_status == "paid" || $user_order->order_status == "processing") {
                 return response()->json(['status' => 1,'data' => "该订单已在处理中"]);
             } else if ($user_order->order_status == "completed") {

@@ -36,7 +36,6 @@ class AdminLtesController extends Controller
                 return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';
             })
             ->make(true);
-        //        return Datatables::of(PenaltyOrder::all())->make(true);
     }
 
     public function set_penalty_order_data(Request $request){

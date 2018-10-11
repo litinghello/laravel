@@ -49,7 +49,9 @@
                                                 value.order_status = order_status[value.order_status];
                                             });
                                             user_datatables_init(info_object,data['data'],function (data) {
-                                                user_modal_comfirm(JSON.stringify(data),function () {
+                                                let html = "<div>金额:"+data['order_money']+"元</div>"+
+                                                            "<div>电话:"+data['order_phone_number']+"</div>"+"<br>是否确认支付？";
+                                                user_modal_comfirm(html,function () {
                                                     // user_modal_warning("订单处理");
                                                     // console.log(data);
                                                     let pay_value={
@@ -58,7 +60,7 @@
                                                         order_src_id:data.order_src_id,
                                                         order_phone_number:data.order_phone_number,
                                                     };
-                                                    user_modal_hide();//关闭弹出框
+                                                    // user_modal_hide();//关闭弹出框
                                                     user_wechat_pay(pay_value);
                                                 });
                                             });

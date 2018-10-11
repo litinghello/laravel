@@ -88,14 +88,13 @@
                                         user_datatables_init(info_object,data['data'],function (data) {
                                             // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
                                             user_modal_input("手机号码",function (value) {
-                                                let pay_value={
-                                                    order_money:parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30,
-                                                    order_src_type:"violate",
-                                                    order_src_id:data.id,
+                                                let order_value={
+                                                    order_money:parseInt(data.penalty_money)+parseInt(data.penalty_money_late)+30,
+                                                    order_src_type:"penalty",
+                                                    order_src_id:data.penalty_number,
                                                     order_phone_number:value,
                                                 };
-                                                user_modal_hide();//关闭弹出框
-                                                user_wechat_pay(pay_value);
+                                                user_order_create(order_value);//创建订单
                                             });
                                         });
                                         user_datatables_show();

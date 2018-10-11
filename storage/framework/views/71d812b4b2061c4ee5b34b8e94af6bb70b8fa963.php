@@ -58,7 +58,7 @@
                             data:post_data,
                             success:function(data){
                                 if(data['status'] === 0){
-                                    console.log(data['data']);
+                                    // console.log(data['data']);
                                     user_datatables_init(info_object,data['data'],function (data) {
                                         user_modal_input("订单提交","手机号码",function (value) {
                                             let order_value={

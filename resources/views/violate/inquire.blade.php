@@ -51,8 +51,9 @@
                     @endcomponent
                     @component('layouts.modal')
                     @endcomponent
-                    @component('layouts.wechat')
+                    @component('layouts.order')
                     @endcomponent
+
                 </div>
                 <script type="text/javascript">
                     let info_object = {
@@ -91,9 +92,9 @@
                                             // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
                                             user_modal_input("订单提交","手机号码",function (value) {
                                                 let order_value={
-                                                    order_money:parseInt(data.penalty_money)+parseInt(data.penalty_money_late)+30,
+                                                    order_money:parseInt(data.violate_marks)*150+parseInt(data.violate_money)+30,
                                                     order_src_type:"violate",
-                                                    order_src_id:data.penalty_number,
+                                                    order_src_id:data.id,
                                                     order_phone_number:value,
                                                 };
                                                 user_order_create(order_value);//创建订单

@@ -194,8 +194,13 @@ class ThirdInterfaceController extends BaseController
             return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
         $penalty_number = $request['penalty_number'];
-        // 这里需要实现 已经存在直接返回（10分钟内）
-        $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
+        if(strlen($penalty_number) == 15){
+            // 这里需要实现 已经存在直接返回（10分钟内）
+            $penaltyinfo = PenaltyInfo::where('penalty_number','like', $penalty_number.'%')->first();
+        }else{
+            // 这里需要实现 已经存在直接返回（10分钟内）
+            $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
+        }
         if ($penaltyinfo != null) {
             if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-100000 minute"))) {
                 return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);

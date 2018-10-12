@@ -159,7 +159,7 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"联系我们",
-                        "url"=>"http://www.cttx-zbx.com/",
+                        "url"=>"http://www.cttx-zbx.com/contact/us",
                     ]
                 ]
             ]

@@ -53,4 +53,11 @@ class HomeController extends Controller
             return view('auth.login');
         }
     }
+    public function views_contact_us(){
+        if (Auth::check()) {
+            return view('corporation.contact_us');
+        }else{
+            return view('auth.login');
+        }
+    }
 }

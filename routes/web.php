@@ -21,8 +21,12 @@ Route::get('/', 'HomeController@views_home')->name('views.home');
 Route::group(['middleware' => ['web', 'wechat.oauth']], function () use ($router) {
     Route::get('/wechats/login','Auth\LoginController@wechat_login')->name('wechats.login');//微信一键登录
 });
+//界面 联系我们
+Route::get('/contact/us', 'HomeController@views_contact_us')->name('views.contact.us');
 //接口 微信认证接口 回调token 官方需要
 Route::any('/wechats/token','WeChatsController@back_token')->name("wechats.serve");
+//接口 创建微信公众号的菜单
+Route::get('/wechats/menu/create','WeChatsController@create_menu')->name("wechats.menu");
 
 //接口 创建订单
 Route::any('/order/create','UserOrderController@create_user_order')->name('order.create');
@@ -32,9 +36,6 @@ Route::any('/order/get','UserOrderController@get_user_order')->name('order.get')
 Route::any('/order/pay/wechat','WeChatsController@order_pay_wechat')->name('order.pay.wechat');
 //接口 微信支付回调
 Route::any('/order/pay/wechat/paycall','WeChatsController@wechat_paycall')->name('penalties.paycall');
-
-//接口 创建微信公众号的菜单
-Route::get('/wechats/menu/create','WeChatsController@create_menu')->name("wechats.menu");
 
 //界面 决定书编号查询
 Route::get('/penalties/inquire','HomeController@views_penalty_inquire')->name('views.penalty.inquire');

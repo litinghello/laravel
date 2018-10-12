@@ -53,6 +53,7 @@
                 $(document).ready(function() {
                     // user_datatables_show();
                     $("#penalty_submit").click(function () {
+                        $("#penalty_submit").attr('disabled',true);
                         let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
                         $.ajax({
                             type:"POST",
@@ -81,6 +82,7 @@
                             },
                             error:function(error){
                                 user_modal_warning("请再次提交");
+                                $("#penalty_submit").attr('disabled',false);
                             }
                         });
                     });

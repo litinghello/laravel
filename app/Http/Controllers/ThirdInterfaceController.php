@@ -221,7 +221,7 @@ class ThirdInterfaceController extends BaseController
         }
         $response_body = json_decode($response->getBody(), true);
         if ($response_body['code'] != 200) {
-            return response()->json(['status' => 1, 'data' => "请求数据失败"]);
+            return response()->json(['status' => 1, 'data' => "查询不到记录！"]);
         }
         $penaltyinfo = PenaltyInfo::create([
             'penalty_number' => $response_body['jdsbh'],

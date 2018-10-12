@@ -79,4 +79,5 @@ class UserOrderController extends Controller
 //        return response()->json(['status' => 1,'data' =>  Auth::id()]);
         return response()->json(['status' => 0,'data' =>  $table]);
     }
+
 }

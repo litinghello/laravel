@@ -25,7 +25,7 @@
     }
     function user_modal_input(title,name,event) {
         layer.prompt({
-            formType: 1,
+            formType: 0,
             // value: '初始值',
             title: '请输入手机号码',
              // area: ['60%', '30%'] //自定义文本域宽高

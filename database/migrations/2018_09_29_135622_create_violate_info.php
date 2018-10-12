@@ -12,7 +12,7 @@ class CreateCarViolateInfo extends Migration
      */
     public function up()
     {
-        Schema::create('car_violate_info', function (Blueprint $table) {
+        Schema::create('violate_info', function (Blueprint $table) {
             $table->increments('id');
             $table->string('car_type')->comment('号牌种类');//
             $table->string('car_province')->comment('车辆省份');//
@@ -35,6 +35,6 @@ class CreateCarViolateInfo extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('car_violate_info');
+        Schema::dropIfExists('violate_info');
     }
 }

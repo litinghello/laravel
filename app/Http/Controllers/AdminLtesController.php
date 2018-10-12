@@ -25,11 +25,11 @@ class AdminLtesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function penalty_order_table_home(){
+    public function order_table_home(){
         return view('adminlte.home');
     }
 
-    public function get_penalty_order_data(){
+    public function get_order_data(){
         $table = UserOrderInfo::all();
         return Datatables::of($table)
             ->addColumn('action', function ($table) {
@@ -38,7 +38,7 @@ class AdminLtesController extends Controller
             ->make(true);
     }
 
-    public function set_penalty_order_data(Request $request){
+    public function set_order_data(Request $request){
         $validator = Validator::make($request->all(), [
             'id' => 'required|alpha_num',
             'order_number' => 'required|alpha_num',
@@ -49,4 +49,32 @@ class AdminLtesController extends Controller
         UserOrderInfo::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
         return view('adminlte.home');
     }
+
+    public function get_order_detail(Request $request){
+        $validator = Validator::make($request->all(), [
+            'order_src_id' => 'required|alpha_num',
+            'order_src_type' => 'required|alpha_num',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
+        }
+        switch($request['order_src_type']){
+            case 'penalty':
+                $order_info = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first()->penalty_info;
+                if ($order_info != null) {
+                    return response()->json(['status' => 0, 'data' => $order_info]);
+                }
+                break;
+            case 'violate':
+                $order_info = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first()->violate_info;
+                if ($order_info != null) {
+                    return response()->json(['status' => 0, 'data' => $order_info]);
+                }
+                break;
+            default:
+                break;
+        }
+        return response()->json(['status' => 1, 'data' => "请求数据失败"]);
+    }
+
 }

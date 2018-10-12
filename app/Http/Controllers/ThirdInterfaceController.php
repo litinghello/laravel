@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\CarViolateInfo;
+use App\ViolateInfo;
 use App\PenaltyInfo;
 use App\ThirdAccount;
 use App\UserOrderInfo;
@@ -164,22 +164,6 @@ class ThirdInterfaceController extends BaseController
         //echo $cookies_str;//打印cookie
         return ['status' => 0, 'cookie' => $cookies_str];
     }
-
-    //根据微信order_src_id获取订单详情
-    public function penalty_detail_by_order(Request $request){
-        $validator = Validator::make($request->all(), [
-            'order_src_id' => 'required|alpha_num',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
-        }
-        $order_info = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first()->penalty_info;
-        if ($order_info != null) {
-            return response()->json(['status' => 0, 'data' => [$order_info]]);
-        }
-        return response()->json(['status' => 1, 'data' => "请求数据失败"]);
-    }
-
     /**决定书编号查询违法信息
      * @param Request $request
      * @return string
@@ -329,7 +313,7 @@ class ThirdInterfaceController extends BaseController
                 unset($infos[0]);
                 foreach ($infos as $info) {
                     if ($info != null) {
-                        $carviolate = CarViolateInfo::create([
+                        $carviolate = ViolateInfo::create([
                                 'car_type' => $lstype,
                                 'car_province' => $lsprefix,
                                 'car_number' => $lsnum,

@@ -27,7 +27,7 @@ class PenaltyInfo extends Model
      * @var array
      */
     protected $hidden = [
-        'id',
+//        'id',
     ];
     //获取决定书编号相关的 决定书相关信息
     public function order_info(){

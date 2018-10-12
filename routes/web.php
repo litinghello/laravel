@@ -36,8 +36,6 @@ Route::any('/order/pay/wechat/paycall','WeChatsController@wechat_paycall')->name
 //接口 创建微信公众号的菜单
 Route::get('/wechats/menu/create','WeChatsController@create_menu')->name("wechats.menu");
 
-//接口 根据微信order_source_id获取详情
-Route::post('/penalties/order/detail','ThirdInterfaceController@penalty_detail_by_order')->name('penalties.order.detail');
 //界面 决定书编号查询
 Route::get('/penalties/inquire','HomeController@views_penalty_inquire')->name('views.penalty.inquire');
 //接口 决定书编号
@@ -53,9 +51,10 @@ Route::post('/violates/info','ThirdInterfaceController@penalty_car_info')->name(
 //Route::any('/penalties/login/51jfk','ThirdAccountController@login_51jfk_account')->name('penalties.login.51jfk');
 
 //后台查看数据
-Route::get('/adminltes/table/home', 'AdminLtesController@penalty_order_table_home')->name('adminltes.table.home');
-Route::post('/adminltes/table/data', 'AdminLtesController@get_penalty_order_data')->name('adminltes.table.data');
-Route::get('/adminltes/table/complete', 'AdminLtesController@set_penalty_order_data')->name('adminltes.table.complete');
+Route::get('/adminltes/table/home', 'AdminLtesController@order_table_home')->name('adminltes.table.home');
+Route::post('/adminltes/table/data', 'AdminLtesController@get_order_data')->name('adminltes.table.data');
+Route::post('/adminltes/table/data/detail', 'AdminLtesController@get_order_detail')->name('adminltes.table.data.detail');
+Route::get('/adminltes/table/complete', 'AdminLtesController@set_order_data')->name('adminltes.table.complete');
 
 
 

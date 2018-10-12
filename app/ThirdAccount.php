@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ThirdAccount extends Model
 {
     //protected $connection = 'connection-name';//数据库连接
-    protected $table = 'third_party_account';//数据表名
+    protected $table = 'third_account';//数据表名
 
     protected $fillable = [
         'account_type',

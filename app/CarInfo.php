@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserCarInfo extends Model
+class CarInfo extends Model
 {
     //protected $connection = 'connection-name';//数据库连接
-    protected $table = 'user_car_info';//数据表名
+    protected $table = 'car_info';//数据表名
 
     protected $fillable = [
         'userid',

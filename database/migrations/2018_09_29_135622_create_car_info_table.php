@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserCarInfo extends Migration
+class CreateCarInfoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateUserCarInfo extends Migration
      */
     public function up()
     {
-        Schema::create('user_car_info', function (Blueprint $table) {
+        Schema::create('car_info', function (Blueprint $table) {
             $table->increments('id');
             $table->string('userid')->comment('用户id');//
             $table->string('car_type')->comment('号牌种类');//
@@ -33,6 +33,6 @@ class CreateUserCarInfo extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_car_info');
+        Schema::dropIfExists('car_info');
     }
 }

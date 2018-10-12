@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateThirdPartyAccount extends Migration
+class CreateThirdAccountTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateThirdPartyAccount extends Migration
      */
     public function up()
     {
-        Schema::create('third_party_account', function (Blueprint $table) {
+        Schema::create('third_account', function (Blueprint $table) {
             $table->increments('id');
             $table->string('account_type')->comment('账户类型');//
             $table->string('account_name')->comment('账户名称');//
@@ -32,6 +32,6 @@ class CreateThirdPartyAccount extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('third_party_account');
+        Schema::dropIfExists('third_account');
     }
 }

@@ -23,7 +23,7 @@
                     </div>
                     <div class="form-group">
                         <div class="text-center">
-                            <a id="penalty_submit" type="button" class="btn btn-primary">确认</a>
+                            <button id="penalty_submit" type="button" class="btn btn-primary">确认</button>
                             {{--<a id="is_order">什么是决定书编号?</a>--}}
                         </div>
                     </div>
@@ -61,8 +61,8 @@
                             url:"{{route('penalties.info')}}",
                             data:post_data,
                             success:function(data){
+                                $("#penalty_submit").attr('disabled',false);
                                 if(data['status'] === 0){
-                                    console.log(data['data']);
                                     user_datatables_init(info_object,data['data'],function (data) {
                                         user_modal_input("订单提交","手机号码",function (value) {
                                             let order_value={

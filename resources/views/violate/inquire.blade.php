@@ -40,9 +40,9 @@
                         </div>
                         <div class="form-group">
                             <div class="text-center">
-                                <a id="violate_inquire_button" type="button" class="btn btn-primary">
+                                <button id="violate_submit" type="button" class="btn btn-primary">
                                     {{ __('查询') }}
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -73,7 +73,7 @@
                             $("#car_province").append("<option value='"+value+"'>"+value+"</option>");
                         });
 
-                        $("#violate_inquire_button").click(function (){
+                        $("#violate_submit").click(function (){
                             let post_data = {
                                 car_province:$("#car_province").val(),
                                 car_number:$("#car_number").val().toLocaleUpperCase(),
@@ -81,12 +81,12 @@
                                 car_frame_number:$("#car_frame_number").val(),
                                 car_engine_number:$("#car_engine_number").val(),
                             };
-                            $("#violate_inquire_button").attr('disabled',true);
+                            $("#violate_submit").attr('disabled',true);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                                 url:"{{route('violates.info')}}",type:"POST",data:post_data,
                                 success:function(data){
-                                    // console.log(data);
+                                    $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
                                             // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
@@ -108,7 +108,7 @@
                                 },
                                 error:function(error){
                                     user_modal_warning("请再次提交");
-                                    $("#violate_inquire_button").attr('disabled',false);//开启再次点击按键
+                                    $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                 }
                             });
                         });

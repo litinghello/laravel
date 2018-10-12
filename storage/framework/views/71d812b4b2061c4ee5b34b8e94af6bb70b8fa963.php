@@ -20,7 +20,7 @@
                     </div>
                     <div class="form-group">
                         <div class="text-center">
-                            <a id="penalty_submit" type="button" class="btn btn-primary">确认</a>
+                            <button id="penalty_submit" type="button" class="btn btn-primary">确认</button>
                             
                         </div>
                     </div>
@@ -50,6 +50,7 @@
                 $(document).ready(function() {
                     // user_datatables_show();
                     $("#penalty_submit").click(function () {
+                        $("#penalty_submit").attr('disabled',true);
                         let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
                         $.ajax({
                             type:"POST",
@@ -57,8 +58,8 @@
                             url:"<?php echo e(route('penalties.info')); ?>",
                             data:post_data,
                             success:function(data){
+                                $("#penalty_submit").attr('disabled',false);
                                 if(data['status'] === 0){
-                                    console.log(data['data']);
                                     user_datatables_init(info_object,data['data'],function (data) {
                                         user_modal_input("订单提交","手机号码",function (value) {
                                             let order_value={
@@ -78,6 +79,7 @@
                             },
                             error:function(error){
                                 user_modal_warning("请再次提交");
+                                $("#penalty_submit").attr('disabled',false);
                             }
                         });
                     });

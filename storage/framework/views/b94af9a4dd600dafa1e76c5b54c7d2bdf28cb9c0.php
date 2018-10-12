@@ -1,5 +1,4 @@
 <script type="text/javascript">
-    let wechat_pay_data = null;
     let wechat_pay_type = "JSSDK";//WeixinJSBridge or JSSDK
     function wechat_process(data){//微信两种支付方式，
         if(wechat_pay_type === "WeixinJSBridge"){
@@ -24,7 +23,6 @@
                 jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
             });
             wx.ready(function(){
-                wechat_pay_data = null;
                 wx.chooseWXPay({
                     debug: false,timestamp:data['timestamp'] ,nonceStr: data['nonceStr'] ,
                     package: data['package'] ,signType: data['signType'] ,paySign: data['paySign'] , // 支付签名
@@ -46,29 +44,40 @@
         }
     }
     function user_wechat_pay(order_data){
-        //这里防止重复加载支付订单
-        if(wechat_pay_data !== null){
-            wechat_process(wechat_pay_data);
-        }else{
-            // console.log(order_data);
-            $.ajax({
-                headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
-                url:"<?php echo e(route('order.pay.wechat')); ?>",
-                type:"POST",
-                data:order_data,
-                success:function(data){
-                    // user_modal_warning(data);
-                    if(data['status'] === 0){
-                        wechat_pay_data = data['data'];//保存值
-                        wechat_process(wechat_pay_data);//采用微信网页支付
-                    }else{
-                        user_modal_prompt(data['data']);
-                    }
-                },
-                error:function(error){
-                    user_modal_prompt("支付提交失败:"+JSON.stringify(error));
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
+            url:"<?php echo e(route('order.pay.wechat')); ?>",
+            type:"POST",
+            data:order_data,
+            success:function(data){
+                // user_modal_warning(data);
+                if(data['status'] === 0){
+                    wechat_pay_data = data['data'];//保存值
+                    wechat_process(wechat_pay_data);//采用微信网页支付
+                }else{
+                    user_modal_prompt(data['data']);
                 }
-            });
-        }
+            },
+            error:function(error){
+                user_modal_prompt("支付提交失败:"+JSON.stringify(error));
+            }
+        });
+    }
+    function user_wechat_pay_check(order_data) {
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
+            url:"<?php echo e(route('order.pay.check')); ?>",
+            type:"POST",
+            //data:{order_number:},
+            success:function(data){
+                if(data['status'] === 0){
+                }else{
+                    user_modal_prompt(data['data']);
+                }
+            },
+            error:function(error){
+                user_modal_prompt("支付提交失败:"+JSON.stringify(error));
+            }
+        });
     }
 </script>

@@ -1,63 +1,37 @@
 
-<div class="modal fade" id="message_info" tabindex="-1" role="dialog" aria-labelledby="message_info_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="message_info_label">标题</h4>
-            </div>
-            <div class="modal-body" id="message_info_body">数据</div>
-            <div id="user_modal_footer" class="modal-footer">
-                <button id="user_modal_button_confirm" type="button" class="btn btn-default">确认</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
 <script type="text/javascript">
     function user_modal_hide(){
-        $("#user_modal_button_confirm").hide();
-        $('#message_info_label').text("");
-        $('#message_info_body').html("");
-        $('#message_info').modal('hide');
     }
     function user_modal_show(title,body){
-        $("#user_modal_button_confirm").hide();
-        $('#message_info_label').text(title);
-        $('#message_info_body').html(body);
-        $('#message_info').modal('show');
+        layer.confirm(body, {icon: 3, title:title}, function(index){
+            //do something
+            layer.close(index);
+        });
     }
-    function user_modal_prompt(html){
-        $("#user_modal_button_confirm").hide().unbind("click");
-        $('#message_info_label').text("提示");
-        $('#message_info_body').html(html);
-        $('#message_info').modal('show');
+    function user_modal_prompt(body){
+        layer.confirm(body, {icon: 3, title:title}, function(index){
+            //do something
+            layer.close(index);
+        });
     }
-    function user_modal_comfirm(html,event){
-        $("#user_modal_button_confirm").hide().unbind("click");
-        $('#message_info_label').text("提示");
-        $('#message_info_body').html(html);
-        $('#message_info').modal('show');
-        $("#user_modal_button_confirm").show().click(function () {
+    function user_modal_comfirm(body,event){
+        layer.confirm(body, {icon: 3, title:"提示"}, function(index){
             event();
+            layer.close(index);
         });
     }
     function user_modal_warning(html){
-        $("#user_modal_button_confirm").hide();
-        $('#message_info_label').text("警告");
-        $('#message_info_body').html(html);
-        $('#message_info').modal('show');
+        layer.alert(html);
     }
     function user_modal_input(title,name,event) {
-        $('#message_info_label').text(title);
-        $('#message_info_body').html("<div class=\"input-group\">\n" +
-            "<div class=\"input-group-addon\">"+name+"</div>\n" +
-            "\t<input id=\"user_model_input\" type=\"text\" class=\"form-control\" name=\"user_model_input\" placeholder=\"手机号码\" value=\"\" required>\n" +
-            "</div>\n" +
-            "</div>");
-        $('#message_info').modal('show');
-
-        $("#user_modal_button_confirm").show().unbind("click").click(function () {
-            event($("#user_model_input").val());
+        layer.prompt({
+            formType: 1,
+            // value: '初始值',
+            title: '请输入手机号码',
+             // area: ['60%', '30%'] //自定义文本域宽高
+        }, function(value, index, elem){
+            event(value); //得到value
+            layer.close(index);
         });
     }
 </script>

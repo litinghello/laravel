@@ -230,8 +230,8 @@ class ThirdInterfaceController extends BaseController
             'penalty_money' => $response_body['fkje'],
             'penalty_money_late' => $response_body['znj'],
             'penalty_user_name' => $response_body['dsr'],
-            'penalty_process_time' => date('Y-m-d H:i:s', strtotime($response_body['clsj'])),
-            'penalty_illegal_time' => date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
+            'penalty_process_time' => $response_body['clsj'],
+            'penalty_illegal_time' => $response_body['wfsj'],//date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
             'penalty_illegal_place' => $response_body['wfdz'],
             'penalty_behavior' => $response_body['wfxw'] . "",
         ]);

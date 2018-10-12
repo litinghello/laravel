@@ -21,8 +21,8 @@ class CreatePenaltyInfoTable extends Migration
             $table->double('penalty_money')->comment('罚款金额');//罚款金额
             $table->double('penalty_money_late')->comment('罚款滞纳金');//罚款滞纳金
             $table->string('penalty_user_name')->comment('罚款人姓名');//罚款人姓名
-            $table->timestamp('penalty_process_time')->nullable()->comment('罚款处理时间');//罚款处理时间
-            $table->timestamp('penalty_illegal_time')->nullable()->comment('罚款违法时间');//罚款违法时间
+            $table->string('penalty_process_time')->nullable()->comment('罚款处理时间');//罚款处理时间
+            $table->string('penalty_illegal_time')->nullable()->comment('罚款违法时间');//罚款违法时间
             $table->string('penalty_illegal_place')->comment('罚款违法地点');//罚款违法地点
             $table->string('penalty_behavior')->comment('罚款违法行为');//罚款违法行为
             $table->timestamps();

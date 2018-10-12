@@ -64,7 +64,7 @@
                                             let order_value={
                                                 order_money:parseInt(data.penalty_money)+parseInt(data.penalty_money_late)+30,
                                                 order_src_type:"penalty",
-                                                order_src_id:data.penalty_number,
+                                                order_src_id:data.id,
                                                 order_phone_number:value,
                                             };
                                             user_order_create(order_value);//创建订单

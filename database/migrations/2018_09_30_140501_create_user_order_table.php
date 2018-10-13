@@ -21,7 +21,7 @@ class CreateUserOrderTable extends Migration
             $table->string('order_src_id')->comment('订单关联类型表的id');//订单关联的订单总单号
             $table->string('order_user_id')->comment('订单用户id');//订单用户id
             $table->string('order_phone_number')->comment('订单用户手机号码');//订单用户id
-            $table->enum('order_status',['invalid','unpaid','paid','processing','completed'])->default('invalid')->comment('处理状态：无效、未支付、已支付、处理中、处理完成，默认：无效');//订单状态 未支付 支付 处理中 处理完成
+            $table->enum('order_status',['invalid','unpaid','paying','paid','processing','completed'])->default('invalid')->comment('处理状态：无效、未支付、支付中、已支付、处理中、处理完成，默认：无效');//订单状态 未支付 支付 处理中 处理完成
             $table->nullableTimestamps();
         });
     }

@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => '/',
 
     'logout_url' => 'logout',
 
@@ -131,6 +131,12 @@ return [
             'text' => '违章查询',
             'url'  => '/violates/inquire',
             'icon' => 'car',
+        ],
+        '联系我们',
+        [
+            'text' => '联系方式',
+            'url'  => '/contact/us',
+            'icon' => 'phone',
         ],
             /*
         '订单管理',

@@ -1,16 +1,11 @@
 <?php $__env->startSection('content_header'); ?>
     <h1>代缴订单</h1>
 <?php $__env->stopSection(); ?>
-<?php $__env->startSection('css'); ?>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-    
-<?php echo $__env->yieldSection(); ?>
-<?php $__env->startSection('js'); ?>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
-<?php echo $__env->yieldSection(); ?>
+
+<?php $__env->startComponent('layouts.resources'); ?>
+<?php echo $__env->renderComponent(); ?>
+
+
 <?php $__env->startSection('content'); ?>
     <p>:</p>
     
@@ -31,7 +26,11 @@
         
     
 
+    <?php if(!count($list)): ?>
+        <p class="help-block text-center well">没 有 记 录 哦！</p>
+    <?php else: ?>
     <div class="table-responsive table-bordered">
+
         <table class="table table-striped table-hover">
         <thead>
         <tr>
@@ -65,9 +64,10 @@
         </tbody>
 
         </table>
+
         <?php if(isset($page)): ?><?php echo $page; ?><?php endif; ?>
-        
     </div>
+    <?php endif; ?>
 
     <?php $__env->startComponent('layouts.modal'); ?>
     <?php echo $__env->renderComponent(); ?>
@@ -95,6 +95,8 @@
             })
         }
     </script>
+
+
     
 
         

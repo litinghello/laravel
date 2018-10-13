@@ -27,7 +27,8 @@ class HomeController extends Controller
 //                return view('adminlte.home');
                 return redirect()->route("adminltes.table.home");
             }else{
-                return view('home');
+//                return view('home');
+                return redirect()->route("order.get");
             }
         }else{
             return view('auth.login');

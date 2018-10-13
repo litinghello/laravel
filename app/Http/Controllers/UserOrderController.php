@@ -75,9 +75,14 @@ class UserOrderController extends Controller
     }
     //获取用户订单
     public function get_user_order(){
-        $table = User::where('id',Auth::id())->first()->user_order;
-//        return response()->json(['status' => 1,'data' =>  Auth::id()]);
-        return response()->json(['status' => 0,'data' =>  $table]);
+
+//        $table = User::where('id',Auth::id())->first()->user_order;
+//
+//        return response()->json(['status' => 0,'data' =>  $table]);
+
+        $result = parent::_list(UserOrderInfo::where('order_user_id',Auth::id()));
+
+        return view('home',$result);
     }
 
 }

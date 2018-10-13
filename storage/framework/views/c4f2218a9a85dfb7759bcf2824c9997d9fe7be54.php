@@ -54,7 +54,9 @@
             paging: true,
             pagingType: "full_numbers"//分页样式的类型
         }).on('click', 'tr', function () {
-            click_event(user_datatables_object.row( this ).data());
+            if(user_datatables_object.row( this ).data() !== undefined){
+                click_event(user_datatables_object.row( this ).data());
+            }
         });
     }
     $("#datalables_body input[type=search]").css({ width: "auto" });

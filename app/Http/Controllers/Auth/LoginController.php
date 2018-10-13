@@ -77,11 +77,14 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
+
         if($user['authorize']=='1')
         {
-            return view('adminlte.home');
+//            return view('adminlte.home');
+            return redirect()->route("adminltes.table.home");
         }else{
-            return view('home');
+//            return view('home');
+            return redirect()->route("order.get");
         }
     }
 }

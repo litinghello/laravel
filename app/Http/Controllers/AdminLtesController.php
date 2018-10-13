@@ -29,20 +29,11 @@ class AdminLtesController extends Controller
     {
 //        $table = UserOrderInfo::all();
 
-        $perPage = 10;
+//        $result = parent::_list(UserOrderInfo::paginate(10));
 
-//        $request->get('page') && $p = $request->get('page');
+//        $result = parent::_list(UserOrderInfo::class);
 
-
-        $page = DB::table('user_order_info')->paginate($perPage);
-
-        if (($totalNum = $page->total()) > 0) {
-            list($curPage, $maxNum) = [$page->currentPage(), $page->lastPage()];
-            list($pattern, $replacement) = [['/href="(.*?)"/', '/pagination/'], ['href="$1"', 'pagination pull-right']];
-            $html = "<span class='pagination-trigger nowrap'>共 {$totalNum} 条记录，每页显示 $perPage 条，共 {$maxNum} 页当前显示第 {$curPage} 页。</span>";
-            list($result['total'], $result['list'], $result['page']) = [$totalNum, $page->all(), $html . preg_replace($pattern, $replacement, $page->render())];
-        }
-
+        $result = parent::_list(DB::table('user_order_info'));
         return view('adminlte.home', $result);
 
     }

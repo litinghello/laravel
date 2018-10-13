@@ -5,16 +5,11 @@
 @section('content_header')
     <h1>代缴订单</h1>
 @stop
-@section('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-    {{--<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.css"/>--}}
-@show
-@section('js')
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    {{--<script type="text/javascript" src="http://cdn.datatables.net/plug-ins/28e7751dbec/integration/bootstrap/3/dataTables.bootstrap.js"></script>--}}
-@show
+
+@component('layouts.resources')
+@endcomponent
+
+
 @section('content')
     <p>:</p>
     {{--<div class="row center-block">--}}
@@ -35,7 +30,11 @@
         {{--</table>--}}
     {{--</div>--}}
 
+    @if(!count($list))
+        <p class="help-block text-center well">没 有 记 录 哦！</p>
+    @else
     <div class="table-responsive table-bordered">
+
         <table class="table table-striped table-hover">
         <thead>
         <tr>
@@ -69,9 +68,10 @@
         </tbody>
 
         </table>
+
         @if(isset($page)){!!$page!!}@endif
-        {{--{{ $table->links() }}--}}
     </div>
+    @endif
 
     @component('layouts.modal')
     @endcomponent
@@ -99,6 +99,8 @@
             })
         }
     </script>
+
+
     {{--<script type="text/javascript" >--}}
 
         {{--$(document).ready(function() {--}}

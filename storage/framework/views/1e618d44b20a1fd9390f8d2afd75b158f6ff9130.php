@@ -1,17 +1,8 @@
 <?php $__env->startSection('content_header'); ?>
     <h1>违章查询</h1>
 <?php $__env->stopSection(); ?>
-<?php $__env->startSection('css'); ?>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-    
-<?php echo $__env->yieldSection(); ?>
-<?php $__env->startSection('js'); ?>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
-    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
-<?php echo $__env->yieldSection(); ?>
+<?php $__env->startComponent('layouts.resources'); ?>
+<?php echo $__env->renderComponent(); ?>
 <?php $__env->startSection('content'); ?>
     <div class="container">
         <div class="row justify-content-center">
@@ -46,10 +37,10 @@
                         </div>
                         <div class="form-group">
                             <div class="text-center">
-                                <a id="violate_inquire_button" type="button" class="btn btn-primary">
+                                <button id="violate_submit" type="button" class="btn btn-primary">
                                     <?php echo e(__('查询')); ?>
 
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -58,8 +49,9 @@
                     <?php echo $__env->renderComponent(); ?>
                     <?php $__env->startComponent('layouts.modal'); ?>
                     <?php echo $__env->renderComponent(); ?>
-                    <?php $__env->startComponent('layouts.wechat'); ?>
+                    <?php $__env->startComponent('layouts.order'); ?>
                     <?php echo $__env->renderComponent(); ?>
+
                 </div>
                 <script type="text/javascript">
                     let info_object = {
@@ -79,7 +71,7 @@
                             $("#car_province").append("<option value='"+value+"'>"+value+"</option>");
                         });
 
-                        $("#violate_inquire_button").click(function (){
+                        $("#violate_submit").click(function (){
                             let post_data = {
                                 car_province:$("#car_province").val(),
                                 car_number:$("#car_number").val().toLocaleUpperCase(),
@@ -87,24 +79,23 @@
                                 car_frame_number:$("#car_frame_number").val(),
                                 car_engine_number:$("#car_engine_number").val(),
                             };
-                            $("#violate_inquire_button").attr('disabled',true);
+                            $("#violate_submit").attr('disabled',true);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
                                 url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
                                 success:function(data){
-                                    // console.log(data);
+                                    $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
                                             // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
-                                            user_modal_input("手机号码",function (value) {
-                                                let pay_value={
-                                                    order_money:parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30,
+                                            user_modal_input("订单提交","手机号码",function (value) {
+                                                let order_value={
+                                                    order_money:parseInt(data.violate_marks)*150+parseInt(data.violate_money)+30,
                                                     order_src_type:"violate",
                                                     order_src_id:data.id,
                                                     order_phone_number:value,
                                                 };
-                                                user_modal_hide();//关闭弹出框
-                                                user_wechat_pay(pay_value);
+                                                user_order_create(order_value);//创建订单
                                             });
                                         });
                                         user_datatables_show();
@@ -115,7 +106,7 @@
                                 },
                                 error:function(error){
                                     user_modal_warning("请再次提交");
-                                    $("#violate_inquire_button").attr('disabled',false);//开启再次点击按键
+                                    $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                 }
                             });
                         });

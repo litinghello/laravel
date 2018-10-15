@@ -46,7 +46,7 @@ Route::any('/penalties/info','ThirdInterfaceController@penalty_info')->name('pen
 //界面 违章查询
 Route::get('/violates/inquire','HomeController@views_violate_inquire')->name('views.violate.inquire');
 //接口 违章查询
-Route::any('/violates/info','ThirdInterfaceController@penalty_car_info')->name('violates.info');
+Route::any('/violates/info','ThirdInterfaceController@violate_info')->name('violates.info');
 
 //添加第三方账户
 //Route::any('/penalties/account/add','ThirdAccountController@add_third_account')->name('penalties.account.add');

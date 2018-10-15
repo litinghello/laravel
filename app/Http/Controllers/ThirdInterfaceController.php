@@ -242,7 +242,7 @@ class ThirdInterfaceController extends BaseController
      * @param Request $request
      * @return string
      */
-    public function penalty_car_info(Request $request){
+    public function violate_info(Request $request){
         $validator = Validator::make($request->all(), [
             'car_province' => 'required',//省份  川
             'car_number' => 'required|alpha_num',//号牌  A5F795
@@ -359,6 +359,7 @@ class ThirdInterfaceController extends BaseController
                                 'violate_address' => $info[4],
                                 'violate_money' => $info[5],
                                 'violate_marks' => $info[7],
+                                'violate_msg' => "",
                             ]
                         );
                         $carviolates[] = $carviolate;

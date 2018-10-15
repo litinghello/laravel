@@ -24,6 +24,7 @@ class CreateViolateInfoTable extends Migration
             $table->string('violate_address')->comment('违章地点');//
             $table->double('violate_money')->comment('罚款金额(元)');//
             $table->double('violate_marks')->comment('扣分(仅供参考)');//
+            $table->string('violate_msg')->comment('提示信息');//
             $table->timestamps();
         });
     }

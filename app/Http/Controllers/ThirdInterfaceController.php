@@ -185,7 +185,7 @@ class ThirdInterfaceController extends BaseController
             $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         }
         if ($penaltyinfo != null) {
-            if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-100000 minute"))) {
+            if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-10 minute"))) {
                 return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
             }
         }
@@ -257,6 +257,23 @@ class ThirdInterfaceController extends BaseController
         $lsnum = $request['car_number'];
         $lstype = $request['car_type'];
         $frameno = $request['car_frame_number'];
+
+        //判断是否在最近8小时内查询了，有则直接返回结果，不在查询接口
+        $carviolates = ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->get();
+        if($carviolates!= null && count($carviolates)>0){
+            if ($carviolates[0] != null && $carviolates[0]->updated_at > date("Y-m-d H:i:s", strtotime("-480 minute"))) {
+                //没有违法返回提示
+                if(($carviolates[0]->violate_time == null || $carviolates[0]->violate_time == '') && $carviolates[0]->violate_msg != null && $carviolates[0]->violate_msg != ''){
+                    return response()->json(['status' => 1, 'data' => $carviolates[0]->violate_msg]);
+                }else{
+                    return response()->json(['status' => 0, 'data' => $carviolates]);
+                }
+            }else{
+                ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->delete();
+            }
+        }
+
+
         $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
         if (!$account) {
             $account = ThirdAccount::where("account_type", '51jfk')->first();
@@ -291,8 +308,24 @@ class ThirdInterfaceController extends BaseController
             if($form_strs!= null && count($form_strs)>0){
                $error = LaravelHtmlDomParser\Facade::str_get_html($form_strs[0])->find('div.tishi');
                if($error!= null && count($error)>1){
+                   $carviolate = ViolateInfo::create([
+                           'car_type' => $lstype,
+                           'car_province' => $lsprefix,
+                           'car_number' => $lsnum,
+                           'car_frame_number' => $frameno,
+                           'violate_msg' => $error[1]->innertext,
+                       ]
+                   );
                     return response()->json(['status' => 1, 'data' => $error[1]->innertext]);
                }elseif ($error!= null && count($error)==1){
+                   $carviolate = ViolateInfo::create([
+                           'car_type' => $lstype,
+                           'car_province' => $lsprefix,
+                           'car_number' => $lsnum,
+                           'car_frame_number' => $frameno,
+                           'violate_msg' => $error[0]->innertext,
+                       ]
+                   );
                    return response()->json(['status' => 1, 'data' => $error[0]->innertext]);
                }
             }

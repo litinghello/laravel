@@ -55,7 +55,7 @@
                 <td><?php echo e($data->order_money); ?></td>
                 <td><?php echo e($data->order_src_id); ?></td>
                 <td><?php echo e($data->order_user_id); ?></td>
-                <td><?php echo e($data->order_status); ?></td>
+                <td><?php if($data->order_status=='paid'): ?>已支付<?php elseif($data->order_status=='unpaid'): ?>未支付<?php elseif($data->order_status=='invalid'): ?>无效<?php elseif($data->order_status=='processing'): ?>正在处理<?php elseif($data->order_status=='completed'): ?>处理完成<?php endif; ?></td>
                 <td><?php echo e($data->created_at); ?></td>
                 <td><?php echo e($data->updated_at); ?></td>
                 <td><a href="<?php echo e(route('adminltes.table.complete', ['id'=>$data->id,'order_number'=>$data->order_number])); ?>" class="btn btn-xs btn-primary">完成</a></td>

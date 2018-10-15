@@ -32,7 +32,7 @@
                         <td>{{ $data->order_number }}</td>
                         <td>{{ $data->order_money }}</td>
                         <td>{{ $data->order_phone_number }}</td>
-                        <td>{{ $data->order_status }}</td>
+                        <td>@if($data->order_status=='paid')已支付@elseif($data->order_status=='unpaid')未支付@elseif($data->order_status=='invalid')无效@elseif($data->order_status=='processing')正在处理@elseif($data->order_status=='completed')处理完成@endif</td>
                         <td>{{ $data->updated_at }}</td>
                     </tr>
                 @endforeach

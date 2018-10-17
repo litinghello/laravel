@@ -54,6 +54,10 @@
             "<div>电话:"+data['order_phone_number']+"</div>"+"<br>是否确认支付？";
         user_modal_comfirm(html,function () {
             // user_modal_warning("订单处理");
+<<<<<<< HEAD
+             console.log(data);
+=======
+>>>>>>> 3da86b33307110d1f90d2290fb52719cb1e5828e
             let pay_value={
                 order_money:parseInt(data.order_money),
                 order_src_type:data.order_src_type,

@@ -317,8 +317,8 @@ class ThirdInterfaceController extends BaseController
                                 'violate_code' => '',
                                 'violate_time' => '',
                                 'violate_address' => '',
-                                'violate_money' => '',
-                                'violate_marks' => '',
+                                'violate_money' => 0,
+                                'violate_marks' => 0,
                            'violate_msg' => $error[1]->innertext,
                        ]
                    );
@@ -333,8 +333,8 @@ class ThirdInterfaceController extends BaseController
                                 'violate_code' => '',
                                 'violate_time' => '',
                                 'violate_address' => '',
-                                'violate_money' => '',
-                                'violate_marks' => '',
+                                'violate_money' => 0,
+                                'violate_marks' => 0,
                            'violate_msg' => $error[0]->innertext,
                        ]
                    );

@@ -313,21 +313,12 @@ class ThirdInterfaceController extends BaseController
                            'car_province' => $lsprefix,
                            'car_number' => $lsnum,
                            'car_frame_number' => $frameno,
-<<<<<<< HEAD
                            'violate_info' => '',
                            'violate_code' => '',
                            'violate_time' => '',
                            'violate_address' => '',
                            'violate_money' => 0,
                            'violate_marks' => 0,
-=======
-						   'violate_info' => '',
-                                'violate_code' => '',
-                                'violate_time' => '',
-                                'violate_address' => '',
-                                'violate_money' => 0,
-                                'violate_marks' => 0,
->>>>>>> 1b6335117919f10bb383d95a852fca4be592dc13
                            'violate_msg' => $error[1]->innertext,
                        ]
                    );
@@ -338,21 +329,12 @@ class ThirdInterfaceController extends BaseController
                            'car_province' => $lsprefix,
                            'car_number' => $lsnum,
                            'car_frame_number' => $frameno,
-<<<<<<< HEAD
                            'violate_info' => '',
                            'violate_code' => '',
                            'violate_time' => '',
                            'violate_address' => '',
                            'violate_money' => 0,
                            'violate_marks' => 0,
-=======
-						   	'violate_info' => '',
-                                'violate_code' => '',
-                                'violate_time' => '',
-                                'violate_address' => '',
-                                'violate_money' => 0,
-                                'violate_marks' => 0,
->>>>>>> 1b6335117919f10bb383d95a852fca4be592dc13
                            'violate_msg' => $error[0]->innertext,
                        ]
                    );

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Http\Controllers;
 
@@ -313,7 +313,7 @@ class ThirdInterfaceController extends BaseController
                            'car_province' => $lsprefix,
                            'car_number' => $lsnum,
                            'car_frame_number' => $frameno,
-				'violate_info' => '',
+						   'violate_info' => '',
                                 'violate_code' => '',
                                 'violate_time' => '',
                                 'violate_address' => '',
@@ -329,7 +329,7 @@ class ThirdInterfaceController extends BaseController
                            'car_province' => $lsprefix,
                            'car_number' => $lsnum,
                            'car_frame_number' => $frameno,
-				'violate_info' => '',
+						   	'violate_info' => '',
                                 'violate_code' => '',
                                 'violate_time' => '',
                                 'violate_address' => '',

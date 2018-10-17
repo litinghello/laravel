@@ -9,7 +9,10 @@
                 if(data['status'] === 0){
                     // user_modal_prompt("创建成功，是否返回支付页面");
                     user_modal_comfirm("订单创建成功，是否返回支付页面？",function () {
-                        window.location.replace("<?php echo e(route('views.home')); ?>");
+
+
+                        
+                        window.location.replace("<?php echo e(route('order.get')); ?>");
                     });
                 }else{
                     user_modal_prompt(data['data']);

@@ -207,21 +207,12 @@ class WeChatsController extends Controller
             'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
             'openid' =>  $user_id,//TODO: 用户openid "oiGyj0im2uCtxHX3_oFct-BDyOuA"
         ]);
-//        $result = $pay->order->unify([
-//            'trade_type'=>Order::NATIVE,
-//            'body'=>"商品描述",
-//            'total_fee'=>$user_order->order_money * 100,
-//            'out_trade_no'=>$user_order->order_number,
-//            'trade_type'=>'NATIVE',
-//            'openid'=>$user_id
-//        ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
 //            $config = $pay->jssdk->bridgeConfig($result['prepay_id'],false); //WeixinJSBridge支付 返回 json 字符串，如果想返回数组，传第二个参数 false
             $config = $pay->jssdk->sdkConfig($result['prepay_id']); //JSSDK支付 返回数组
-            //$configForPickAddress = $pay->jssdk->shareAddressConfig($token);//生成共享收货地址 JS 配置
-            //$config = $pay->jssdk->appConfig($result['prepay_id']);
-            //$config = $result->code_url;//二维码支付链接
+//            $config = $pay->jssdk->appConfig($result['prepay_id']);
             return response()->json(['status' => 0,'data' => $config]);
+//            return response()->json(['status' => 0,'data' => $result->code_url]);//二维码支付链接
         } else {
             return response()->json(['status' => 1,'data' => "微信支付异常"]);
         }

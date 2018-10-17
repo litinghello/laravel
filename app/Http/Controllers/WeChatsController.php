@@ -179,9 +179,22 @@ class WeChatsController extends Controller
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
 
-        $user = session('wechat.oauth_user'); //拿到授权用户资料
-        $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
+        $user_id = null;
+        if(session('wechat.oauth_user') == null){
+            if(Auth::check()){
+                if(Auth::user()->user_wechat != null){
+                    $user_id = Auth::user()->user_wechat->wechat_id;
+                }else{
+                    return response()->json(['status' => 1,'data' => "为绑定微信账户，请先绑定微信。"]);
+                }
+            }else{
+                return response()->json(['status' => 1,'data' => "请登录再尝试。"]);
+            }
+        }else{
+            $user_id = session('wechat.oauth_user')['default']['id'];
+        }
 
+        $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
         if($user_order->order_status != 'unpaid'){
             return response()->json(['status' => 1,'data' => "此订单已正在处理中。"]);
         }
@@ -195,7 +208,7 @@ class WeChatsController extends Controller
 //            'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
 //            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
-            'openid' =>  $user['default']['id'],//TODO: 用户openid
+            'openid' =>  $user_id,//TODO: 用户openid
 //            'openid' =>  "oiGyj0im2uCtxHX3_oFct-BDyOuA",//TODO: 用户openid
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
@@ -203,6 +216,7 @@ class WeChatsController extends Controller
             $config = $pay->jssdk->sdkConfig($result['prepay_id']); //JSSDK支付 返回数组
             //$configForPickAddress = $pay->jssdk->shareAddressConfig($token);//生成共享收货地址 JS 配置
             //$config = $pay->jssdk->appConfig($result['prepay_id']);
+            //$config = $result->code_url;//二维码支付链接
             return response()->json(['status' => 0,'data' => $config]);
         } else {
             return response()->json(['status' => 1,'data' => "微信支付异常"]);

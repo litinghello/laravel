@@ -185,7 +185,7 @@ class WeChatsController extends Controller
                 if(Auth::user()->user_wechat != null){
                     $user_id = Auth::user()->user_wechat->wechat_id;
                 }else{
-                    return response()->json(['status' => 1,'data' => "为绑定微信账户，请先绑定微信。"]);
+                    return response()->json(['status' => 1,'data' => "未绑定微信账户，请先绑定微信。"]);
                 }
             }else{
                 return response()->json(['status' => 1,'data' => "请登录再尝试。"]);

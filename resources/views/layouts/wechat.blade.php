@@ -69,6 +69,7 @@
             data:order_data,
             success:function(data){
                 // user_modal_warning(data);
+                console.log(data);
                 if(data['status'] === 0){
                     wechat_pay_data = data['data'];//保存值
                     wechat_process(wechat_pay_data,function () {

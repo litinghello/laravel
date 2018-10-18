@@ -55,6 +55,7 @@
                     $("#penalty_submit").click(function () {
                         $("#penalty_submit").attr('disabled',true);
                         let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
+                        console.log(post_data);
                         $.ajax({
                             type:"POST",
                             headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},

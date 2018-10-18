@@ -188,6 +188,7 @@ class ThirdInterfaceController extends BaseController
             if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-10 minute"))) {
                 return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
             }
+            $penaltyinfo->delete();
         }
 //        return response()->json(['status' => 1, 'data' => $penaltyinfo]);
         

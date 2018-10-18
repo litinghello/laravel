@@ -61,17 +61,23 @@ class UserOrderController extends Controller
                 return response()->json(['status' => 1,'data' => "该订单已被其他用户关联"]);
             }
         }else{
-            switch ($user_order->order_src_type){
-                case 'violate':
-                    $order_info =  ViolateInfo::where('id',$request['order_src_id'])->first();
-                    $request['order_money'] = $order_info->violate_money + $order_info->violate_marks * 150 + 30;
-                    break;
-                case 'penalty':
-                    $order_info =   PenaltyInfo::where('id',$request['order_src_id'])->first();
-                    $request['order_money'] = $order_info->penalty_money + $order_info->penalty_money_late + 10;
-                    break;
-                default:break;
-            }
+//            switch ($request['order_src_type'] ){
+//                case 'violate':
+//                    $order_info =  ViolateInfo::where('id',$request['order_src_id'])->first();
+//                    if($order_info == null){
+//                        return response()->json(['status' => 1, 'data' => '数据有误']);
+//                    }
+//                    $request['order_money'] = $order_info->violate_money + $order_info->violate_marks * 150 + 30;
+//                    break;
+//                case 'penalty':
+//                    $order_info =  PenaltyInfo::where('id',$request['order_src_id'])->first();
+//                    if($order_info == null){
+//                        return response()->json(['status' => 1, 'data' => '数据有误']);
+//                    }
+//                    $request['order_money'] = $order_info->penalty_money + $order_info->penalty_money_late + 10;
+//                    break;
+//                default:break;
+//            }
             UserOrderInfo::create([
                 'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
                 'order_money'=> $request['order_money'],

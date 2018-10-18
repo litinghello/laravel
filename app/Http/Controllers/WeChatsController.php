@@ -175,32 +175,40 @@ class WeChatsController extends Controller
             'order_src_type' => 'required|alpha_num',
             'order_src_id' => 'required|alpha_num',
             'order_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
-            'wechat_pay_type' => 'required|in:JSAPI,NATIVE,APP'
+            'wechat_pay_type' => 'required|in:JSAPI,NATIVE,APP',
+            'wechat_pay_limit' => 'required|in:true,false'
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
-
         $user_id = null;
-        if(session('wechat.oauth_user') == null){
-            if(Auth::check()){
-                if(Auth::user()->user_wechat != null){
-                    $user_id = Auth::user()->user_wechat->wechat_id;
+        if($request['wechat_pay_limit'] == 'true'){//如果指定支付唯一账户那么需要进行账户获取
+            if(session('wechat.oauth_user') == null){
+                if(Auth::check()){
+                    if(Auth::user()->user_wechat != null){
+                        $user_id = Auth::user()->user_wechat->wechat_id;
+                    }else{
+                        return response()->json(['status' => 1,'data' => "未绑定微信账户，请先绑定微信。"]);
+                    }
                 }else{
-                    return response()->json(['status' => 1,'data' => "未绑定微信账户，请先绑定微信。"]);
+                    return response()->json(['status' => 1,'data' => "请登录再尝试。"]);
                 }
             }else{
-                return response()->json(['status' => 1,'data' => "请登录再尝试。"]);
+                $user_id = session('wechat.oauth_user')['default']['id'];
             }
-        }else{
-            $user_id = session('wechat.oauth_user')['default']['id'];
         }
-
         $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
-        if($user_order->order_status != 'unpaid'){
+        if($user_order == null){//检查订单是否存在
+            return response()->json(['status' => 1,'data' => "此订单不存在，请联系客服。"]);
+        }
+        if($user_order->order_money != $request['order_money'] || $user_order->order_src_type != $request['order_src_type']
+            || $user_order->order_src_id != $request['order_src_id']|| $user_order->order_phone_number != $request['order_phone_number']
+        ){//检查订单信息是否正确
+            return response()->json(['status' => 1,'data' => "订单信息有误"]);
+        }
+        if($user_order->order_status != 'unpaid'){//检查是否支付完成
             return response()->json(['status' => 1,'data' => "此订单已正在处理中。"]);
         }
-
         $pay = Factory::payment(config('wechat.payment')['default']);
         $result = $pay->order->unify([
             'body' => '代办付款',
@@ -221,12 +229,13 @@ class WeChatsController extends Controller
                 case 'APP':
                     return response()->json(['status' => 0,'data' => $pay->jssdk->appConfig($result['prepay_id'])]);
                 case 'NATIVE':
-                    return response()->json(['status' => 0,'data' => $result->code_url]);
+//                    return response()->json(['status' => 0,'data' => $result->code_url]);
+                    return response()->json(['status' => 0,'data' => (new BaconQrCodeGenerator)->size(200)->generate($result['code_url'])]);
                 default:
                     return response()->json(['status' => 1,'data' => "暂时不支持支付"]);
             }
         } else {
-            return response()->json(['status' => 1,'data' => "微信支付异常"]);
+            return response()->json(['status' => 1,'data' => $result['err_code_des']]);
         }
     }
     //微信回调

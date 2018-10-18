@@ -110,7 +110,7 @@
                 },
                 columns: [
                     { data: 'id', name: 'id' },
-                    { data: 'order_number', name: 'name' },
+                    { data: 'order_number', name: 'order_number' },
                     { data: 'order_money', name: 'email' },
                     { data: 'order_src_id', name: 'order_src_id' },
                     { data: 'order_user_id', name: 'order_user_id' },

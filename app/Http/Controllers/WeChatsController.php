@@ -9,6 +9,7 @@ use App\WechatAccount;
 use App\User;
 use GuzzleHttp\Cookie\json_decode;
 use Yajra\Datatables\Datatables;
+use SimpleSoftwareIO\QrCode\BaconQrCodeGenerator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -174,7 +175,7 @@ class WeChatsController extends Controller
             'order_src_type' => 'required|alpha_num',
             'order_src_id' => 'required|alpha_num',
             'order_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
-            'wechat_pay_type' => 'required|in:JSAPI，NATIVE，APP'
+            'wechat_pay_type' => 'required|in:JSAPI,NATIVE,APP'
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
@@ -320,5 +321,10 @@ class WeChatsController extends Controller
             }
         }
         return response()->json(['status' => 1,'data' => "微信支付异常"]);
+    }
+
+    function test(){
+//        return (new BaconQrCodeGenerator)->size(100)->generate('Make a qrcode without Laravel!');
+        return response()->json(['status' => 0,'data' => (new BaconQrCodeGenerator)->size(100)->generate('Make a qrcode without Laravel!')]);
     }
 }

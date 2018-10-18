@@ -45,6 +45,9 @@
 @endcomponent
 @component('layouts.wechat')
 @endcomponent
+
+
+
 <script>
     function dataClick(data){
         let body = "<div>金额:"+data['order_money']+"元</div>"+
@@ -53,8 +56,7 @@
             order_money:parseInt(data.order_money),
             order_src_type:data.order_src_type,
             order_src_id:data.order_src_id,
-            order_phone_number:data.order_phone_number,
-            wechat_pay_type:'JSAPI'
+            order_phone_number:data.order_phone_number
         };
         user_modal_order_pay(body,pay_value);
     }

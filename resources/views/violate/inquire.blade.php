@@ -92,7 +92,7 @@
                                             // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
                                             user_modal_input("订单提交","手机号码",function (value) {
                                                 let order_value={
-                                                    order_money:parseInt(data.violate_marks)*150+parseInt(data.violate_money)+30,
+                                                    order_money:parseFloat(data.violate_marks)*150+parseFloat(data.violate_money)+30,
                                                     order_src_type:"violate",
                                                     order_src_id:data.id,
                                                     order_phone_number:value,

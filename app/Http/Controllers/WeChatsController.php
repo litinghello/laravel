@@ -201,6 +201,9 @@ class WeChatsController extends Controller
         if($user_order == null){//检查订单是否存在
             return response()->json(['status' => 1,'data' => "此订单不存在，请联系客服。"]);
         }
+//        echo $user_order;
+//        echo "////**********/////";
+//        echo $request;
         if($user_order->order_money != $request['order_money'] || $user_order->order_src_type != $request['order_src_type']
             || $user_order->order_src_id != $request['order_src_id']|| $user_order->order_phone_number != $request['order_phone_number']
         ){//检查订单信息是否正确

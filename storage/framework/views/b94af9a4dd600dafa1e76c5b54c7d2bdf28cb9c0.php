@@ -69,7 +69,7 @@
             data:order_data,
             success:function(data){
                 // user_modal_warning(data);
-                console.log(data);
+                // console.log(data);
                 if(data['status'] === 0){
                     if(order_data['wechat_pay_type'] === 'JSAPI'){
                         wechat_process(data['data'],function () {

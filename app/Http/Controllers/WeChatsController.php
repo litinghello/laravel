@@ -174,6 +174,7 @@ class WeChatsController extends Controller
             'order_src_type' => 'required|alpha_num',
             'order_src_id' => 'required|alpha_num',
             'order_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
+            'wechat_pay_type' => 'required|in:JSAPI，NATIVE，APP'
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
@@ -201,18 +202,28 @@ class WeChatsController extends Controller
 
         $pay = Factory::payment(config('wechat.payment')['default']);
         $result = $pay->order->unify([
-            'body' => '缴费',
+            'body' => '代办付款',
             'out_trade_no' => $user_order->order_number,//传入订单ID
             'total_fee' => $user_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
-            'trade_type' => 'JSAPI', // JSAPI，NATIVE，APP...
-            'openid' =>  $user_id,//TODO: 用户openid "oiGyj0im2uCtxHX3_oFct-BDyOuA"
+            'trade_type' => $request['wechat_pay_type'], // JSAPI，NATIVE，APP...
+            'openid' =>  $user_id,//TODO: 用户openid ex "oiGyj0im2uCtxHX3_oFct-BDyOuA"
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
 //            $config = $pay->jssdk->bridgeConfig($result['prepay_id'],false); //WeixinJSBridge支付 返回 json 字符串，如果想返回数组，传第二个参数 false
-            $config = $pay->jssdk->sdkConfig($result['prepay_id']); //JSSDK支付 返回数组
-//            $config = $pay->jssdk->appConfig($result['prepay_id']);
-            return response()->json(['status' => 0,'data' => $config]);
+//            $config = $pay->jssdk->sdkConfig($result['prepay_id']); //JSSDK支付 返回数组
+//            $config = $pay->jssdk->appConfig($result['prepay_id']); //APP支付
+//            return response()->json(['status' => 0,'data' => $config]);
 //            return response()->json(['status' => 0,'data' => $result->code_url]);//二维码支付链接
+            switch ($request['wechat_pay_type']){
+                case 'JSAPI':
+                    return response()->json(['status' => 0,'data' => $pay->jssdk->sdkConfig($result['prepay_id'])]);
+                case 'APP':
+                    return response()->json(['status' => 0,'data' => $pay->jssdk->appConfig($result['prepay_id'])]);
+                case 'NATIVE':
+                    return response()->json(['status' => 0,'data' => $result->code_url]);
+                default:
+                    return response()->json(['status' => 1,'data' => "暂时不支持支付"]);
+            }
         } else {
             return response()->json(['status' => 1,'data' => "微信支付异常"]);
         }

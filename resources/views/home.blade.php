@@ -26,7 +26,6 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 @foreach ($list as &$data)
                     <tr onclick="dataClick({{json_encode($data)}})">
                         <td>{{ $data->order_number }}</td>
@@ -37,13 +36,10 @@
                     </tr>
                 @endforeach
                 </tbody>
-
             </table>
-
             @if(isset($page)){!!$page!!}@endif
         </div>
     @endif
-
 @endsection
 @component('layouts.modal')
 @endcomponent
@@ -58,6 +54,7 @@
             order_src_type:data.order_src_type,
             order_src_id:data.order_src_id,
             order_phone_number:data.order_phone_number,
+            wechat_pay_type:'JSAPI'
         };
         user_modal_order_pay(body,pay_value);
     }

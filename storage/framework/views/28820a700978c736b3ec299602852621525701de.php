@@ -22,7 +22,6 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 <?php $__currentLoopData = $list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as &$data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr onclick="dataClick(<?php echo e(json_encode($data)); ?>)">
                         <td><?php echo e($data->order_number); ?></td>
@@ -33,41 +32,29 @@
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
-
             </table>
-
             <?php if(isset($page)): ?><?php echo $page; ?><?php endif; ?>
         </div>
     <?php endif; ?>
-
 <?php $__env->stopSection(); ?>
-
-
 <?php $__env->startComponent('layouts.modal'); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php $__env->startComponent('layouts.wechat'); ?>
 <?php echo $__env->renderComponent(); ?>
+
+
+
 <script>
     function dataClick(data){
-
-        let html = "<div>金额:"+data['order_money']+"元</div>"+
+        let body = "<div>金额:"+data['order_money']+"元</div>"+
             "<div>电话:"+data['order_phone_number']+"</div>"+"<br>是否确认支付？";
-        user_modal_comfirm(html,function () {
-            // user_modal_warning("订单处理");
-<<<<<<< HEAD
-             console.log(data);
-=======
->>>>>>> 3da86b33307110d1f90d2290fb52719cb1e5828e
-            let pay_value={
-                order_money:parseInt(data.order_money),
-                order_src_type:data.order_src_type,
-                order_src_id:data.order_src_id,
-                order_phone_number:data.order_phone_number,
-            };
-            // user_modal_hide();//关闭弹出框
-            user_wechat_pay(pay_value);
-        });
-
+        let pay_value={
+            order_money:parseInt(data.order_money),
+            order_src_type:data.order_src_type,
+            order_src_id:data.order_src_id,
+            order_phone_number:data.order_phone_number
+        };
+        user_modal_order_pay(body,pay_value);
     }
 </script>
 

@@ -26,7 +26,6 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 @foreach ($list as &$data)
                     <tr onclick="dataClick({{json_encode($data)}})">
                         <td>{{ $data->order_number }}</td>
@@ -37,37 +36,29 @@
                     </tr>
                 @endforeach
                 </tbody>
-
             </table>
-
             @if(isset($page)){!!$page!!}@endif
         </div>
     @endif
-
 @endsection
-
-
 @component('layouts.modal')
 @endcomponent
 @component('layouts.wechat')
 @endcomponent
+
+
+
 <script>
     function dataClick(data){
-
-        let html = "<div>金额:"+data['order_money']+"元</div>"+
+        let body = "<div>金额:"+data['order_money']+"元</div>"+
             "<div>电话:"+data['order_phone_number']+"</div>"+"<br>是否确认支付？";
-        user_modal_comfirm(html,function () {
-            // user_modal_warning("订单处理");
-            let pay_value={
-                order_money:parseInt(data.order_money),
-                order_src_type:data.order_src_type,
-                order_src_id:data.order_src_id,
-                order_phone_number:data.order_phone_number,
-            };
-            // user_modal_hide();//关闭弹出框
-            user_wechat_pay(pay_value);
-        });
-
+        let pay_value={
+            order_money:parseInt(data.order_money),
+            order_src_type:data.order_src_type,
+            order_src_id:data.order_src_id,
+            order_phone_number:data.order_phone_number
+        };
+        user_modal_order_pay(body,pay_value);
     }
 </script>
 

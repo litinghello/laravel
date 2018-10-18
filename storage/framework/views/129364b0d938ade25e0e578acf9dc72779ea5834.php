@@ -35,4 +35,25 @@
             layer.close(index);
         });
     }
+    //支付模块
+    function user_modal_order_pay(body,pay_value) {
+        if (/MicroMessenger/.test(window.navigator.userAgent)) {
+            pay_value['wechat_pay_type'] = 'JSAPI';
+            layer.confirm(body, {offset: '100px',icon: 3, title:"微信支付"}, function(index){
+                user_wechat_pay(pay_value);
+                layer.close(index);
+            });
+        } else if (/AlipayClient/.test(window.navigator.userAgent)) {
+            layer.confirm(body, {offset: '100px',icon: 3, title:"支付宝支付"}, function(index){
+                layer.close(index);
+            });
+        } else {
+            pay_value['wechat_pay_type'] = 'NATIVE';
+            console.log(pay_value);
+            layer.confirm(body, {offset: '100px',icon: 1, title:"二维码支付"}, function(index){
+                layer.close(index);
+                user_wechat_pay(pay_value);
+            });
+        }
+    }
 </script>

@@ -24,8 +24,8 @@ class HomeController extends Controller
     public function views_home(){
         if (Auth::check()) {
             if(Auth::user()->authorize=='1'){
-//                return view('adminlte.home');
-                return redirect()->route("adminltes.table.home");
+                return view('adminlte.home');
+//                return redirect()->route("adminltes.table.home");
             }else{
 //                return view('home');
                 return redirect()->route("order.get");

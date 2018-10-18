@@ -80,8 +80,8 @@ class LoginController extends Controller
 
         if($user['authorize']=='1')
         {
-//            return view('adminlte.home');
-            return redirect()->route("adminltes.table.home");
+            return view('adminlte.home');
+//            return redirect()->route("adminltes.table.home");
         }else{
 //            return view('home');
             return redirect()->route("order.get");

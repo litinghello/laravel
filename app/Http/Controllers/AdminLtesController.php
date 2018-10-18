@@ -27,25 +27,22 @@ class AdminLtesController extends Controller
      */
     public function order_table_home(Request $request)
     {
-//        $table = UserOrderInfo::all();
+        $table = UserOrderInfo::all();
 
-//        $result = parent::_list(UserOrderInfo::paginate(10));
-
-//        $result = parent::_list(UserOrderInfo::class);
-
-        $result = parent::_list(DB::table('user_order_info'));
-        return view('adminlte.home', $result);
+//        $result = parent::_list(DB::table('user_order_info'));
+//        return view('adminlte.home', $result);
+        return view('adminlte.home');
 
     }
     public function get_order_data(){
-//        $table = UserOrderInfo::all();
-//        return Datatables::of($table)
-//            ->addColumn('action', function ($table) {
-//                return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';
-//            })
-//            ->make(true);
+        $table = UserOrderInfo::all();
+        return Datatables::of($table)
+            ->addColumn('action', function ($table) {
+                return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';
+            })
+            ->make(true);
 
-        return redirect()->route("adminltes.table.home");
+//        return redirect()->route("adminltes.table.home");
     }
 
     public function set_order_data(Request $request){
@@ -57,9 +54,9 @@ class AdminLtesController extends Controller
             return $validator->errors()->first();
         }
         UserOrderInfo::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
-//        return view('adminlte.home');
+        return view('adminlte.home');
 
-        return redirect()->back();
+//        return redirect()->back();
     }
 
     public function get_order_detail(Request $request){

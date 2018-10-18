@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ViolateInfo;
 use Log;
 use App\PenaltyInfo;
 use App\UserOrderInfo;
@@ -41,8 +42,7 @@ class UserOrderController extends Controller
 
         $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
         if ($user_order != null) {
-            if($user_order->order_money != $request['order_money'] ||
-                $user_order->order_src_type != $request['order_src_type'] ||
+            if($user_order->order_src_type != $request['order_src_type'] ||
                 $user_order->order_phone_number != $request['order_phone_number']){
                 return response()->json(['status' => 1,'data' => "订单错误。"]);
             }
@@ -61,13 +61,17 @@ class UserOrderController extends Controller
                 return response()->json(['status' => 1,'data' => "该订单已被其他用户关联"]);
             }
         }else{
-//            switch ($user_order->order_src_type){
-//                case 'violate':
-//                    break;
-//                case 'penalty':
-//                    break;
-//                default:break;
-//            }
+            switch ($user_order->order_src_type){
+                case 'violate':
+                    $order_info =  ViolateInfo::where('id',$request['order_src_id'])->first();
+                    $request['order_money'] = $order_info->violate_money + $order_info->violate_marks * 150 + 30;
+                    break;
+                case 'penalty':
+                    $order_info =   PenaltyInfo::where('id',$request['order_src_id'])->first();
+                    $request['order_money'] = $order_info->penalty_money + $order_info->penalty_money_late + 10;
+                    break;
+                default:break;
+            }
             UserOrderInfo::create([
                 'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
                 'order_money'=> $request['order_money'],

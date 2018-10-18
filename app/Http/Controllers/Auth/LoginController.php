@@ -74,16 +74,10 @@ class LoginController extends Controller
             }
         }
         Auth::login($user_account);//登录账户
-
         $user = Auth::user();
-
-
-        if($user['authorize']=='1')
-        {
+        if($user['authorize']=='1'){
             return view('adminlte.home');
-//            return redirect()->route("adminltes.table.home");
         }else{
-//            return view('home');
             return redirect()->route("order.get");
         }
     }

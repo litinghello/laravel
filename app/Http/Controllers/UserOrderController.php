@@ -61,6 +61,13 @@ class UserOrderController extends Controller
                 return response()->json(['status' => 1,'data' => "该订单已被其他用户关联"]);
             }
         }else{
+//            switch ($user_order->order_src_type){
+//                case 'violate':
+//                    break;
+//                case 'penalty':
+//                    break;
+//                default:break;
+//            }
             UserOrderInfo::create([
                 'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
                 'order_money'=> $request['order_money'],

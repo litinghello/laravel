@@ -13,7 +13,8 @@
 @section('content')
     <p>:</p>
     <div class="row center-block">
-        <table id="table_info" class="table table-striped table-hover table-condensed">
+        {{--<table id="table_info" class="table table-striped table-hover table-condensed">--}}
+        <table id="table_info" class="table table-striped table-bordered" style="width:100%">
             <thead>
             <tr>
                 <th>编号</th>
@@ -115,7 +116,7 @@
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'order_number', name: 'order_number' },
-                    { data: 'order_money', name: 'email' },
+                    { data: 'order_money', name: 'order_money' },
                     { data: 'order_src_id', name: 'order_src_id' },
                     { data: 'order_user_id', name: 'order_user_id' },
                     { data: 'order_status', name: 'order_status' },
@@ -125,7 +126,7 @@
                 ],
                 language: {
                     lengthMenu: '<select class="form-control input-xsmall">' + '<option value="1">1</option>' + '<option value="10">10</option>' + '<option value="20">20</option>' + '<option value="30">30</option>' + '<option value="40">40</option>' + '<option value="50">50</option>' + '</select>条记录',//左上角的分页大小显示。
-                    search: '<span class="label label-success">搜索：</span>',//右上角的搜索文本，可以写html标签
+                    search: '<span class="btn btn-xs btn-primary">搜索：</span>',//右上角的搜索文本，可以写html标签
                     paginate: {//分页的样式内容。
                         previous: "上一页",
                         next: "下一页",

@@ -185,13 +185,14 @@ class ThirdInterfaceController extends BaseController
             $penaltyinfo = PenaltyInfo::where('penalty_number', $penalty_number)->first();
         }
         if ($penaltyinfo != null) {
+            if($penaltyinfo->penalty_car_number == ""){
+                return response()->json(['status' => 1, 'data' => "查询不到记录！"]);
+            }
             if ($penaltyinfo->updated_at > date("Y-m-d H:i:s", strtotime("-10 minute"))) {
                 return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
             }
             $penaltyinfo->delete();
         }
-//        return response()->json(['status' => 1, 'data' => $penaltyinfo]);
-        
         $account = ThirdAccount::where("account_status", 'valid')->where("account_type", '51jfk')->first();
         if (!$account) {
             $account = ThirdAccount::where("account_type", '51jfk')->first();
@@ -222,21 +223,34 @@ class ThirdInterfaceController extends BaseController
         }
         $response_body = json_decode($response->getBody(), true);
         if ($response_body['code'] != 200) {
+            PenaltyInfo::create([
+                'penalty_number' => $penalty_number,
+                'penalty_car_number' => "",
+                'penalty_car_type' => "",
+                'penalty_money' => 0,
+                'penalty_money_late' => 0,
+                'penalty_user_name' => "",
+                'penalty_process_time' => "",
+                'penalty_illegal_time' => "",//date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
+                'penalty_illegal_place' => "",
+                'penalty_behavior' => "",
+            ]);
             return response()->json(['status' => 1, 'data' => "查询不到记录！"]);
+        }else{
+            $penaltyinfo = PenaltyInfo::create([
+                'penalty_number' => $response_body['jdsbh'],
+                'penalty_car_number' => $response_body['hphm'],
+                'penalty_car_type' => $response_body['hpzl'],
+                'penalty_money' => $response_body['fkje'],
+                'penalty_money_late' => $response_body['znj'],
+                'penalty_user_name' => $response_body['dsr'],
+                'penalty_process_time' => $response_body['clsj'],
+                'penalty_illegal_time' => $response_body['wfsj'],//date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
+                'penalty_illegal_place' => $response_body['wfdz'],
+                'penalty_behavior' => $response_body['wfxw'] . "",
+            ]);
+            return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
         }
-        $penaltyinfo = PenaltyInfo::create([
-            'penalty_number' => $response_body['jdsbh'],
-            'penalty_car_number' => $response_body['hphm'],
-            'penalty_car_type' => $response_body['hpzl'],
-            'penalty_money' => $response_body['fkje'],
-            'penalty_money_late' => $response_body['znj'],
-            'penalty_user_name' => $response_body['dsr'],
-            'penalty_process_time' => $response_body['clsj'],
-            'penalty_illegal_time' => $response_body['wfsj'],//date('Y-m-d H:i:s', strtotime($response_body['wfsj'])),
-            'penalty_illegal_place' => $response_body['wfdz'],
-            'penalty_behavior' => $response_body['wfxw'] . "",
-        ]);
-        return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
     }
 
     /**车辆违法

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ViolateInfo;
 use Log;
 use App\PenaltyInfo;
 use App\UserOrderInfo;
@@ -30,7 +31,7 @@ class UserOrderController extends Controller
     //创建用户订单
     public function create_user_order(Request $request){
         $validator = Validator::make($request->all(), [
-            'order_money' => 'required|numeric',
+//            'order_money' => 'required|numeric',
             'order_src_type' => 'required|alpha_num',
             'order_src_id' => 'required|alpha_num',
             'order_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
@@ -39,19 +40,15 @@ class UserOrderController extends Controller
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
 
-        $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
+        $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->where('order_src_type',$request['order_src_type'])->first();
         if ($user_order != null) {
-            if($user_order->order_money != $request['order_money'] ||
-                $user_order->order_src_type != $request['order_src_type'] ||
-                $user_order->order_phone_number != $request['order_phone_number']){
-                return response()->json(['status' => 1,'data' => "订单错误。"]);
-            }
             if ($user_order->updated_at > date("Y-m-d H:i:s", strtotime("-100000 minute"))) {
                 //return response()->json(['status' => 0, 'data' => [$penaltyinfo]]);
                 $user_order->order_user_id = Auth::id();
+                $user_order->order_phone_number = $request['order_phone_number'];
                 $user_order->save();
             }else{
-                return response()->json(['status' => 1,'data' => "订单已经存在，10分钟不付款将自动删除。"]);
+                return response()->json(['status' => 1,'data' => "订单已经存在，10分钟不付款将自动转移。"]);
             }
             if ($user_order->order_status == "paid" || $user_order->order_status == "processing") {
                 return response()->json(['status' => 1,'data' => "该订单已在处理中"]);
@@ -61,13 +58,23 @@ class UserOrderController extends Controller
                 return response()->json(['status' => 1,'data' => "该订单已被其他用户关联"]);
             }
         }else{
-//            switch ($user_order->order_src_type){
-//                case 'violate':
-//                    break;
-//                case 'penalty':
-//                    break;
-//                default:break;
-//            }
+            switch ($request['order_src_type']){
+                case 'violate':
+                    $order_info =  ViolateInfo::where('id',$request['order_src_id'])->first();
+                    if($order_info == null){
+                        return response()->json(['status' => 1, 'data' => '数据有误']);
+                    }
+                    $request['order_money'] = $order_info->violate_money + $order_info->violate_marks * 150 + 30;//每一分150元手续费30元
+                    break;
+                case 'penalty':
+                    $order_info =  PenaltyInfo::where('id',$request['order_src_id'])->first();
+                    if($order_info == null){
+                        return response()->json(['status' => 1, 'data' => '数据有误']);
+                    }
+                    $request['order_money'] = $order_info->penalty_money + $order_info->penalty_money_late + 10;//十元手续费
+                    break;
+                default:break;
+            }
             UserOrderInfo::create([
                 'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
                 'order_money'=> $request['order_money'],

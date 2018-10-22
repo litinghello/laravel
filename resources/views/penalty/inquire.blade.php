@@ -55,6 +55,7 @@
                     $("#penalty_submit").click(function () {
                         $("#penalty_submit").attr('disabled',true);
                         let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
+                        console.log(post_data);
                         $.ajax({
                             type:"POST",
                             headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
@@ -66,7 +67,7 @@
                                     user_datatables_init(info_object,data['data'],function (data) {
                                         user_modal_input("订单提交","手机号码",function (value) {
                                             let order_value={
-                                                order_money:parseFloat(data.penalty_money)+parseFloat(data.penalty_money_late)+30,
+                                                order_money:parseFloat(data.penalty_money) + parseFloat(data.penalty_money_late) + 10,
                                                 order_src_type:"penalty",
                                                 order_src_id:data.id,
                                                 order_phone_number:value,

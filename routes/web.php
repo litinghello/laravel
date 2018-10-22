@@ -62,7 +62,7 @@ Route::get('/adminltes/table/complete', 'AdminLtesController@set_order_data')->n
 
 
 
-Route::any('/test','WeChatsController@test')->name('laravel.test');
+//Route::any('/test','WeChatsController@test')->name('laravel.test');
 
 
 

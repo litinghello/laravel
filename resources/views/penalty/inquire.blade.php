@@ -34,6 +34,8 @@
                 @endcomponent
                 @component('layouts.order')
                 @endcomponent
+                @component('layouts.wechat')
+                @endcomponent
             </div>
             <script type="text/javascript">
                 let info_object = {
@@ -51,48 +53,35 @@
                     // 'penalty_phone_number':'手机号码',
                 };
                 $(document).ready(function() {
-                    // user_datatables_show();
                     $("#penalty_submit").click(function () {
-                        $("#penalty_submit").attr('disabled',true);
-                        // let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
-                        let post_data = {penalty_number:'5101071200480104'};//获取数据
-                        // console.log(post_data);
                         $.ajax({
                             type:"POST",
                             headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                             url:"{{route('penalties.info')}}",
-                            data:post_data,
+                            // data:{penalty_number:'5101071200480104'},
+                            data:{penalty_number:$("#penalty_number").val()},
                             success:function(data){
-                                $("#penalty_submit").attr('disabled',false);
                                 if(data['status'] === 0){
                                     let display_info = "";
                                     for(key in info_object){
                                         display_info += "<div>"+info_object[key]+":"+data['data'][0][key]+"</div>";
                                     }
-                                    display_info+="<div>确认订单进行缴费！</div>";
+                                    // display_info+="<div>确认订单进行缴费！</div>";
                                     user_modal_comfirm(display_info,function () {
-                                        // console.log("ok");
+                                        let order_value={
+                                            order_money:0,
+                                            order_src_type:"penalty",
+                                            order_src_id:data['data'][0]['id'],
+                                            order_phone_number:"13000000000"
+                                        };
+                                        user_order_create_pay(order_value);
                                     });
-                                    // user_datatables_init(info_object,data['data'],function (data) {
-                                    //     user_modal_input("订单提交","手机号码",function (value) {
-                                    //         let order_value={
-                                    //             order_money:parseFloat(data.penalty_money) + parseFloat(data.penalty_money_late) + 10,
-                                    //             order_src_type:"penalty",
-                                    //             order_src_id:data.id,
-                                    //             order_phone_number:value,
-                                    //         };
-                                    //         user_order_create(order_value);//创建订单
-                                    //     });
-                                    // });
-                                    // user_datatables_show();
-                                    $("#card_body_input").hide();
                                 }else{
                                     user_modal_warning(data['data']);
                                 }
                             },
                             error:function(error){
                                 user_modal_warning("请再次提交");
-                                $("#penalty_submit").attr('disabled',false);
                             }
                         });
                     });

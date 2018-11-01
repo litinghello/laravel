@@ -75,7 +75,7 @@ class UserOrderController extends Controller
                     break;
                 default:break;
             }
-            UserOrderInfo::create([
+            $user_order = UserOrderInfo::create([
                 'order_number'=> date("YmdHis") .'0'. rand(10000, 99999),
                 'order_money'=> $request['order_money'],
                 'order_src_type'=> $request['order_src_type'],
@@ -85,7 +85,7 @@ class UserOrderController extends Controller
                 'order_status'=> 'unpaid',
             ]);
         }
-        return response()->json(['status' => 0, 'data' => '创建成功']);
+        return response()->json(['status' => 0, 'data' => $user_order]);
     }
     //获取用户订单
     public function get_user_order(){

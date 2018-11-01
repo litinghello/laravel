@@ -77,7 +77,7 @@
                             user_modal_prompt("支付成功，我们将在12小时以内处理，请等待！");
                         });//采用微信网页支付
                     }else if(order_data['wechat_pay_type'] === 'NATIVE'){
-                        user_modal_show("支付码",data['data']);
+                        user_modal_image("微信支付码",data['data']);
                     }else{
                     }
                 }else{

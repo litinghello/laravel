@@ -27,22 +27,55 @@ class AdminLtesController extends Controller
      */
     public function order_table_home(Request $request)
     {
-        $table = UserOrderInfo::all();
-
+//        $table = UserOrderInfo::all();
 //        $result = parent::_list(DB::table('user_order_info'));
 //        return view('adminlte.home', $result);
-        return view('adminlte.home');
+
+
+//        return view('adminlte.home');
+
+
+        $result = DB::table('user_order_info');
+
+        $get = $request->input();
+
+        foreach (['order_number'] as $key)
+        {
+
+            (isset($get[$key]) && $get[$key] !== '') && $result->where($key,'like','%'.$get[$key].'%');
+        }
+
+
+        if (isset($get['date']) && $get['date'] !== '') {
+            list($start, $end) = explode(' - ', $get['date']);
+            $result->whereBetween('created_at', ["{$start} 00:00:00", "{$end} 23:59:59"]);
+        }
+
+
+        isset($get['limit']) && $limit = $get['limit'];
+
+        $result  = $result->paginate($limit?:10)->toArray();
+
+        $data = [
+            'code' => 0,
+            'msg' => '正在请求中...',
+            'count' => $result['total'],
+            'data' => $result['data']
+        ];
+        return response()->json($data);
 
     }
-    public function get_order_data(){
-        $table = UserOrderInfo::all();
-        return Datatables::of($table)
-            ->addColumn('action', function ($table) {
-                return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';
-            })
-            ->make(true);
 
-//        return redirect()->route("adminltes.table.home");
+
+    public function get_order_data(){
+//        $table = UserOrderInfo::all();
+//        return Datatables::of($table)
+//            ->addColumn('action', function ($table) {
+//                return '<a href="'.route("adminltes.table.complete", ['id'=>$table->id,'order_number'=>$table->order_number]).'" class="btn btn-xs btn-primary">完成</a>';
+//            })
+//            ->make(true);
+
+        return redirect()->route("adminltes.table.home");
     }
 
     public function set_order_data(Request $request){
@@ -53,8 +86,15 @@ class AdminLtesController extends Controller
         if ($validator->fails()) {
             return $validator->errors()->first();
         }
-        UserOrderInfo::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
-        return view('adminlte.home');
+        $rs = UserOrderInfo::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
+
+
+        if($rs)
+        {
+            return response()->json(['state'=>0,'data'=>$rs]);
+        }
+        return response()->json(['state'=>1,'data'=>'请再次提交']);
+//        return view('adminlte.home');
 
 //        return redirect()->back();
     }
@@ -83,6 +123,7 @@ class AdminLtesController extends Controller
             default:
                 break;
         }
+
         return response()->json(['status' => 1, 'data' => "请求数据失败"]);
     }
 

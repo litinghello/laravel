@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('手机')); ?></div>
-                            <a type="text" class="form-control" href="tel:13194893037">13194893037</a>
+                            <a type="text" class="form-control" href="tel:13194893073">13194893037</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('微信')); ?></div>
-                            <a type="text" class="form-control" href="tel:13194893037">13194893037</a>
+                            <a type="text" class="form-control" href="tel:13194893073">13194893037</a>
                         </div>
                     </div>
                     <div class="form-group">

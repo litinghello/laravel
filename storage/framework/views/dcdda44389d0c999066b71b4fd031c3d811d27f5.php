@@ -69,12 +69,17 @@
             data:order_data,
             success:function(data){
                 // user_modal_warning(data);
+                // console.log(data);
                 if(data['status'] === 0){
-                    wechat_pay_data = data['data'];//保存值
-                    wechat_process(wechat_pay_data,function () {
-                        //user_wechat_pay_check(order_data);
-                        user_modal_prompt("支付成功，我们将在12小时以内处理，请等待！");
-                    });//采用微信网页支付
+                    if(order_data['wechat_pay_type'] === 'JSAPI'){
+                        wechat_process(data['data'],function () {
+                            //user_wechat_pay_check(order_data);
+                            user_modal_prompt("支付成功，我们将在12小时以内处理，请等待！");
+                        });//采用微信网页支付
+                    }else if(order_data['wechat_pay_type'] === 'NATIVE'){
+                        user_modal_show("支付码",data['data']);
+                    }else{
+                    }
                 }else{
                     user_modal_prompt(data['data']);
                 }

@@ -14,30 +14,39 @@
                 <div class="card-body">
                     <div class="form-group">
                         <div class="input-group">
-                            <div class="input-group-addon"><?php echo e(__('座机')); ?></div>
+                            <div class="input-group-addon"><?php echo e(__('座 机')); ?></div>
                             <a type="text" class="form-control" href="tel:028-62561692">028-62561692</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
-                            <div class="input-group-addon"><?php echo e(__('手机')); ?></div>
-                            <a type="text" class="form-control" href="tel:13194893037">13194893037</a>
+                            <div class="input-group-addon"><?php echo e(__('手 机')); ?></div>
+                            <a type="text" class="form-control" href="tel:13194893073">13194893073</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
-                            <div class="input-group-addon"><?php echo e(__('邮件')); ?></div>
+                            <div class="input-group-addon"><?php echo e(__('邮 件')); ?></div>
                             <a type="text" class="form-control" href="mailto:3325815724@qq.com">3325815724@qq.com</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
-                            <div class="input-group-addon"><?php echo e(__('微信')); ?></div>
-                            <a type="text" class="form-control" href="tel:13194893037">13194893037</a>
+                            <div class="input-group-addon"><?php echo e(__('微 信')); ?></div>
+                            <a type="text" class="form-control" href="tel:13194893073">13194893073</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <img src="<?php echo e(URL::asset('images/contact_us_wechat.jpg')); ?>" class="img-responsive" alt="Responsive image">
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon"><?php echo e(__('公众号')); ?></div>
+                            <a type="text" class="form-control" >车途天下</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <img src="<?php echo e(URL::asset('images/wechat_public.jpg')); ?>" class="img-responsive" alt="Responsive image">
                     </div>
                 </div>
                 <?php $__env->startComponent('layouts.modal'); ?>

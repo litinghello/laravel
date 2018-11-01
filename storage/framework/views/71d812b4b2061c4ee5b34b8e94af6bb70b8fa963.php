@@ -50,7 +50,6 @@
                     // 'penalty_phone_number':'手机号码',
                 };
                 $(document).ready(function() {
-                    alert(layui.v);
                     $("#penalty_submit").click(function () {
                         $.ajax({
                             type:"POST",
@@ -59,7 +58,6 @@
                             // data:{penalty_number:'5101071200480104'},
                             data:{penalty_number:$("#penalty_number").val()},
                             success:function(data){
-                                $("#penalty_submit").attr('disabled',false);
                                 if(data['status'] === 0){
                                     let display_info = "";
                                     for(key in info_object){

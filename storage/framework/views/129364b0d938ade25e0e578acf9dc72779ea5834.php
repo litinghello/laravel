@@ -1,7 +1,6 @@
 
 <script type="text/javascript">
-    function user_modal_hide(){
-    }
+
     function user_modal_show(title,body){
         layer.confirm(body, {offset: '100px',icon: 3, title:title}, function(index){
             //do something

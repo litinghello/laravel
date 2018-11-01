@@ -63,6 +63,10 @@
                             data:post_data,
                             success:function(data){
                                 $("#penalty_submit").attr('disabled',false);
+                                // user_modal_warning(data['data']);
+                                // // user_modal_comfirm(data['data'],function () {
+                                // //     console.log("ok");
+                                // // });
                                 if(data['status'] === 0){
                                     user_datatables_init(info_object,data['data'],function (data) {
                                         user_modal_input("订单提交","手机号码",function (value) {

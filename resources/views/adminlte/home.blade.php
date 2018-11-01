@@ -1,45 +1,30 @@
  {{--resources/views/admin/dashboard.blade.php --}}
-
 @extends('adminlte::page')
-
 @section('content_header')
     <h1>代缴订单</h1>
 @stop
-
 @component('layouts.resources')
-
 @endcomponent
-
-
 @section('content')
-
-
-    <script type="text/javascript" src="{{ URL::asset('layui1/lay/modules/layer.js') }}"></script>
-
-    <script type="text/javascript" src="{{ URL::asset('layui1/layui.all.js') }}"></script>
-
+    <script type="text/javascript" src="{{ URL::asset('layui/lay/modules/layer.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('layui/layui.all.js') }}"></script>
     <form autocomplete="off" class="layui-form layui-form-pane form-search" action="" onsubmit="return false" method="get">
-
         <div class="layui-form-item layui-inline">
             <label class="layui-form-label">订单号</label>
             <div class="layui-input-inline">
                 <input name="ddh" id="ddh" value="" placeholder="请输入订单号" class="layui-input" autocomplete="off">
             </div>
         </div>
-
         <div class="layui-form-item layui-inline">
             <label class="layui-form-label">创建时间</label>
             <div class="layui-input-inline">
                 <input name="date" id='range-date'  placeholder="请选择创建时间" class="layui-input">
             </div>
         </div>
-
         <div class="layui-form-item layui-inline" style="margin-top: -6px;">
             <button id="search" class="layui-btn layui-btn-primary" data-type="reload"><i class="layui-icon">&#xe615;</i> 搜 索</button>
         </div>
-
     </form>
-
     <div class="layui-card">
         {{--<div class="layui-card-header layuiadmin-card-header-auto">--}}
             {{--<div class="layui-btn-group">--}}
@@ -49,38 +34,23 @@
             {{--</div>--}}
         {{--</div>--}}
         {{--<div class="layui-card-body">--}}
-
-
-
-
             <table id="tab" lay-filter='dataTable' class="layui-table"></table>
-
             <script type="text/html" id="options">
                 <a class="layui-btn layui-btn-primary layui-btn-xs " style="margin-top:2px;" lay-event="finish">完成</a>
             </script>
         {{--</div>--}}
     </div>
-
     @component('layouts.modal')
     @endcomponent
-
-
     <script>
-
-
         layui.use(['layer','table','form','laydate'],function () {
-
-
-
             var layer = layui.layer;
             var form = layui.form;
             var table = layui.table;
             var $ = layui.$
             var laydate = layui.laydate;
-
             //时间选择器
             laydate.render({range: true, elem: '#range-date'});
-
             //用户表格初始化
             table.render({
                 elem: '#tab',
@@ -120,26 +90,19 @@
                     ,{title:'操作', width: 100, align:'center', templet: '#options'}
                 ]]
             });
-
             //监听工具条
-
             table.on("tool(dataTable)",function(obj){
                 var data = obj.data //获得当前行数据
                 layEvent = obj.event; //获得 lay-event 对应的值
 //                console.log(obj.tr);
-
 //                layui.stope(obj.tr)
-
-                 if(layEvent === 'finish')
-                {
-
+                 if(layEvent === 'finish') {
                      $.ajax({
                          type:'GET',
                          data:{id:data.id,order_number:data.order_number},
                          headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                          url:"{{route('adminltes.table.complete')}}",
                          success:function (data) {
-
                              if(data['state']=='0')
                              {
                                  $(".layui-laypage-btn").click()
@@ -155,7 +118,6 @@
             //监听行事件
             table.on('rowDouble(dataTable)', function(obj){
                 var data = obj.data;
-
                 console.log(obj.tr[0]);
                 $.ajax({
                     type:"POST",
@@ -165,7 +127,6 @@
                     success:function(data){
 //                        console.log(data);
                     if(data['status'] === 0){
-
                     var html="<div>决定书编号:"+data['data']['penalty_number']+"</div>"
                     html+= "<div>车牌号:"+data['data']['penalty_car_number']+"</div>"
                     html+= "<div>金额:"+data['data']['penalty_money']+"</div>"
@@ -179,11 +140,9 @@
                     user_modal_warning("请再次提交");
                     }
                 });
-
                 //标注选中样式
                 obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
             });
-
             var $ = layui.$,active = {
                 reload:function () {
                     var input = $('#ddh')
@@ -199,21 +158,13 @@
                         }
                     })
                 }
-            }
-
+            };
             $('#search').on('click', function(){
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
-
-
         })
-
-
-
     </script>
-
-
 
     {{--<p>:</p>--}}
     {{--<div class="row center-block">--}}

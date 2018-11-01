@@ -170,8 +170,10 @@ class WeChatsController extends Controller
 
     //通过微信支付
     public function order_pay_wechat(Request $request){
+
         $validator = Validator::make($request->all(), [
             'order_money' => 'required|numeric',
+            'order_number' => 'required|alpha_num',
             'order_src_type' => 'required|alpha_num',
             'order_src_id' => 'required|alpha_num',
             'order_phone_number' => 'required|regex:/^1[34578]\d{9}$/',
@@ -181,6 +183,8 @@ class WeChatsController extends Controller
         if ($validator->fails()) {
             return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
         }
+//        return response()->json(['status' => 1,'data' => "111"]);
+
         $user_id = null;
         if($request['wechat_pay_limit'] == 'true'){//如果指定支付唯一账户那么需要进行账户获取
             if(session('wechat.oauth_user') == null){
@@ -197,13 +201,10 @@ class WeChatsController extends Controller
                 $user_id = session('wechat.oauth_user')['default']['id'];
             }
         }
-        $user_order = UserOrderInfo::where('order_src_id', $request['order_src_id'])->first();
+        $user_order = UserOrderInfo::where('order_number', $request['order_number'])->first();
         if($user_order == null){//检查订单是否存在
             return response()->json(['status' => 1,'data' => "此订单不存在，请联系客服。"]);
         }
-//        echo $user_order;
-//        echo "////**********/////";
-//        echo $request;
         if($user_order->order_money != $request['order_money'] || $user_order->order_src_type != $request['order_src_type']
             || $user_order->order_src_id != $request['order_src_id']|| $user_order->order_phone_number != $request['order_phone_number']
         ){//检查订单信息是否正确

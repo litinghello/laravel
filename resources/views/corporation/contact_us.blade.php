@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">{{ __('手机') }}</div>
-                            <a type="text" class="form-control" href="tel:13194893073">13194893037</a>
+                            <a type="text" class="form-control" href="tel:13194893073">13194893073</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -36,7 +36,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">{{ __('微信') }}</div>
-                            <a type="text" class="form-control" href="tel:13194893073">13194893037</a>
+                            <a type="text" class="form-control" href="tel:13194893073">13194893073</a>
                         </div>
                     </div>
                     <div class="form-group">

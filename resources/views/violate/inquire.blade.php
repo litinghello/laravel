@@ -53,7 +53,8 @@
                     @endcomponent
                     @component('layouts.order')
                     @endcomponent
-
+                    @component('layouts.floatmenu')
+                    @endcomponent
                 </div>
                 <script type="text/javascript">
                     let info_object = {

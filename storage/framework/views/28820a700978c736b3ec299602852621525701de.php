@@ -4,12 +4,10 @@
 <?php $__env->startComponent('layouts.resources'); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php $__env->startSection('content'); ?>
-
     <?php if(!count($list)): ?>
         <p class="help-block text-center well">没 有 记 录 哦！</p>
     <?php else: ?>
         <div class="table-responsive table-bordered">
-
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
@@ -41,7 +39,8 @@
 <?php echo $__env->renderComponent(); ?>
 <?php $__env->startComponent('layouts.wechat'); ?>
 <?php echo $__env->renderComponent(); ?>
-
+<?php $__env->startComponent('layouts.floatmenu'); ?>
+<?php echo $__env->renderComponent(); ?>
 <script>
     function dataClick(data){
         let body = "<div>金额:"+data['order_money']+"元</div>"+

@@ -51,7 +51,8 @@
                     <?php echo $__env->renderComponent(); ?>
                     <?php $__env->startComponent('layouts.order'); ?>
                     <?php echo $__env->renderComponent(); ?>
-
+                    <?php $__env->startComponent('layouts.floatmenu'); ?>
+                    <?php echo $__env->renderComponent(); ?>
                 </div>
                 <script type="text/javascript">
                     let info_object = {

@@ -8,12 +8,10 @@
 @component('layouts.resources')
 @endcomponent
 @section('content')
-
     @if(!count($list))
         <p class="help-block text-center well">没 有 记 录 哦！</p>
     @else
         <div class="table-responsive table-bordered">
-
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
@@ -45,7 +43,8 @@
 @endcomponent
 @component('layouts.wechat')
 @endcomponent
-
+@component('layouts.floatmenu')
+@endcomponent
 <script>
     function dataClick(data){
         let body = "<div>金额:"+data['order_money']+"元</div>"+

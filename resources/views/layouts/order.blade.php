@@ -21,4 +21,22 @@
             }
         });
     }
+    function user_order_create_pay(order_data){
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
+            url:"{{route('order.create')}}",
+            type:"POST",
+            data:order_data,
+            success:function(data){
+                if(data['status'] === 0){
+                    user_modal_order_pay_now(data['data']);
+                }else{
+                    user_modal_prompt(data['data']);
+                }
+            },
+            error:function(error){
+                user_modal_prompt("创建失败");
+            }
+        });
+    }
 </script>

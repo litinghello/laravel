@@ -51,8 +51,9 @@
                     // user_datatables_show();
                     $("#penalty_submit").click(function () {
                         $("#penalty_submit").attr('disabled',true);
-                        let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
-                        console.log(post_data);
+                        // let post_data = {penalty_number:$("#penalty_number").val()};//获取数据
+                        let post_data = {penalty_number:'5101071200480104'};//获取数据
+                        // console.log(post_data);
                         $.ajax({
                             type:"POST",
                             headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
@@ -60,23 +61,27 @@
                             data:post_data,
                             success:function(data){
                                 $("#penalty_submit").attr('disabled',false);
-                                // user_modal_warning(data['data']);
-                                // // user_modal_comfirm(data['data'],function () {
-                                // //     console.log("ok");
-                                // // });
                                 if(data['status'] === 0){
-                                    user_datatables_init(info_object,data['data'],function (data) {
-                                        user_modal_input("订单提交","手机号码",function (value) {
-                                            let order_value={
-                                                order_money:parseFloat(data.penalty_money) + parseFloat(data.penalty_money_late) + 10,
-                                                order_src_type:"penalty",
-                                                order_src_id:data.id,
-                                                order_phone_number:value,
-                                            };
-                                            user_order_create(order_value);//创建订单
-                                        });
+                                    let display_info = "";
+                                    for(key in info_object){
+                                        display_info += "<div>"+info_object[key]+":"+data['data'][0][key]+"</div>";
+                                    }
+                                    display_info+="<div>确认订单进行缴费！</div>";
+                                    user_modal_comfirm(display_info,function () {
+                                        // console.log("ok");
                                     });
-                                    user_datatables_show();
+                                    // user_datatables_init(info_object,data['data'],function (data) {
+                                    //     user_modal_input("订单提交","手机号码",function (value) {
+                                    //         let order_value={
+                                    //             order_money:parseFloat(data.penalty_money) + parseFloat(data.penalty_money_late) + 10,
+                                    //             order_src_type:"penalty",
+                                    //             order_src_id:data.id,
+                                    //             order_phone_number:value,
+                                    //         };
+                                    //         user_order_create(order_value);//创建订单
+                                    //     });
+                                    // });
+                                    // user_datatables_show();
                                     $("#card_body_input").hide();
                                 }else{
                                     user_modal_warning(data['data']);

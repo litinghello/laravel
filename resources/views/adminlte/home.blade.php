@@ -7,7 +7,7 @@
 @endcomponent
 @section('content')
     <script type="text/javascript" src="{{ URL::asset('layui/lay/modules/layer.js') }}"></script>
-    <script type="text/javascript" src="{{ URL::asset('layui/layui.all.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('layui/layui.js') }}"></script>
     <form autocomplete="off" class="layui-form layui-form-pane form-search" action="" onsubmit="return false" method="get">
         <div class="layui-form-item layui-inline">
             <label class="layui-form-label">订单号</label>
@@ -34,6 +34,7 @@
     @component('layouts.modal')
     @endcomponent
     <script>
+
         layui.use(['layer','table','form','laydate'],function () {
             var layer = layui.layer;
             var form = layui.form;

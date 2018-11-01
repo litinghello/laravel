@@ -51,7 +51,7 @@
         } else {
             pay_value['wechat_pay_type'] = 'NATIVE';//支付方式
             pay_value['wechat_pay_limit'] = false;//支付限制
-            console.log(pay_value);
+            // console.log(pay_value);
             layer.confirm(body, {offset: '100px',icon: 1, title:"二维码支付"}, function(index){
                 layer.close(index);
                 user_wechat_pay(pay_value);

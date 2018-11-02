@@ -19,6 +19,12 @@
             layer.close(index);
         });
     }
+    function user_modal_loading(style){
+        layer.load(style);
+    }
+    function user_modal_loading_close() {
+        layer.closeAll('loading'); //关闭加载层
+    }
     function user_modal_comfirm(body,event){
         layer.confirm(body, {offset: '100px',icon: 3, title:"提示"}, function(index){
             event();

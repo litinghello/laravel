@@ -80,12 +80,14 @@
                                 car_frame_number:$("#car_frame_number").val(),
                                 car_engine_number:$("#car_engine_number").val(),
                             };
-                            $("#violate_submit").attr('disabled',true);
+                            // $("#violate_submit").attr('disabled',true);
+                            user_modal_loading(0);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
                                 url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
                                 success:function(data){
-                                    $("#violate_submit").attr('disabled',false);//开启再次点击按键
+                                    user_modal_loading_close();
+                                    // $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
                                             // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
@@ -106,8 +108,9 @@
                                     }
                                 },
                                 error:function(error){
+                                    user_modal_loading_close();
                                     user_modal_warning("请再次提交");
-                                    $("#violate_submit").attr('disabled',false);//开启再次点击按键
+                                    // $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                 }
                             });
                         });

@@ -53,6 +53,7 @@
                 };
                 $(document).ready(function() {
                     $("#penalty_submit").click(function () {
+                        user_modal_loading(0);
                         $.ajax({
                             type:"POST",
                             headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
@@ -60,6 +61,7 @@
                             // data:{penalty_number:'5101071200480104'},
                             data:{penalty_number:$("#penalty_number").val()},
                             success:function(data){
+                                user_modal_loading_close();
                                 if(data['status'] === 0){
                                     let display_info = "";
                                     for(key in info_object){
@@ -80,6 +82,7 @@
                                 }
                             },
                             error:function(error){
+                                user_modal_loading_close();
                                 user_modal_warning("请再次提交");
                             }
                         });

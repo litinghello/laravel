@@ -14,7 +14,7 @@
                 <tr >
                     <th>订单号</th>
                     <th>订单金额</th>
-                    <th>联系电话</th>
+                    
                     <th>状态</th>
                     <th>时间</th>
                 </tr>
@@ -24,7 +24,7 @@
                     <tr onclick="dataClick(<?php echo e(json_encode($data)); ?>)">
                         <td><?php echo e($data->order_number); ?></td>
                         <td><?php echo e($data->order_money); ?></td>
-                        <td><?php echo e($data->order_phone_number); ?></td>
+                        
                         <td><?php if($data->order_status=='paid'): ?>已支付<?php elseif($data->order_status=='unpaid'): ?>未支付<?php elseif($data->order_status=='invalid'): ?>无效<?php elseif($data->order_status=='processing'): ?>正在处理<?php elseif($data->order_status=='completed'): ?>处理完成<?php endif; ?></td>
                         <td><?php echo e($data->updated_at); ?></td>
                     </tr>

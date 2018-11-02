@@ -1,9 +1,6 @@
 
 <div class="row">
     <div id="user_float_menu" class="row text-center navbar-fixed-bottom">
-        
-        
-        
         <ul class="layui-nav layui-bg-cyan" lay-filter="" lay-separator="|">
             <li class="layui-nav-item"><a href="<?php echo e(route('order.get')); ?>">订单查询</a></li>
             <li class="layui-nav-item"><a href="<?php echo e(route('views.penalty.inquire')); ?>">代缴罚款</a></li>

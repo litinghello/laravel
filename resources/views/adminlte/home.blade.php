@@ -90,8 +90,7 @@
                          headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
                          url:"{{route('adminltes.table.complete')}}",
                          success:function (data) {
-                             if(data['state']=='0')
-                             {
+                             if(data['state']==='0') {
                                  $(".layui-laypage-btn").click()
                              }
                          },

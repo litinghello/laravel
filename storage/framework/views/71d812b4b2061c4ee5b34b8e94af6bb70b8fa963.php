@@ -1,5 +1,5 @@
 <?php $__env->startSection('content_header'); ?>
-    <h1>罚款查询</h1>
+    <h1>代缴罚款</h1>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startComponent('layouts.resources'); ?>

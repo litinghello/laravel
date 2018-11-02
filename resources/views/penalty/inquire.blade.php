@@ -2,7 +2,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-    <h1>罚款查询</h1>
+    <h1>代缴罚款</h1>
 @stop
 
 @component('layouts.resources')

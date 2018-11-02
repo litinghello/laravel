@@ -87,7 +87,6 @@
                                 url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
                                 success:function(data){
                                     user_modal_loading_close();
-                                    // $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
                                             // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
@@ -110,7 +109,6 @@
                                 error:function(error){
                                     user_modal_loading_close();
                                     user_modal_warning("请再次提交");
-                                    // $("#violate_submit").attr('disabled',false);//开启再次点击按键
                                 }
                             });
                         });

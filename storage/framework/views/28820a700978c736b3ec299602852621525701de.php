@@ -42,18 +42,21 @@
 <?php $__env->startComponent('layouts.floatmenu'); ?>
 <?php echo $__env->renderComponent(); ?>
 <script>
-    function dataClick(data){
-        let body = "<div>金额:"+data['order_money']+"元</div>"+
-            "<div>电话:"+data['order_phone_number']+"</div>"+"<br>是否确认支付？";
-        let pay_value={
-            order_number:data.order_number,
-            order_money:parseFloat(data.order_money),
-            order_src_type:data.order_src_type,
-            order_src_id:data.order_src_id,
-            order_phone_number:data.order_phone_number
-        };
-        user_modal_order_pay(body,pay_value);
-    }
+    $(document).ready(function() {
+        user_float_menu_select(0);
+        function dataClick(data) {
+            let body = "<div>金额:" + data['order_money'] + "元</div>" +
+                "<div>电话:" + data['order_phone_number'] + "</div>" + "<br>是否确认支付？";
+            let pay_value = {
+                order_number: data.order_number,
+                order_money: parseFloat(data.order_money),
+                order_src_type: data.order_src_type,
+                order_src_id: data.order_src_id,
+                order_phone_number: data.order_phone_number
+            };
+            user_modal_order_pay(body, pay_value);
+        }
+    });
 </script>
 
 <?php echo $__env->make('adminlte::page', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

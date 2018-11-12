@@ -52,6 +52,7 @@
                     // 'penalty_phone_number':'手机号码',
                 };
                 $(document).ready(function() {
+                    user_float_menu_select(1);
                     $("#penalty_submit").click(function () {
                         user_modal_loading(0);
                         $.ajax({

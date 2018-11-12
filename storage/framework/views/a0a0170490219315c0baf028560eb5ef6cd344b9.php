@@ -14,6 +14,12 @@
                 <div class="card-body">
                     <div class="form-group">
                         <div class="input-group">
+                            
+                            <button id="wechat_share_but" class="btn btn-default">分享</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('座 机')); ?></div>
                             <a type="text" class="form-control" href="tel:028-62561692">028-62561692</a>
                         </div>
@@ -51,10 +57,28 @@
                 </div>
                 <?php $__env->startComponent('layouts.modal'); ?>
                 <?php echo $__env->renderComponent(); ?>
+                <?php $__env->startComponent('layouts.floatmenu'); ?>
+                <?php echo $__env->renderComponent(); ?>
+                <?php $__env->startComponent('layouts.wechat'); ?>
+                <?php echo $__env->renderComponent(); ?>
             </div>
+            <script type="text/javascript">
+                $("#wechat_share_but").click(function () {
+                     user_wechat_share();
+                    // wx.checkJsApi({
+                    //     jsApiList: ['chooseImage'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                    //     success: function(res) {
+                    //         // 以键值对的形式返回，可用的api值true，不可用为false
+                    //         // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                    //         alert(JSON.stringify(res));
+                    //     }
+                    // });
+                });
+            </script>
         </div>
     </div>
 </div>
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('adminlte::page', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

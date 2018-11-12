@@ -28,6 +28,9 @@ Route::any('/wechats/token','WeChatsController@back_token')->name("wechats.serve
 //接口 创建微信公众号的菜单
 Route::get('/wechats/menu/create','WeChatsController@create_menu')->name("wechats.menu");
 
+//接口 获取微信配置权限
+Route::any('/wechats/get/config','WeChatsController@wechat_get_share_config')->name("wechats.get.config");
+
 //接口 创建订单
 Route::any('/order/create','UserOrderController@create_user_order')->name('order.create');
 //接口 获取订单

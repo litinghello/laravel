@@ -336,8 +336,9 @@ class WeChatsController extends Controller
         return response()->json(['status' => 1,'data' => "微信支付异常"]);
     }
 
-//    function test(){
-////        return (new BaconQrCodeGenerator)->size(100)->generate('Make a qrcode without Laravel!');
-//        return response()->json(['status' => 0,'data' => (new BaconQrCodeGenerator)->size(100)->generate('Make a qrcode without Laravel!')]);
-//    }
+    function wechat_get_share_config(){
+        $app = app('wechat.official_account');
+        $app->jssdk->setUrl("http://www.cttx-zbx.com/contact/us");
+        return response()->json(['status' => 0,'data' => $app->jssdk->buildConfig(array('updateAppMessageShareData', 'updateTimelineShareData','onMenuShareTimeline'))]);
+    }
 }

@@ -89,4 +89,23 @@
             }
         });
     }
+    function user_wechat_share(){
+        wx.config({
+            wx.config(<?php 
+            echo $app->jssdk->buildConfig(array('onMenuShareQQ', 'onMenuShareWeibo'), true);
+            ?>);
+        });
+        wx.ready(function () {      //需在用户可能点击分享按钮前就先调用
+            wx.updateTimelineShareData({
+                title: '违章代缴免费开放', // 分享标题
+                // link: 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzMzkyNTUxMg==#wechat_redirect', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                link: 'http://www.cttx-zbx.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: '', // 分享图标
+                success: function () {
+                    // 设置成功
+                    console.log("error");
+                }
+            });
+        })
+    }
 </script>

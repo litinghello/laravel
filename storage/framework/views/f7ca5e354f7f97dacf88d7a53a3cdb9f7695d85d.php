@@ -43,13 +43,14 @@
                                 </button>
                             </div>
                         </div>
-
                     </div>
                     <?php $__env->startComponent('layouts.datatables'); ?>
                     <?php echo $__env->renderComponent(); ?>
                     <?php $__env->startComponent('layouts.modal'); ?>
                     <?php echo $__env->renderComponent(); ?>
                     <?php $__env->startComponent('layouts.order'); ?>
+                    <?php echo $__env->renderComponent(); ?>
+                    <?php $__env->startComponent('layouts.wechat'); ?>
                     <?php echo $__env->renderComponent(); ?>
                     <?php $__env->startComponent('layouts.floatmenu'); ?>
                     <?php echo $__env->renderComponent(); ?>
@@ -90,15 +91,20 @@
                                     user_modal_loading_close();
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
-                                            // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
-                                            user_modal_input("订单提交","手机号码",function (value) {
+                                            let display_info = "";
+                                            for(key in info_object){
+                                                display_info += "<div>"+info_object[key]+":"+data[key]+"</div>";
+                                            }
+                                            display_info += "<div>收费规则：150元*扣分+罚款+服务费</div>";
+                                            display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"</div>";
+                                            user_modal_comfirm(display_info,function () {
                                                 let order_value={
-                                                    order_money: parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30,
+                                                    order_money:0,
                                                     order_src_type:"violate",
-                                                    order_src_id:data.id,
-                                                    order_phone_number:value,
+                                                    order_src_id:data['id'],
+                                                    order_phone_number:"13000000000"
                                                 };
-                                                user_order_create(order_value);//创建订单
+                                                user_order_create_pay(order_value);
                                             });
                                         });
                                         user_datatables_show();

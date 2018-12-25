@@ -26,19 +26,10 @@
         </div>
     </form>
     <div class="layui-card">
-        
-            
-                    
-                    
-
-            
-        
-        
-            <table id="tab" lay-filter='dataTable' class="layui-table"></table>
-            <script type="text/html" id="options">
-                <a class="layui-btn layui-btn-primary layui-btn-xs " style="margin-top:2px;" lay-event="finish">完成</a>
-            </script>
-        
+        <table id="tab" lay-filter='dataTable' class="layui-table"></table>
+        <script type="text/html" id="options">
+            <a class="layui-btn layui-btn-primary layui-btn-xs " style="margin-top:2px;" lay-event="finish">完成</a>
+        </script>
     </div>
     <?php $__env->startComponent('layouts.modal'); ?>
     <?php echo $__env->renderComponent(); ?>
@@ -69,25 +60,20 @@
                     ,{field: 'order_money', sort: true,title: '订单金额'}
                     ,{field: 'order_src_id',sort: true, title: '决定书编号'}
                     ,{field: 'order_status', sort: true,title: '订单状态' ,templet:function(d){
-                        if(d.order_status=='paid')
-                        {
+                        if(d.order_status === 'paid'){
                             return '已支付'
-                        }else if(d.order_status == 'unpaid'){
+                        }else if(d.order_status === 'unpaid'){
                             return '未支付'
-                        }else if(d.order_status == 'invalid')
-                        {
+                        }else if(d.order_status === 'invalid') {
                             return '无效'
-                        }else if(d.order_status == 'processing')
-                        {
+                        }else if(d.order_status === 'processing'){
                             return '正在处理'
-                        }else if(d.order_status == 'completed')
-                        {
+                        }else if(d.order_status === 'completed'){
                             return '处理完成'
                         }
                     }}
                     ,{field: 'created_at',sort: true, title: '创建时间'}
                     ,{field: 'updated_at', sort: true,title: '更新时间'}
-
                     ,{title:'操作', width: 100, align:'center', templet: '#options'}
                 ]]
             });
@@ -104,8 +90,7 @@
                          headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
                          url:"<?php echo e(route('adminltes.table.complete')); ?>",
                          success:function (data) {
-                             if(data['state']=='0')
-                             {
+                             if(data['state']==='0') {
                                  $(".layui-laypage-btn").click()
                              }
                          },
@@ -166,171 +151,5 @@
             });
         })
     </script>
-
-    
-    
-        
-        
-            
-            
-                
-                
-                
-                
-                
-                
-                
-                
-                
-            
-            
-        
-    
-
-
-
-
-    
-        
-    
-    
-
-        
-        
-        
-        
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        
-        
-        
-
-            
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-            
-        
-
-        
-
-        
-    
-    
-
-    
-    
-    
-        
-            
-                
-                
-                
-                
-                
-                    
-                        
-                        
-                        
-                        
-                        
-                    
-                        
-                    
-                
-                
-                    
-                
-            
-        
-    
-
-
-
-
-
-
-    
-    
-
-        
-            
-                
-                
-                
-                    
-                    
-                    
-                
-                
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                
-                
-                    
-                    
-                    
-                        
-                        
-                        
-                        
-                    
-                    
-                    
-                    
-                    
-                    
-                
-                
-                
-            
-                
-                
-                
-                    
-                    
-                    
-                    
-                    
-                        
-                            
-                            
-                            
-                            
-                            
-                        
-                            
-                        
-                    
-                    
-                        
-                    
-                
-
-            
-        
-    
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('adminlte::page', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

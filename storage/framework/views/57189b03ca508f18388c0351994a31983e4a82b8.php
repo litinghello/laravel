@@ -1,9 +1,14 @@
 
 <script type="text/javascript">
-    function user_modal_hide(){
-    }
+
     function user_modal_show(title,body){
         layer.confirm(body, {offset: '100px',icon: 3, title:title}, function(index){
+            //do something
+            layer.close(index);
+        });
+    }
+    function user_modal_image(title,body){
+        layer.confirm(body, {offset: '100px', title:title}, function(index){
             //do something
             layer.close(index);
         });
@@ -13,6 +18,12 @@
             //do something
             layer.close(index);
         });
+    }
+    function user_modal_loading(style){
+        layer.load(style);
+    }
+    function user_modal_loading_close() {
+        layer.closeAll('loading'); //关闭加载层
     }
     function user_modal_comfirm(body,event){
         layer.confirm(body, {offset: '100px',icon: 3, title:"提示"}, function(index){
@@ -56,6 +67,22 @@
                 layer.close(index);
                 user_wechat_pay(pay_value);
             });
+        }
+    }
+    //支付模块
+    function user_modal_order_pay_now(pay_value) {
+        if (/MicroMessenger/.test(window.navigator.userAgent)) {
+            pay_value['wechat_pay_type'] = 'JSAPI';
+            pay_value['wechat_pay_limit'] = true;
+            user_wechat_pay(pay_value);
+        } else if (/AlipayClient/.test(window.navigator.userAgent)) {
+            layer.confirm("暂时不支持", {offset: '100px',icon: 3, title:"支付宝支付"}, function(index){
+                layer.close(index);
+            });
+        } else {
+            pay_value['wechat_pay_type'] = 'NATIVE';//支付方式
+            pay_value['wechat_pay_limit'] = false;//支付限制
+            user_wechat_pay(pay_value);
         }
     }
 </script>

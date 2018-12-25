@@ -168,6 +168,69 @@ class WeChatsController extends Controller
         return $app->menu->create($buttons);
     }
 
+    //发消息给指定的人员
+    public function send_message_to_server_wechat(Request $request)
+    {
+        $order = UserOrderInfo::where('order_number', '20181101180000074571')->first();
+//        $rest = $this->send_message_to_server_paid($order->user_info->name, '缴费成功', $order->order_money, '已完成');
+        if($order->user_info->user_wechat != null){
+             $this->send_message_to_user_paid($order->user_info->user_wechat->wechat_id,$order->order_number,$order->order_money,'0');
+//            $rest = $this->send_message_to_user_paid("oiGyj0im2uCtxHX3_oFct-BDyOuA",$order->order_number,$order->order_money,'0');
+        }
+        return response()->json(['status' => 1, 'data' => "ok"]);
+    }
+
+    //发消息给指定客服的人员
+    public function send_message_to_server_paid($name, $bz, $order_money, $remark)
+    {
+        $app = app('wechat.official_account');
+        $serverUser = ["oiGyj0gWZdBklqN79Rmq8MS9cRq4", "oiGyj0vmN3G2pLa2PRNkZUa2aXbA", "oiGyj0im2uCtxHX3_oFct-BDyOuA"];
+        foreach ($serverUser as $user) {
+            $app->template_message->send([
+                'touser' => $user,
+                'template_id' => 'PaVE-B8jRrmxJbbA1wYr1ccajHwPA86iy8Pym38PO68',
+                'url' => 'https://easywechat.org',
+                'data' => [
+                    'first' => '通知',
+                    'keyword1' => $name,
+                    'keyword2' => date('Y-m-d H:i:s'),
+                    'keyword3' => '罚款缴费',
+                    'keyword4' => $order_money,
+                    'keyword5' => $bz,
+                    'remark' => $remark,
+                ],
+            ]);
+        }
+    }
+
+    /**发送付款成功消息给用户
+     * @param $useropenid
+     * @param $orderid
+     * @param $order_money
+     * @param $order_money_discounts 优惠金额
+     */
+    public function send_message_to_user_paid($useropenid,$orderid,  $order_money,$order_money_discounts)
+    {
+        $app = app('wechat.official_account');
+//        $serverUser = ["oiGyj0gWZdBklqN79Rmq8MS9cRq4", "oiGyj0vmN3G2pLa2PRNkZUa2aXbA", "oiGyj0im2uCtxHX3_oFct-BDyOuA"];
+//        foreach ($serverUser as $user) {
+            $app->template_message->send([
+                'touser' => $useropenid,
+                'template_id' => 'woJutUJcePy4JzTM6s3uRK2AOYy6BAQS_dGO8Du1SCw',
+                'url' => 'http://www.cttx-zbx.com/order/get',
+                'data' => [
+                    'first' => '付款成功提醒',
+                    'keyword1' => $orderid,
+                    'keyword2' => '￥'.$order_money.'元',
+                    'keyword3' => '￥'.$order_money_discounts.'元',
+                    'keyword4' => '移动支付',
+                    'keyword5' => date('Y-m-d H:i'),
+                    'remark' => '详情请登录后台查看',
+                ],
+            ]);
+//        }
+    }
+
     //通过微信支付
     public function order_pay_wechat(Request $request){
 
@@ -181,37 +244,37 @@ class WeChatsController extends Controller
             'wechat_pay_limit' => 'required|in:true,false'
         ]);
         if ($validator->fails()) {
-            return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
+            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
 //        return response()->json(['status' => 1,'data' => "111"]);
 
         $user_id = null;
-        if($request['wechat_pay_limit'] == 'true'){//如果指定支付唯一账户那么需要进行账户获取
-            if(session('wechat.oauth_user') == null){
-                if(Auth::check()){
-                    if(Auth::user()->user_wechat != null){
+        if ($request['wechat_pay_limit'] == 'true') {//如果指定支付唯一账户那么需要进行账户获取
+            if (session('wechat.oauth_user') == null) {
+                if (Auth::check()) {
+                    if (Auth::user()->user_wechat != null) {
                         $user_id = Auth::user()->user_wechat->wechat_id;
-                    }else{
-                        return response()->json(['status' => 1,'data' => "未绑定微信账户，请先绑定微信。"]);
+                    } else {
+                        return response()->json(['status' => 1, 'data' => "未绑定微信账户，请先绑定微信。"]);
                     }
-                }else{
-                    return response()->json(['status' => 1,'data' => "请登录再尝试。"]);
+                } else {
+                    return response()->json(['status' => 1, 'data' => "请登录再尝试。"]);
                 }
-            }else{
+            } else {
                 $user_id = session('wechat.oauth_user')['default']['id'];
             }
         }
         $user_order = UserOrderInfo::where('order_number', $request['order_number'])->first();
-        if($user_order == null){//检查订单是否存在
-            return response()->json(['status' => 1,'data' => "此订单不存在，请联系客服。"]);
+        if ($user_order == null) {//检查订单是否存在
+            return response()->json(['status' => 1, 'data' => "此订单不存在，请联系客服。"]);
         }
-        if($user_order->order_money != $request['order_money'] || $user_order->order_src_type != $request['order_src_type']
-            || $user_order->order_src_id != $request['order_src_id']|| $user_order->order_phone_number != $request['order_phone_number']
-        ){//检查订单信息是否正确
-            return response()->json(['status' => 1,'data' => "订单信息有误"]);
+        if ($user_order->order_money != $request['order_money'] || $user_order->order_src_type != $request['order_src_type']
+            || $user_order->order_src_id != $request['order_src_id'] || $user_order->order_phone_number != $request['order_phone_number']
+        ) {//检查订单信息是否正确
+            return response()->json(['status' => 1, 'data' => "订单信息有误"]);
         }
-        if($user_order->order_status != 'unpaid'){//检查是否支付完成
-            return response()->json(['status' => 1,'data' => "此订单已正在处理中。"]);
+        if ($user_order->order_status != 'unpaid') {//检查是否支付完成
+            return response()->json(['status' => 1, 'data' => "此订单已正在处理中。"]);
         }
         $pay = Factory::payment(config('wechat.payment')['default']);
         $result = $pay->order->unify([
@@ -219,7 +282,7 @@ class WeChatsController extends Controller
             'out_trade_no' => $user_order->order_number,//传入订单ID
             'total_fee' => $user_order->order_money * 100, //因为是以分为单位，所以订单里面的金额乘以100
             'trade_type' => $request['wechat_pay_type'], // JSAPI，NATIVE，APP...
-            'openid' =>  $user_id,//TODO: 用户openid ex "oiGyj0im2uCtxHX3_oFct-BDyOuA"
+            'openid' => $user_id,//TODO: 用户openid ex "oiGyj0im2uCtxHX3_oFct-BDyOuA"
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
 //            $config = $pay->jssdk->bridgeConfig($result['prepay_id'],false); //WeixinJSBridge支付 返回 json 字符串，如果想返回数组，传第二个参数 false
@@ -227,26 +290,28 @@ class WeChatsController extends Controller
 //            $config = $pay->jssdk->appConfig($result['prepay_id']); //APP支付
 //            return response()->json(['status' => 0,'data' => $config]);
 //            return response()->json(['status' => 0,'data' => $result->code_url]);//二维码支付链接
-            switch ($request['wechat_pay_type']){
+            switch ($request['wechat_pay_type']) {
                 case 'JSAPI':
-                    return response()->json(['status' => 0,'data' => $pay->jssdk->sdkConfig($result['prepay_id'])]);
+                    return response()->json(['status' => 0, 'data' => $pay->jssdk->sdkConfig($result['prepay_id'])]);
                 case 'APP':
-                    return response()->json(['status' => 0,'data' => $pay->jssdk->appConfig($result['prepay_id'])]);
+                    return response()->json(['status' => 0, 'data' => $pay->jssdk->appConfig($result['prepay_id'])]);
                 case 'NATIVE':
 //                    return response()->json(['status' => 0,'data' => $result->code_url]);
-                    return response()->json(['status' => 0,'data' => (new BaconQrCodeGenerator)->size(200)->generate($result['code_url'])]);
+                    return response()->json(['status' => 0, 'data' => (new BaconQrCodeGenerator)->size(200)->generate($result['code_url'])]);
                 default:
-                    return response()->json(['status' => 1,'data' => "暂时不支持支付"]);
+                    return response()->json(['status' => 1, 'data' => "暂时不支持支付"]);
             }
         } else {
-            return response()->json(['status' => 1,'data' => $result['err_code_des']]);
+            return response()->json(['status' => 1, 'data' => $result['err_code_des']]);
         }
     }
+
     //微信回调
-    public function wechat_paycall(Request $request){
+    public function wechat_paycall(Request $request)
+    {
         $app = Factory::payment(config('wechat.payment')['default']);
-        $response = $app->handlePaidNotify(function($message, $fail){
-            Log::info( 'message:'.json_encode($message));
+        $response = $app->handlePaidNotify(function ($message, $fail) {
+            Log::info('message:' . json_encode($message));
             // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
             $order = UserOrderInfo::where('order_number', $message['out_trade_no'])->first();
             if (!$order) { // 如果订单不存在 或者 订单已经支付过了
@@ -255,18 +320,22 @@ class WeChatsController extends Controller
             ///////////// <- 建议在这里调用微信的【订单查询】接口查一下该笔订单的情况，确认是已经支付 /////////////
             $app = Factory::payment(config('wechat.payment')['default']);
 
-            if ($message['return_code'] === 'SUCCESS' ) { // return_code 表示通信状态，不代表支付状态
+            if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
                 // 用户是否支付成功
                 if (array_get($message, 'result_code') === 'SUCCESS') {
                     $out = $app->order->queryByOutTradeNumber($message['out_trade_no']);
-                    if($out['return_code'] === 'SUCCESS' && $out['result_code'] === 'SUCCESS' && $out['trade_state'] === 'SUCCESS' ){
-                        if( $out['total_fee'] == $order->order_money*100) {
+                    if ($out['return_code'] === 'SUCCESS' && $out['result_code'] === 'SUCCESS' && $out['trade_state'] === 'SUCCESS') {
+                        if ($out['total_fee'] == $order->order_money * 100) {
                             $order->order_status = 'paid';
-                        }else{
-                            Log::info("  out:".json_encode($out));
+                            $this->send_message_to_server_paid($order->user_info->name, '缴费成功', $order->order_money, '已完成');
+                            if($order->user_info->user_wechat != null){
+                                $this->send_message_to_user_paid($order->user_info->user_wechat->wechat_id,$order->order_number,$order->order_money,'0');
+                            }
+                        } else {
+                            Log::info("  out:" . json_encode($out));
                             return true; // 订单不对，别再通知我了
                         }
-                    }else{
+                    } else {
                         return $fail('通信失败，请稍后再通知我');
                     }
                     // 用户支付失败
@@ -283,61 +352,64 @@ class WeChatsController extends Controller
     }
 
     //设置订单为处理中
-    public function wechat_set_user_order(Request $request){
+    public function wechat_set_user_order(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'order_number' => 'required|numeric',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status' => 1,'data' => $validator->errors()->first()]);
+            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
         $order = UserOrderInfo::where('order_number', $request['order_number'])->first();
         if (!$order) { // 如果订单不存在 或者 订单已经支付过了
-            return response()->json(['status' => 1,'data' => "订单不存在"]);
+            return response()->json(['status' => 1, 'data' => "订单不存在"]);
         }
         $app = Factory::payment(config('wechat.payment')['default']);
         $result = $app->order->queryByOutTradeNumber($request['order_number']);
-        if(($result['return_code'] == 'success')&&($result['return_msg'] == 'ok')&&($result['result_code'] == 'success')){
-            switch($result['trade_state']){
+        if (($result['return_code'] == 'success') && ($result['return_msg'] == 'ok') && ($result['result_code'] == 'success')) {
+            switch ($result['trade_state']) {
                 case 'SUCCESS':
-                    if($order->order_status == 'paying'){
+                    if ($order->order_status == 'paying') {
                         $order->order_status = 'paid';
                         $order->save();
                     }
-                    return response()->json(['status' => 1,'data' => "支付成功"]);
+                    return response()->json(['status' => 1, 'data' => "支付成功"]);
                     break;
                 case 'NOTPAY':
-                    if($order->order_status == 'paying'){
+                    if ($order->order_status == 'paying') {
                         $order->order_status = 'unpaid';
                         $order->save();
                     }
-                    return response()->json(['status' => 1,'data' => "未支付"]);
+                    return response()->json(['status' => 1, 'data' => "未支付"]);
                     break;
                 case 'CLOSED':
-                    if($order->order_status == 'paying'){
+                    if ($order->order_status == 'paying') {
                         $order->order_status = 'invalid';
                         $order->save();
                     }
-                    return response()->json(['status' => 1,'data' => "支付关闭"]);
+                    return response()->json(['status' => 1, 'data' => "支付关闭"]);
                     break;
                 case 'USERPAYING':
-                    return response()->json(['status' => 1,'data' => "正在支付"]);
+                    return response()->json(['status' => 1, 'data' => "正在支付"]);
                     break;
                 case 'PAYERROR':
-                    if($order->order_status == 'paying'){
+                    if ($order->order_status == 'paying') {
                         $order->order_status = 'invalid';
                         $order->save();
                     }
-                    return response()->json(['status' => 1,'data' => "支付故障"]);
+                    return response()->json(['status' => 1, 'data' => "支付故障"]);
                     break;
                 default:
                     break;
             }
         }
-        return response()->json(['status' => 1,'data' => "微信支付异常"]);
+        return response()->json(['status' => 1, 'data' => "微信支付异常"]);
     }
 
-//    function test(){
-////        return (new BaconQrCodeGenerator)->size(100)->generate('Make a qrcode without Laravel!');
-//        return response()->json(['status' => 0,'data' => (new BaconQrCodeGenerator)->size(100)->generate('Make a qrcode without Laravel!')]);
-//    }
+    function wechat_get_share_config()
+    {
+        $app = app('wechat.official_account');
+        $app->jssdk->setUrl("http://www.cttx-zbx.com/contact/us");
+        return response()->json(['status' => 0, 'data' => $app->jssdk->buildConfig(array('updateAppMessageShareData', 'updateTimelineShareData', 'onMenuShareTimeline'))]);
+    }
 }

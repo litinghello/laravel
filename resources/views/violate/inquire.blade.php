@@ -45,13 +45,14 @@
                                 </button>
                             </div>
                         </div>
-
                     </div>
                     @component('layouts.datatables')
                     @endcomponent
                     @component('layouts.modal')
                     @endcomponent
                     @component('layouts.order')
+                    @endcomponent
+                    @component('layouts.wechat')
                     @endcomponent
                     @component('layouts.floatmenu')
                     @endcomponent
@@ -70,6 +71,7 @@
                     };
                     var province_array = ["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                     $(document).ready(function() {
+                        user_float_menu_select(2);
                         province_array.forEach(function(value){
                             $("#car_province").append("<option value='"+value+"'>"+value+"</option>");
                         });
@@ -91,15 +93,20 @@
                                     user_modal_loading_close();
                                     if(data['status'] === 0){
                                         user_datatables_init(info_object,data['data'],function (data) {
-                                            // console.log(parseInt(data.violate_marks)*110+parseInt(data.violate_money)+30);
-                                            user_modal_input("订单提交","手机号码",function (value) {
+                                            let display_info = "";
+                                            for(key in info_object){
+                                                display_info += "<div>"+info_object[key]+":"+data[key]+"</div>";
+                                            }
+                                            display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
+                                            display_info += "<div>收费规则：150元*扣分+罚款+30元服务费</div>";
+                                            user_modal_comfirm(display_info,function () {
                                                 let order_value={
-                                                    order_money: parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30,
+                                                    order_money:0,
                                                     order_src_type:"violate",
-                                                    order_src_id:data.id,
-                                                    order_phone_number:value,
+                                                    order_src_id:data['id'],
+                                                    order_phone_number:"13000000000"
                                                 };
-                                                user_order_create(order_value);//创建订单
+                                                user_order_create_pay(order_value);
                                             });
                                         });
                                         user_datatables_show();

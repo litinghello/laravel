@@ -54,8 +54,18 @@
                 </div>
                 @component('layouts.modal')
                 @endcomponent
+                @component('layouts.floatmenu')
+                @endcomponent
+                @component('layouts.wechat')
+                @endcomponent
             </div>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    user_wechat_share();
+                });
+            </script>
         </div>
     </div>
 </div>
+
 @endsection

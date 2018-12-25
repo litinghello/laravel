@@ -52,6 +52,7 @@
                     // 'penalty_phone_number':'手机号码',
                 };
                 $(document).ready(function() {
+                    user_float_menu_select(1);
                     $("#penalty_submit").click(function () {
                         user_modal_loading(0);
                         $.ajax({
@@ -67,6 +68,8 @@
                                     for(key in info_object){
                                         display_info += "<div>"+info_object[key]+":"+data['data'][0][key]+"</div>";
                                     }
+                                    display_info += "<div>合计："+parseFloat(parseFloat(data['data'][0]['penalty_money'])+parseFloat(data['data'][0]['penalty_money_late'])+ 10)+"元</div>";
+                                    display_info += "<div>收费规则：罚款+滞纳金+10元服务费</div>";
                                     // display_info+="<div>确认订单进行缴费！</div>";
                                     user_modal_comfirm(display_info,function () {
                                         let order_value={

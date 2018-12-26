@@ -104,7 +104,7 @@ return [
     /*
      * 微信支付
      */
-     'payment' => [
+     /*'payment' => [
          'default' => [
              'sandbox'            => env('WECHAT_PAYMENT_SANDBOX', false),
              'app_id'             => env('WECHAT_PAYMENT_APPID', 'wxf76823239c5e6688'),
@@ -115,7 +115,7 @@ return [
              'notify_url'         => 'http://www.cttx-zbx.com/order/pay/wechat/paycall',                           // 默认支付结果通知地址
          ],
          // ...
-     ],
+     ],*/
 
     /*
      * 企业微信

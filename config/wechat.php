@@ -59,10 +59,10 @@ return [
      */
     'official_account' => [
         'default' => [
-            'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID', 'wx6c189d35895dc09c'),         // AppID
-            'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET', '07640b5995eb4f9bcd84ad5ce870131f'),    // AppSecret
+            'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID', 'wxf76823239c5e6688'),         // AppID
+            'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET', 'a53d07d5f190c4a7005ef4e47b28b614'),    // AppSecret
             'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN', 'token_default'),           // Token
-            'aes_key' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY', 'IRPz0swUDFMWlt6GqIoFliMOcPEIL37QyTpEFKRfK8f'),                 // EncodingAESKey
+            'aes_key' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY', 'lP8WfxCS5CtS13bFxxYh32ofNUSlawoL8k3Q37G6yGU'),                 // EncodingAESKey
 
             /*
              * OAuth 配置
@@ -107,7 +107,7 @@ return [
      'payment' => [
          'default' => [
              'sandbox'            => env('WECHAT_PAYMENT_SANDBOX', false),
-             'app_id'             => env('WECHAT_PAYMENT_APPID', 'wx6c189d35895dc09c'),
+             'app_id'             => env('WECHAT_PAYMENT_APPID', 'wxf76823239c5e6688'),
              'mch_id'             => env('WECHAT_PAYMENT_MCH_ID', '1511956531'),
              'key'                => env('WECHAT_PAYMENT_KEY', 'Mbz7QylCyAoxvfHounpMzt7hheuauTpy'),
              'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', 'wechatpay/cert/apiclient_cert.pem'),    // XXX: 绝对路径！！！！

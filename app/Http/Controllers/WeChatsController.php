@@ -184,7 +184,7 @@ class WeChatsController extends Controller
     public function send_message_to_server_paid($name, $bz, $order_money, $remark)
     {
         $app = app('wechat.official_account');
-        $serverUser = ["oIIzd55p7UnPrvJRZ8SQ53nbBLlk", "oiGyj0vmN3G2pLa2PRNkZUa2aXbA"];
+        $serverUser = ["oIIzd55p7UnPrvJRZ8SQ53nbBLlk", "oIIzd51HGlmFJdT1m1cW9h3-1Gzw"];
         foreach ($serverUser as $user) {
             $app->template_message->send([
                 'touser' => $user,
@@ -212,7 +212,7 @@ class WeChatsController extends Controller
     public function send_message_to_user_paid($useropenid,$orderid,  $order_money,$order_money_discounts)
     {
         $app = app('wechat.official_account');
-//        $serverUser = ["oiGyj0gWZdBklqN79Rmq8MS9cRq4", "oiGyj0vmN3G2pLa2PRNkZUa2aXbA", "oiGyj0im2uCtxHX3_oFct-BDyOuA"];
+//        $serverUser = ["oIIzd55p7UnPrvJRZ8SQ53nbBLlk", "oIIzd51HGlmFJdT1m1cW9h3", "oiGyj0im2uCtxHX3_oFct-BDyOuA"];
 //        foreach ($serverUser as $user) {
             $app->template_message->send([
                 'touser' => $useropenid,

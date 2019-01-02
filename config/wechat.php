@@ -104,18 +104,18 @@ return [
     /*
      * 微信支付
      */
-     /*'payment' => [
+     'payment' => [
          'default' => [
              'sandbox'            => env('WECHAT_PAYMENT_SANDBOX', false),
              'app_id'             => env('WECHAT_PAYMENT_APPID', 'wxf76823239c5e6688'),
-             'mch_id'             => env('WECHAT_PAYMENT_MCH_ID', '1511956531'),
-             'key'                => env('WECHAT_PAYMENT_KEY', 'Mbz7QylCyAoxvfHounpMzt7hheuauTpy'),
+             'mch_id'             => env('WECHAT_PAYMENT_MCH_ID', '1521412071'),
+             'key'                => env('WECHAT_PAYMENT_KEY', 'Bq2zwwhhX9E0lt3WlDu9FWvDlZUJj97L'),
              'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', 'wechatpay/cert/apiclient_cert.pem'),    // XXX: 绝对路径！！！！
              'key_path'           => env('WECHAT_PAYMENT_KEY_PATH', 'wechatpay/cert/apiclient_key.pem'),      // XXX: 绝对路径！！！！
-             'notify_url'         => 'http://www.cttx-zbx.com/order/pay/wechat/paycall',                           // 默认支付结果通知地址
+             'notify_url'         => 'http://weizhangxiaoxiao.com/order/pay/wechat/paycall',                           // 默认支付结果通知地址
          ],
          // ...
-     ],*/
+     ],
 
     /*
      * 企业微信

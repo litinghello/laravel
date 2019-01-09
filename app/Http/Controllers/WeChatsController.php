@@ -415,8 +415,10 @@ class WeChatsController extends Controller
     }
 
     function test(){
+        $this->send_message_to_server_paid("测试", "测试", "测试", "测试");
+        return "ok";
 //        $name = HTMLDomParser::str_get_html($html)->find('div.profile > span.name > span')[0]->plaintext;
-        return LaravelHtmlDomParser\Facade::str_get_html("<div>hello</div>")->plaintext;
+//        return LaravelHtmlDomParser\Facade::str_get_html("<div>hello</div>")->plaintext;
         //return file_get_contents("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxf76823239c5e6688&secret=9e98d6513da0cb6fb29d1098d0cd1fba");
     }
 }

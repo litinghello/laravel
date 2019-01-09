@@ -9,6 +9,7 @@ use App\WechatAccount;
 use App\User;
 use GuzzleHttp\Cookie\json_decode;
 use Yajra\Datatables\Datatables;
+use Ammadeuss\LaravelHtmlDomParser;
 use SimpleSoftwareIO\QrCode\BaconQrCodeGenerator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -414,6 +415,8 @@ class WeChatsController extends Controller
     }
 
     function test(){
-        return file_get_contents("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxf76823239c5e6688&secret=9e98d6513da0cb6fb29d1098d0cd1fba");
+//        $name = HTMLDomParser::str_get_html($html)->find('div.profile > span.name > span')[0]->plaintext;
+        return LaravelHtmlDomParser\Facade::str_get_html("<div>hello</div>")->plaintext;
+        //return file_get_contents("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxf76823239c5e6688&secret=9e98d6513da0cb6fb29d1098d0cd1fba");
     }
 }

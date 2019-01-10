@@ -89,13 +89,14 @@
             }
         });
     }
-    function user_wechat_share(){
+    function user_wechat_share(share_info){
         $.ajax({
             headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
             url:"{{route('wechats.get.config')}}",
             type:"POST",
             data:"",
             success:function(data){
+                // alert(JSON.stringify(data["data"]));
                 // console.log(JSON.parse(data["data"]));
                 wx.config(JSON.parse(data["data"]));
                 // wx.checkJsApi({
@@ -107,16 +108,32 @@
                 //     }
                 // });
                 wx.error(function(res){
-                    // alert(JSON.stringify(res));
+                    alert(JSON.stringify(res));
                 });
                 wx.ready(function () {//需在用户可能点击分享按钮前就先调用
-                    // wx.updateTimelineShareData({ //jssdk 1.40+
-                    wx.onMenuShareTimeline({//jssdk 1.0+
-                        title: '违章罚款代缴 | 首单免费，最低手续费1元，名额有限。', // 分享标题
-                        desc : "快速违章代缴，违法代办，免费名额有限。",//摘要,如果分享到朋友圈的话，不显示摘要。
-                        // link: 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzMzkyNTUxMg==#wechat_redirect', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                        link: 'http://www.weizhangxiaoxiao.com/penalties/inquire', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                        imgUrl: 'http://www.weizhangxiaoxiao.com/images/wechat_payment.jpg', // 分享图标
+                    // wx.updateAppMessageShareData({//jssdk 1.40+ 自定义“分享给朋友”及“分享到QQ”按钮的分享内容
+                    // wx.updateTimelineShareData({ //jssdk 1.40+ 自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容
+                    // wx.onMenuShareTimeline({//jssdk 1.0+ 分享到朋友圈
+                    wx.onMenuShareAppMessage({//jssdk 1.0+ 分享给朋友
+                        title: share_info.title, // 分享标题
+                        desc : share_info.desc,//摘要,如果分享到朋友圈的话，不显示摘要。
+                        link: share_info.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl: share_info.imgUrl, // 分享图标
+                        success: function (res) {
+                            // alert(JSON.stringify(res));
+                        },
+                        fail:function (err) {
+                            // alert(JSON.stringify(err));
+                        },
+                        cancel: function (res) {
+                            // alert(JSON.stringify(res));
+                        }
+                    });
+                    wx.onMenuShareTimeline({//jssdk 1.0+ 分享给朋友
+                        title: share_info.title, // 分享标题
+                        desc : share_info.desc,//摘要,如果分享到朋友圈的话，不显示摘要。
+                        link: share_info.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl: share_info.imgUrl, // 分享图标
                         success: function (res) {
                             // alert(JSON.stringify(res));
                         },

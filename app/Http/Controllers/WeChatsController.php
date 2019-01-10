@@ -410,8 +410,8 @@ class WeChatsController extends Controller
     function wechat_get_share_config()
     {
         $app = app('wechat.official_account');
-        $app->jssdk->setUrl("http://www.cttx-zbx.com/contact/us");
-        return response()->json(['status' => 0, 'data' => $app->jssdk->buildConfig(array('updateAppMessageShareData', 'updateTimelineShareData', 'onMenuShareTimeline'))]);
+        $app->jssdk->setUrl("http://www.weizhangxiaoxiao.com/contact/us");
+        return response()->json(['status' => 0, 'data' => $app->jssdk->buildConfig(array('updateAppMessageShareData', 'updateTimelineShareData', 'onMenuShareTimeline','onMenuShareAppMessage'))]);
     }
 
     function test(){

@@ -115,8 +115,8 @@
                         title: '违章罚款代缴 | 首单免费，最低手续费1元，名额有限。', // 分享标题
                         desc : "快速违章代缴，违法代办，免费名额有限。",//摘要,如果分享到朋友圈的话，不显示摘要。
                         // link: 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzMzkyNTUxMg==#wechat_redirect', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                        link: 'http://www.cttx-zbx.com/penalties/inquire', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                        imgUrl: 'http://www.cttx-zbx.com/images/wechat_payment.jpg', // 分享图标
+                        link: 'http://www.weizhangxiaoxiao.com/penalties/inquire', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl: 'http://www.weizhangxiaoxiao.com/images/wechat_payment.jpg', // 分享图标
                         success: function (res) {
                             // alert(JSON.stringify(res));
                         },

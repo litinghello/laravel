@@ -9,6 +9,7 @@ use App\WechatAccount;
 use App\User;
 use GuzzleHttp\Cookie\json_decode;
 use Yajra\Datatables\Datatables;
+use Ammadeuss\LaravelHtmlDomParser;
 use SimpleSoftwareIO\QrCode\BaconQrCodeGenerator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -120,12 +121,12 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"违章处理",
-                        "url"=>"http://www.cttx-zbx.com/violates/inquire",
+                        "url"=>"http://www.weizhangxiaoxiao.com/violates/inquire",
                     ],
                     [
                         "type" => "view",
                         "name"=>"罚款缴纳",
-                        "url"=>"http://www.cttx-zbx.com/penalties/inquire",
+                        "url"=>"http://www.weizhangxiaoxiao.com/penalties/inquire",
                     ]
                 ]
             ],
@@ -135,17 +136,17 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"汽车审验",
-                        "url"=>"http://www.cttx-zbx.com/",
+                        "url"=>"http://www.weizhangxiaoxiao.com/",
                     ],
                     [
                         "type" => "view",
                         "name"=>"过户上户",
-                        "url"=>"http://www.cttx-zbx.com/",
+                        "url"=>"http://www.weizhangxiaoxiao.com/",
                     ],
                     [
                         "type" => "view",
                         "name"=>"事故查询",
-                        "url"=>"http://www.cttx-zbx.com/",
+                        "url"=>"http://www.weizhangxiaoxiao.com/",
                     ]
                 ]
             ],
@@ -155,12 +156,12 @@ class WeChatsController extends Controller
                     [
                         "type" => "view",
                         "name"=>"订单信息",
-                        "url"=>"http://www.cttx-zbx.com/",
+                        "url"=>"http://www.weizhangxiaoxiao.com/",
                     ],
                     [
                         "type" => "view",
                         "name"=>"联系我们",
-                        "url"=>"http://www.cttx-zbx.com/contact/us",
+                        "url"=>"http://www.weizhangxiaoxiao.com/contact/us",
                     ]
                 ]
             ]
@@ -184,11 +185,11 @@ class WeChatsController extends Controller
     public function send_message_to_server_paid($name, $bz, $order_money, $remark)
     {
         $app = app('wechat.official_account');
-        $serverUser = ["oiGyj0gWZdBklqN79Rmq8MS9cRq4", "oiGyj0vmN3G2pLa2PRNkZUa2aXbA", "oiGyj0im2uCtxHX3_oFct-BDyOuA"];
+        $serverUser = ["oIIzd55p7UnPrvJRZ8SQ53nbBLlk", "oIIzd51HGlmFJdT1m1cW9h3-1Gzw","oIIzd57jQPZbxB__U_A-CMXgl_08"];
         foreach ($serverUser as $user) {
             $app->template_message->send([
                 'touser' => $user,
-                'template_id' => 'PaVE-B8jRrmxJbbA1wYr1ccajHwPA86iy8Pym38PO68',
+                'template_id' => '9qcIi1wu2OZGH8FLmgmN1_p8tnwteD1JCBDBf4zjxF4',
                 'url' => 'https://easywechat.org',
                 'data' => [
                     'first' => '通知',
@@ -212,11 +213,11 @@ class WeChatsController extends Controller
     public function send_message_to_user_paid($useropenid,$orderid,  $order_money,$order_money_discounts)
     {
         $app = app('wechat.official_account');
-//        $serverUser = ["oiGyj0gWZdBklqN79Rmq8MS9cRq4", "oiGyj0vmN3G2pLa2PRNkZUa2aXbA", "oiGyj0im2uCtxHX3_oFct-BDyOuA"];
+//        $serverUser = ["oIIzd55p7UnPrvJRZ8SQ53nbBLlk", "oIIzd51HGlmFJdT1m1cW9h3", "oIIzd57jQPZbxB__U_A-CMXgl_08"];
 //        foreach ($serverUser as $user) {
             $app->template_message->send([
                 'touser' => $useropenid,
-                'template_id' => 'woJutUJcePy4JzTM6s3uRK2AOYy6BAQS_dGO8Du1SCw',
+                'template_id' => 'TXyFUPqrBzQDf33dCh49nezHr3RdLQrP7VrrodKejF0',
                 'url' => 'http://www.cttx-zbx.com/order/get',
                 'data' => [
                     'first' => '付款成功提醒',
@@ -409,7 +410,15 @@ class WeChatsController extends Controller
     function wechat_get_share_config()
     {
         $app = app('wechat.official_account');
-        $app->jssdk->setUrl("http://www.cttx-zbx.com/contact/us");
-        return response()->json(['status' => 0, 'data' => $app->jssdk->buildConfig(array('updateAppMessageShareData', 'updateTimelineShareData', 'onMenuShareTimeline'))]);
+        $app->jssdk->setUrl("http://www.weizhangxiaoxiao.com/contact/us");
+        return response()->json(['status' => 0, 'data' => $app->jssdk->buildConfig(array('updateAppMessageShareData', 'updateTimelineShareData', 'onMenuShareTimeline','onMenuShareAppMessage'))]);
+    }
+
+    function test(){
+        $this->send_message_to_server_paid("测试", "测试", "测试", "测试");
+        return "ok";
+//        $name = HTMLDomParser::str_get_html($html)->find('div.profile > span.name > span')[0]->plaintext;
+//        return LaravelHtmlDomParser\Facade::str_get_html("<div>hello</div>")->plaintext;
+        //return file_get_contents("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxf76823239c5e6688&secret=9e98d6513da0cb6fb29d1098d0cd1fba");
     }
 }

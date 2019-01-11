@@ -24,8 +24,8 @@
     <link rel="stylesheet" href="<?php echo e(asset('vendor/adminlte/dist/css/AdminLTE.min.css')); ?>">
 
     <?php if(config('adminlte.plugins.datatables')): ?>
-        <!-- DataTables -->
-        <link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+        <!-- DataTables with bootstrap 3 style -->
+        <link rel="stylesheet" href="//cdn.datatables.net/v/bs/dt-1.10.18/datatables.min.css">
     <?php endif; ?>
 
     <?php echo $__env->yieldContent('adminlte_css'); ?>
@@ -36,7 +36,7 @@
     <![endif]-->
 
     <!-- Google Font -->
-    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition <?php echo $__env->yieldContent('body_class'); ?>">
 
@@ -52,8 +52,8 @@
 <?php endif; ?>
 
 <?php if(config('adminlte.plugins.datatables')): ?>
-    <!-- DataTables -->
-    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <!-- DataTables with bootstrap 3 renderer -->
+    <script src="//cdn.datatables.net/v/bs/dt-1.10.18/datatables.min.js"></script>
 <?php endif; ?>
 
 <?php if(config('adminlte.plugins.chartjs')): ?>

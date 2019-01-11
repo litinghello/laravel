@@ -48,7 +48,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('公众号')); ?></div>
-                            <a type="text" class="form-control" href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzMzkyNTUxMg==#wechat_redirect" >车途天下</a>
+                            <a type="text" class="form-control" href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzMzkyNTUxMg==#wechat_redirect" >违章消消</a>
                         </div>
                     </div>
                     <div class="form-group">

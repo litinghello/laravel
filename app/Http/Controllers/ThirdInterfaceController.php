@@ -314,6 +314,7 @@ class ThirdInterfaceController extends BaseController
         if ($response_code != 200) {
             return response()->json(['status' => 1, 'data' => "系统异常"]);
         }
+//        return LaravelHtmlDomParser\Facade::str_get_html($response->getBody());
         $form_strs = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('div.chaxun_jg > form');
         if($form_strs!= null && count($form_strs)>0){
             $form_str = $form_strs[0];

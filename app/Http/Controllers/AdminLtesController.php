@@ -84,13 +84,14 @@ class AdminLtesController extends Controller
             'order_number' => 'required|alpha_num',
         ]);
         if ($validator->fails()) {
+
             return $validator->errors()->first();
         }
         $rs = UserOrderInfo::where('id',$request['id'])->where('order_number',$request['order_number'])->update(['order_status' => 'completed']);
 
-
         if($rs)
         {
+
             return response()->json(['state'=>0,'data'=>$rs]);
         }
         return response()->json(['state'=>1,'data'=>'请再次提交']);

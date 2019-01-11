@@ -79,31 +79,50 @@
             });
             //监听工具条
             table.on("tool(dataTable)",function(obj){
+
                 var data = obj.data //获得当前行数据
                 layEvent = obj.event; //获得 lay-event 对应的值
-//                console.log(obj.tr);
+//                console.log(data);
 //                layui.stope(obj.tr)
+
                  if(layEvent === 'finish') {
-                     $.ajax({
-                         type:'GET',
-                         data:{id:data.id,order_number:data.order_number},
-                         headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
-                         url:"{{route('adminltes.table.complete')}}",
-                         success:function (data) {
-                             if(data['state']==='0') {
-                                 $(".layui-laypage-btn").click()
+                     user_modal_comfirm("<p>您确定已处理完成?</p>",function () {
+
+                         $.ajax({
+                             type:'GET',
+                             data:{id:data.id,order_number:data.order_number},
+                             headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
+                             url:"{{route('adminltes.table.complete')}}",
+                             success:function (data) {
+                                 console.log(data)
+                                 if(data['state']=='0') {
+
+                                     $(".layui-laypage-btn").click()
+
+
+                                 }else {
+
+                                 }
+                             },
+                             error:function (error) {
+                                 user_modal_warning("请再次提交1");
                              }
-                         },
-                         error:function (error) {
-                             user_modal_warning("请再次提交1");
-                         }
-                     })
+                         })
+                     });
 
                 }
             });
             //监听行事件
             table.on('rowDouble(dataTable)', function(obj){
                 var data = obj.data;
+                var order_src_type='';
+
+                if(data['order_src_type']=='violate')
+                {
+                    order_src_type = 'violate';
+                }else if(data['order_src_type']=='penalty'){
+                    order_src_type = 'penalty';
+                }
                 console.log(obj.tr[0]);
                 $.ajax({
                     type:"POST",
@@ -113,11 +132,24 @@
                     success:function(data){
 //                        console.log(data);
                     if(data['status'] === 0){
-                    var html="<div>决定书编号:"+data['data']['penalty_number']+"</div>"
-                    html+= "<div>车牌号:"+data['data']['penalty_car_number']+"</div>"
-                    html+= "<div>金额:"+data['data']['penalty_money']+"</div>"
-                    html+= "<div>姓名:"+data['data']['penalty_user_name']+"</div>";
-                    user_modal_show('详情',html)
+                        var html = '';
+
+                        if(order_src_type=='violate')
+                        {
+                            html = "<div>车牌号:" + data['data']['car_province']+data['data']['car_number'] + "</div>"
+                            html += "<div>违法行为:" + data['data']['violate_info'] + "</div>"
+                            html += "<div>违法地址:" + data['data']['violate_address'] + "</div>";
+                            html += "<div>罚款金额:" + data['data']['violate_money'] + "</div>";
+                            html += "<div>扣分:" + data['data']['violate_marks'] + "</div>";
+                        }else if(order_src_type=='penalty'){
+                            html = "<div>决定书编号:" + data['data']['penalty_number'] + "</div>"
+                            html += "<div>车牌号:" + data['data']['penalty_car_number'] + "</div>"
+                            html += "<div>金额:" + data['data']['penalty_money'] + "</div>"
+                            html += "<div>姓名:" + data['data']['penalty_user_name'] + "</div>";
+                        }else{
+                            return
+                        }
+                        user_modal_show('详情',html)
                     }else{
                     user_modal_warning(data['data']);
                     }

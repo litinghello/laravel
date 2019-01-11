@@ -10,6 +10,9 @@
 
 </div>
 <script type="text/javascript">
+    function user_float_menu_select(index) {
+        $("#user_float_menu > ul li").eq(index).addClass("layui-this");
+    }
     function user_device_is_phone(){
         let status = false;
         ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"].some(function (value) {

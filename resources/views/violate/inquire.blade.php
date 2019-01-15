@@ -99,7 +99,7 @@
                                     if(data['status'] === 0){
 
                                         open_upphoto_layer('{{url('a')}}','上传行驶证正面照片',function (d) {
-                                            if(d!=undefined && d!=''){
+                                            if(d!==undefined && d!==''){
                                                 $.ajax({type:'POST',data:{'order_src_id':data['id'],'img':d},url:"{{route('driving.upfile_suc')}}",headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"}})
                                             }
 

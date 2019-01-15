@@ -228,7 +228,7 @@
             auto: true,
             fileNumLimit: 1,
 
-            server: '{{url('ab')}}',
+            server: '{{url('plug/upload')}}',
             swf: "{{URL::asset('/uploader/Uploader.swf')}}",
             chunked: false,
             dnd: '#dndArea',

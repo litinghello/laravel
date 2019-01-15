@@ -44,6 +44,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <input id="handle_status" value="" hidden="hidden">
+
                     <?php $__env->startComponent('layouts.datatables'); ?>
                     <?php echo $__env->renderComponent(); ?>
                     <?php $__env->startComponent('layouts.modal'); ?>
@@ -90,26 +93,40 @@
                                 url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
                                 success:function(data){
                                     user_modal_loading_close();
+
                                     if(data['status'] === 0){
-                                        user_datatables_init(info_object,data['data'],function (data) {
-                                            let display_info = "";
-                                            for(key in info_object){
-                                                display_info += "<div>"+info_object[key]+":"+data[key]+"</div>";
-                                            }
-                                            display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
-                                            display_info += "<div>收费规则：150元*扣分+罚款+30元服务费</div>";
-                                            user_modal_comfirm(display_info,function () {
-                                                let order_value={
-                                                    order_money:0,
-                                                    order_src_type:"violate",
-                                                    order_src_id:data['id'],
-                                                    order_phone_number:"13000000000"
-                                                };
-                                                user_order_create_pay(order_value);
+
+                                            user_datatables_init(info_object,data['data'],function (data) {
+                                                let display_info = "";
+                                                for(key in info_object){
+                                                    display_info += "<div>"+info_object[key]+":"+data[key]+"</div>";
+                                                }
+                                                display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
+                                                display_info += "<div>收费规则：150元*扣分+罚款+30元服务费</div>";
+
+
+                                                open_upphoto_layer('<?php echo e(url('driving/upfile')); ?>','上传行驶证正面照片',function (d) {
+                                                    if (d !== undefined && d !== '') {
+                                                        $.ajax({
+                                                            type: 'POST',
+                                                            data: {'order_src_id': data['id'], 'img': d},
+                                                            url: "<?php echo e(route('driving.upfile_suc')); ?>",
+                                                            headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"}
+                                                        })
+                                                    }
+                                                    user_modal_comfirm(display_info, function () {
+                                                        let order_value = {
+                                                            order_money: 0,
+                                                            order_src_type: "violate",
+                                                            order_src_id: data['id'],
+                                                            order_phone_number: "13000000000"
+                                                        };
+                                                        user_order_create_pay(order_value);
+                                                    });
+                                                })
                                             });
-                                        });
-                                        user_datatables_show();
-                                        $("#card_body_input").hide();
+                                            user_datatables_show();
+                                            $("#card_body_input").hide();
                                     }else{
                                         user_modal_warning(data['data']);
                                     }

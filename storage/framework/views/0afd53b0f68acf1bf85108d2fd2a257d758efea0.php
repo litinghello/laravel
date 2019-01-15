@@ -228,7 +228,7 @@
             auto: true,
             fileNumLimit: 1,
 
-            server: '<?php echo e(url('ab')); ?>',
+            server: '<?php echo e(url('plug/upload')); ?>',
             swf: "<?php echo e(URL::asset('/uploader/Uploader.swf')); ?>",
             chunked: false,
             dnd: '#dndArea',

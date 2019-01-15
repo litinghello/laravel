@@ -24,19 +24,19 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">{{ __('手 机') }}</div>
-                            <a type="text" class="form-control" href="tel:13194893073">13308000058</a>
+                            <a type="text" class="form-control" href="tel:18090005244">18090005244</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">{{ __('邮 件') }}</div>
-                            <a type="text" class="form-control" href="mailto:3325815724@qq.com">68518537@qq.com</a>
+                            <a type="text" class="form-control" href="mailto:570446275@qq.com">570446275@qq.com</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">{{ __('微 信') }}</div>
-                            <a type="text" class="form-control" href="tel:13194893073">13308000058</a>
+                            <a type="text" class="form-control" href="tel:weizhangxxx">weizhangxxx</a>
                         </div>
                     </div>
                     <div class="form-group">

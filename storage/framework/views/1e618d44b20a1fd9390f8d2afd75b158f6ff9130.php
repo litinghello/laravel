@@ -67,7 +67,8 @@
                         // 'penalty_phone_number':'手续费',
                         'violate_marks':'扣分（仅供参考）',
                     };
-                    var province_array = ["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
+                    var province_array = ["川"];
+                    // var province_array = ["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                     $(document).ready(function() {
                         user_float_menu_select(2);
                         province_array.forEach(function(value){

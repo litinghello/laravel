@@ -31,9 +31,11 @@
             <a class="layui-btn layui-btn-primary layui-btn-xs " style="margin-top:2px;" lay-event="finish">完成</a>
         </script>
     </div>
+
     <?php $__env->startComponent('layouts.modal'); ?>
     <?php echo $__env->renderComponent(); ?>
     <script>
+
 
         layui.use(['layer','table','form','laydate'],function () {
             var layer = layui.layer;
@@ -77,15 +79,18 @@
                     ,{title:'操作', width: 100, align:'center', templet: '#options'}
                 ]]
             });
+
             //监听工具条
             table.on("tool(dataTable)",function(obj){
 
                 var data = obj.data //获得当前行数据
                 layEvent = obj.event; //获得 lay-event 对应的值
-//                console.log(data);
+
 //                layui.stope(obj.tr)
 
+
                  if(layEvent === 'finish') {
+
                      user_modal_comfirm("<p>您确定已处理完成?</p>",function () {
 
                          $.ajax({

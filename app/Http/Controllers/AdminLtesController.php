@@ -128,4 +128,5 @@ class AdminLtesController extends Controller
         return response()->json(['status' => 1, 'data' => "请求数据失败"]);
     }
 
+
 }

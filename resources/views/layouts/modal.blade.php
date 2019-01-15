@@ -85,4 +85,16 @@
             user_wechat_pay(pay_value);
         }
     }
+    //上传照片
+    function open_upphoto_layer(url, title,event) {
+
+        layer.open({title: title || '窗口', type: 2, area: ['320px', '430px'], fix: true, maxmin: false, content: url,end:function () {
+            var $ = layui.$
+            var handle_status = $("#handle_status").val();
+            if(handle_status!=undefined && handle_status!='')
+            {
+                event(handle_status)
+            }
+        }});
+    }
 </script>

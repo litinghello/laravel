@@ -64,6 +64,10 @@ Route::get('/adminltes/table/complete', 'AdminLtesController@set_order_data')->n
 
 
 
+Route::any('/a','DrivingLicenseController@upfile')->name('driving.upfile');
+Route::any('/ab','Plugs@upload')->name('plug.upload');
+Route::any('/abc','Plugs@upstate')->name('plug.upstate');
+Route::post('/upload/img','DrivingLicenseController@upfile_suc')->name('driving.upfile_suc');
 
 Route::any('/test','WeChatsController@test')->name('laravel.test');
 

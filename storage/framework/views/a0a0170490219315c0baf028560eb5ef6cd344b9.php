@@ -14,32 +14,26 @@
                 <div class="card-body">
                     <div class="form-group">
                         <div class="input-group">
-                            
-                            <button id="wechat_share_but" class="btn btn-default">分享</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('座 机')); ?></div>
-                            <a type="text" class="form-control" href="tel:028-62561692">028-62561692</a>
+                            <a type="text" class="form-control" href="tel:028-62561692">028-64363802</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('手 机')); ?></div>
-                            <a type="text" class="form-control" href="tel:13194893073">13194893073</a>
+                            <a type="text" class="form-control" href="tel:18090005244">18090005244</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('邮 件')); ?></div>
-                            <a type="text" class="form-control" href="mailto:3325815724@qq.com">3325815724@qq.com</a>
+                            <a type="text" class="form-control" href="mailto:570446275@qq.com">570446275@qq.com</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('微 信')); ?></div>
-                            <a type="text" class="form-control" href="tel:13194893073">13194893073</a>
+                            <a type="text" class="form-control" href="tel:weizhangxxx">weizhangxxx</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -48,7 +42,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><?php echo e(__('公众号')); ?></div>
-                            <a type="text" class="form-control" href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzMzkyNTUxMg==#wechat_redirect" >违章消消</a>
+                            <a type="text" class="form-control" onclick="ss();">违章消消</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -63,16 +57,19 @@
                 <?php echo $__env->renderComponent(); ?>
             </div>
             <script type="text/javascript">
-                $("#wechat_share_but").click(function () {
-                     user_wechat_share();
-                    // wx.checkJsApi({
-                    //     jsApiList: ['chooseImage'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
-                    //     success: function(res) {
-                    //         // 以键值对的形式返回，可用的api值true，不可用为false
-                    //         // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
-                    //         alert(JSON.stringify(res));
-                    //     }
-                    // });
+                function ss(){
+                    layer.confirm("<img src=\"<?php echo e(URL::asset('images/car_license_ex.jpg')); ?>\" height=\"300px\" width=\"400px\"/>", {offset: '100px', title:"行驶证示例"}, function(index){
+
+                    });
+                }
+                $(document).ready(function() {
+                    let share_info = {
+                        title: '违章罚款代缴 | 首单免费，最低手续费1元，名额有限。', // 分享标题
+                        desc : "快速违章代缴，违法代办，免费名额有限。",//摘要,如果分享到朋友圈的话，不显示摘要。
+                        link: 'http://www.weizhangxiaoxiao.com/penalties/inquire', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        imgUrl: 'http://www.weizhangxiaoxiao.com/images/wechat_payment.jpg' // 分享图标
+                    };
+                    user_wechat_share(share_info);
                 });
             </script>
         </div>

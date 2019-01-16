@@ -68,6 +68,7 @@ Route::any('/driving/upfile','DrivingLicenseController@upfile')->name('driving.u
 Route::any('/plug/upload','Plugs@upload')->name('plug.upload');
 Route::any('/plug/upstate','Plugs@upstate')->name('plug.upstate');
 Route::post('/upload/img','DrivingLicenseController@upfile_suc')->name('driving.upfile_suc');
+Route::any('/driving/get_url','DrivingLicenseController@get_upfile_url')->name('driving.get_upfile_url');
 
 Route::any('/test','WeChatsController@test')->name('laravel.test');
 

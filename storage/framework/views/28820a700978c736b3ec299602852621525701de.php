@@ -16,7 +16,7 @@
                     <th>订单金额</th>
                     
                     <th>状态</th>
-                    <th>照片</th>
+                    <th>驾驶证</th>
                     <th>时间</th>
                 </tr>
                 </thead>
@@ -27,7 +27,7 @@
                         <td><?php echo e($data->order_money); ?></td>
                         
                         <td><?php if($data->order_status=='paid'): ?>已支付<?php elseif($data->order_status=='unpaid'): ?>未支付<?php elseif($data->order_status=='invalid'): ?>无效<?php elseif($data->order_status=='processing'): ?>正在处理<?php elseif($data->order_status=='completed'): ?>处理完成<?php endif; ?></td>
-                        <td><?php if($data->order_status=='paid'): ?>传照片<?php else: ?> 无照片 <?php endif; ?></td>
+                        <td><?php if($data->order_src_type=='violate'): ?> 需要 <?php else: ?> 不需要 <?php endif; ?></td>
                         <td><?php echo e($data->updated_at); ?></td>
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -63,16 +63,26 @@
                 user_modal_order_pay(body, pay_value);
                 break;
             case 'paid':
-                open_upphoto_layer('<?php echo e(url('driving/upfile')); ?>','上传行驶证正面照片',function (d) {
-                    if (d !== undefined && d !== '') {
-                        $.ajax({
-                            type: 'POST',
-                            data: {'order_src_id': data.id, 'img': d},
-                            url: "<?php echo e(route('driving.upfile_suc')); ?>",
-                            headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"}
-                        })
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
+                    url:"<?php echo e(route('driving.get_upfile_url')); ?>",type:"POST",data:data,
+                    success:function(p_data){
+                        open_upphoto_layer(p_data,'<?php echo e(url('driving/upfile')); ?>','上传行驶证正面照片',function (d) {
+                            if (d !== undefined && d !== '') {
+                                $.ajax({
+                                    type: 'POST',
+                                    data: {'order_src_id': p_data.id, 'img': d},
+                                    url: "<?php echo e(route('driving.upfile_suc')); ?>",
+                                    headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"}
+                                })
+                            }
+                        });
+                    },
+                    error:function(err){
+
                     }
                 });
+
                 break;
             default:
                 break;

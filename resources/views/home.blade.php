@@ -20,7 +20,7 @@
                     <th>订单金额</th>
                     {{--<th>联系电话</th>--}}
                     <th>状态</th>
-                    <th>照片</th>
+                    <th>驾驶证</th>
                     <th>时间</th>
                 </tr>
                 </thead>
@@ -31,7 +31,7 @@
                         <td>{{ $data->order_money }}</td>
                         {{--<td>{{ $data->order_phone_number }}</td>--}}
                         <td>@if($data->order_status=='paid')已支付@elseif($data->order_status=='unpaid')未支付@elseif($data->order_status=='invalid')无效@elseif($data->order_status=='processing')正在处理@elseif($data->order_status=='completed')处理完成@endif</td>
-                        <td>@if($data->order_status=='paid')传照片@else 无照片 @endif</td>
+                        <td>@if($data->order_src_type=='violate') 需要 @else 不需要 @endif</td>
                         <td>{{ $data->updated_at }}</td>
                     </tr>
                 @endforeach
@@ -67,16 +67,26 @@
                 user_modal_order_pay(body, pay_value);
                 break;
             case 'paid':
-                open_upphoto_layer('{{url('driving/upfile')}}','上传行驶证正面照片',function (d) {
-                    if (d !== undefined && d !== '') {
-                        $.ajax({
-                            type: 'POST',
-                            data: {'order_src_id': data.id, 'img': d},
-                            url: "{{route('driving.upfile_suc')}}",
-                            headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"}
-                        })
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
+                    url:"{{route('driving.get_upfile_url')}}",type:"POST",data:data,
+                    success:function(p_data){
+                        open_upphoto_layer(p_data,'{{url('driving/upfile')}}','上传行驶证正面照片',function (d) {
+                            if (d !== undefined && d !== '') {
+                                $.ajax({
+                                    type: 'POST',
+                                    data: {'order_src_id': p_data.id, 'img': d},
+                                    url: "{{route('driving.upfile_suc')}}",
+                                    headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"}
+                                })
+                            }
+                        });
+                    },
+                    error:function(err){
+
                     }
                 });
+
                 break;
             default:
                 break;

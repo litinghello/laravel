@@ -16,6 +16,7 @@
                     <th>订单金额</th>
                     
                     <th>状态</th>
+                    <th>照片</th>
                     <th>时间</th>
                 </tr>
                 </thead>
@@ -26,6 +27,7 @@
                         <td><?php echo e($data->order_money); ?></td>
                         
                         <td><?php if($data->order_status=='paid'): ?>已支付<?php elseif($data->order_status=='unpaid'): ?>未支付<?php elseif($data->order_status=='invalid'): ?>无效<?php elseif($data->order_status=='processing'): ?>正在处理<?php elseif($data->order_status=='completed'): ?>处理完成<?php endif; ?></td>
+                        <td><?php if($data->order_status=='paid'): ?>传照片<?php else: ?> 无照片 <?php endif; ?></td>
                         <td><?php echo e($data->updated_at); ?></td>
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -46,16 +48,36 @@
         user_float_menu_select(0);
     });
     function dataClick(data) {
-        let body = "<div>金额:" + data['order_money'] + "元</div>" +
-            "<div>电话:" + data['order_phone_number'] + "</div>" + "<br>是否确认支付？";
-        let pay_value = {
-            order_number: data.order_number,
-            order_money: parseFloat(data.order_money),
-            order_src_type: data.order_src_type,
-            order_src_id: data.order_src_id,
-            order_phone_number: data.order_phone_number
-        };
-        user_modal_order_pay(body, pay_value);
+        console.log(data);
+        switch(data.order_status){
+            case 'unpaid':
+                let body = "<div>金额:" + data['order_money'] + "元</div>" +
+                    "<div>电话:" + data['order_phone_number'] + "</div>" + "<br>是否确认支付？";
+                let pay_value = {
+                    order_number: data.order_number,
+                    order_money: parseFloat(data.order_money),
+                    order_src_type: data.order_src_type,
+                    order_src_id: data.order_src_id,
+                    order_phone_number: data.order_phone_number
+                };
+                user_modal_order_pay(body, pay_value);
+                break;
+            case 'paid':
+                open_upphoto_layer('<?php echo e(url('driving/upfile')); ?>','上传行驶证正面照片',function (d) {
+                    if (d !== undefined && d !== '') {
+                        $.ajax({
+                            type: 'POST',
+                            data: {'order_src_id': data.id, 'img': d},
+                            url: "<?php echo e(route('driving.upfile_suc')); ?>",
+                            headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"}
+                        })
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+
     }
 </script>
 

@@ -95,9 +95,7 @@
                                 url:"{{route('violates.info')}}",type:"POST",data:post_data,
                                 success:function(data){
                                     user_modal_loading_close();
-
                                     if(data['status'] === 0){
-
                                             user_datatables_init(info_object,data['data'],function (data) {
                                                 let display_info = "";
                                                 for(key in info_object){
@@ -105,8 +103,6 @@
                                                 }
                                                 display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
                                                 display_info += "<div>收费规则：150元*扣分+罚款+30元服务费</div>";
-
-
                                                 open_upphoto_layer('{{url('driving/upfile')}}','上传行驶证正面照片',function (d) {
                                                     if (d !== undefined && d !== '') {
                                                         $.ajax({
@@ -125,7 +121,7 @@
                                                         };
                                                         user_order_create_pay(order_value);
                                                     });
-                                                })
+                                                });
                                             });
                                             user_datatables_show();
                                             $("#card_body_input").hide();

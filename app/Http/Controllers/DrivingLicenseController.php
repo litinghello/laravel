@@ -9,13 +9,10 @@ class DrivingLicenseController extends Controller
 {
     //
 
-    public function upfile(Request $request)
-    {
-
-        return view('upfile');
+    public function upfile(Request $request){
+        return view('layouts.upfile');
     }
-    public function upfile_suc(Request $request)
-    {
+    public function upfile_suc(Request $request){
         DrivingLicenseImgs::create([
             'order_src_id'=>$request['order_src_id'],
             'img'=>$request['img'],

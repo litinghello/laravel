@@ -15,7 +15,7 @@
                             <div class="input-group-addon">
                                 <select id="car_province" class="selectpicker" data-style="btn-info">
                                 </select>
-                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="">
+                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="AF474B">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon" >车辆类型</div>
@@ -29,7 +29,7 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车架号码</div>
-                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="">
+                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="A4300825">
                         </div>
 
                         <div class="form-group input-group hidden">
@@ -40,7 +40,7 @@
 
                         <div class="form-group input-group">
                             <div class="input-group-addon">车主姓名</div>
-                            <input type="text" class="form-control" id="car_name" value="">
+                            <input type="text" class="form-control" id="car_name" value="曾行">
                         </div>
 
 
@@ -165,6 +165,7 @@
 
                                     user_modal_loading_close();
                                     if(data['status'] === 0){
+                                        console.log(data)
                                             user_datatables_init(info_object,data['data'],function (data) {
                                                 let display_info = "";
                                                 for(key in info_object){

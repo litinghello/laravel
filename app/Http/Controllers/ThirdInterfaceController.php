@@ -6,6 +6,7 @@ use App\User;
 use App\ViolateInfo;
 use App\PenaltyInfo;
 use App\ThirdAccount;
+use App\ViolateCode;
 use App\UserOrderInfo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
@@ -469,9 +470,38 @@ class ThirdInterfaceController extends BaseController
             foreach ($list as  $key => $value){
                 if($key > 1){//设置过滤标题的 tr 设置为1
                     $array = array();
-                    foreach (LaravelHtmlDomParser\Facade::str_get_html($value->innertext)->find('td') as  $key => $value){
-                        $array[] = trim($value->innertext);
+                    $list = LaravelHtmlDomParser\Facade::str_get_html($value->innertext)->find('td');
+                    $array['violate_time'] = trim($list[0]->innertext);//时间
+                    $array['violate_address'] = trim($list[1]->innertext);//地点
+                    $array['violate_info'] = trim($list[2]->innertext);//违法信息
+
+                    preg_match('#\((.*?)\)#', trim($array['violate_info']), $match);
+                    $ViolateCode = ViolateCode::where("code",$match[1])->first();
+                    if($ViolateCode != null) {
+                        $array['violate_code'] = $match[1];//违法代码
+                        $array['violate_money'] = $ViolateCode['money'];
+                        $array['violate_marks'] = $ViolateCode['score'];
+                        $array['violate_msg'] = $ViolateCode['notification'];
+//                        $array['car_type'] = $ViolateCode[3];
+//                        $array['car_province'] = $ViolateCode[3];
+//                        $array['car_number'] = $ViolateCode[3];
+//                        $array['car_frame_number'] = $ViolateCode[3];
                     }
+
+//                    foreach (LaravelHtmlDomParser\Facade::str_get_html($value->innertext)->find('td') as  $key => $value){
+//                        $array[] = trim($value->innertext);
+//                        if($key == 2){
+//                            preg_match('#\((.*?)\)#', trim($value->innertext), $match);
+//                            $ViolateCode = ViolateCode::where("code",$match[1])->first();
+//                            if($ViolateCode != null){
+//                                $array[] = $match[1];
+//                                $array[] = $ViolateCode['score'];
+//                                $array[] = $ViolateCode['money'];
+//                                $array[] = $ViolateCode['notification'];
+//                            }
+//                        }
+//                    }
+
                     $object[] = $array;
                 }
             }

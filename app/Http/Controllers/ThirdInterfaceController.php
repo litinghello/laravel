@@ -438,20 +438,20 @@ class ThirdInterfaceController extends BaseController
         $frameno = $request['ctl00$ContentPlaceHolder1$hidClsbdh'];
 
 
-//        //判断是否在最近8小时内查询了，有则直接返回结果，不在查询接口
-//        $carviolates = ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->get();
-//        if($carviolates!= null && count($carviolates)>0){
-//            if ($carviolates[0] != null && $carviolates[0]->updated_at > date("Y-m-d H:i:s", strtotime("-480 minute"))) {
-//                //没有违法返回提示
-//                if(($carviolates[0]->violate_time == null || $carviolates[0]->violate_time == '') && $carviolates[0]->violate_msg != null && $carviolates[0]->violate_msg != ''){
-//                    return response()->json(['status' => 1, 'data' => $carviolates[0]->violate_msg]);
-//                }else{
-//                    return response()->json(['status' => 0, 'data' => $carviolates]);
-//                }
-//            }else{
-//                ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->delete();
-//            }
-//        }
+        //判断是否在最近8小时内查询了，有则直接返回结果，不在查询接口
+        $carviolates = ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->get();
+        if($carviolates!= null && count($carviolates)>0){
+            if ($carviolates[0] != null && $carviolates[0]->updated_at > date("Y-m-d H:i:s", strtotime("-480 minute"))) {
+                //没有违法返回提示
+                if(($carviolates[0]->violate_time == null || $carviolates[0]->violate_time == '') && $carviolates[0]->violate_msg != null && $carviolates[0]->violate_msg != ''){
+                    return response()->json(['status' => 1, 'data' => $carviolates[0]->violate_msg]);
+                }else{
+                    return response()->json(['status' => 0, 'data' => $carviolates]);
+                }
+            }else{
+                ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->delete();
+            }
+        }
 
 
         $data_object = $request->all();

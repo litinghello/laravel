@@ -18,7 +18,7 @@
                             <div class="input-group-addon">
                                 <select id="car_province" class="selectpicker" data-style="btn-info">
                                 </select>
-                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="">
+                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="A879Y9">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon" >车辆类型</div>
@@ -32,31 +32,23 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车架号码</div>
-                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="">
+                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="JT000614">
                         </div>
-
                         <div class="form-group input-group hidden">
                             <div class="input-group-addon">发动机号</div>
                             <input type="text" class="form-control" id="car_engine_number" placeholder="后六位" value="">
                         </div>
-
-
                         <div class="form-group input-group">
                             <div class="input-group-addon">车主姓名</div>
-                            <input type="text" class="form-control" id="car_name" value="">
+                            <input type="text" class="form-control" id="car_name" value="杨力">
                         </div>
-
-
                         <div class="form-group input-group">
                             <div class="input-group-addon">验证码</div>
                             <input type="text" class="form-control" id="code"  value="">
                         </div>
-
                         <div class="form-group input-group">
                             <span><img id="check_img"/><a id="check_img_but" style="color: red;margin-left: 10px;">看不清，换一张</a></span>
                         </div>
-
-
                         <div class="form-group">
                             <div class="text-center">
                                 <button id="violate_submit" type="button" class="btn btn-primary">
@@ -66,7 +58,6 @@
                         </div>
                         <input id="check_cookies" placeholder="cookies" hidden>
                     </div>
-
                     <input id="handle_status" value="" hidden="hidden">
 
                     @component('layouts.datatables')

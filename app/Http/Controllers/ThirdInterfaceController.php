@@ -474,7 +474,8 @@ class ThirdInterfaceController extends BaseController
                     $array['violate_time'] = trim($list[0]->innertext);//时间
                     $array['violate_address'] = trim($list[1]->innertext);//地点
                     $array['violate_info'] = trim($list[2]->innertext);//违法信息
-
+                    $array['violate_status'] = trim($list[3]->innertext);//处理状态
+                    $array['violate_pay'] = trim($list[4]->innertext);//交款状态
                     preg_match('#\((.*?)\)#', trim($array['violate_info']), $match);
                     $ViolateCode = ViolateCode::where("code",$match[1])->first();
                     if($ViolateCode != null) {
@@ -482,26 +483,11 @@ class ThirdInterfaceController extends BaseController
                         $array['violate_money'] = $ViolateCode['money'];
                         $array['violate_marks'] = $ViolateCode['score'];
                         $array['violate_msg'] = $ViolateCode['notification'];
-//                        $array['car_type'] = $ViolateCode[3];
-//                        $array['car_province'] = $ViolateCode[3];
-//                        $array['car_number'] = $ViolateCode[3];
-//                        $array['car_frame_number'] = $ViolateCode[3];
+                        $array['car_type'] = $data_object['ctl00$ContentPlaceHolder1$hidHpzl'];
+                        $array['car_province'] = $data_object['ctl00$ContentPlaceHolder1$txtSyr'];
+                        $array['car_number'] = $data_object['ctl00$ContentPlaceHolder1$hidHphm'];
+                        $array['car_frame_number'] = $data_object['ctl00$ContentPlaceHolder1$hidClsbdh'];
                     }
-
-//                    foreach (LaravelHtmlDomParser\Facade::str_get_html($value->innertext)->find('td') as  $key => $value){
-//                        $array[] = trim($value->innertext);
-//                        if($key == 2){
-//                            preg_match('#\((.*?)\)#', trim($value->innertext), $match);
-//                            $ViolateCode = ViolateCode::where("code",$match[1])->first();
-//                            if($ViolateCode != null){
-//                                $array[] = $match[1];
-//                                $array[] = $ViolateCode['score'];
-//                                $array[] = $ViolateCode['money'];
-//                                $array[] = $ViolateCode['notification'];
-//                            }
-//                        }
-//                    }
-
                     $object[] = $array;
                 }
             }

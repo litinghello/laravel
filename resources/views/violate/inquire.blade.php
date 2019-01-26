@@ -158,12 +158,12 @@
                             post_object = post_object.substr(0, post_object.length - 1);//删掉最后一个&字符串
 
 
-                            let durl = search_url + `?${post_object}`;
+                            let durl = search_url;
 
                             user_modal_loading(0);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
-                                url:durl,type:"POST",
+                                url:durl,type:"POST",data:post_object,
                                 success:function(data){
 
                                     user_modal_loading_close();

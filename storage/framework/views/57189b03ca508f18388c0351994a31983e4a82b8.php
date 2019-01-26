@@ -86,15 +86,23 @@
         }
     }
     //上传照片
-    function open_upphoto_layer(url, title,event) {
-
-        layer.open({title: title || '窗口', type: 2, area: ['320px', '430px'], fix: true, maxmin: false, content: url,end:function () {
-            var $ = layui.$
-            var handle_status = $("#handle_status").val();
-            if(handle_status!=undefined && handle_status!='')
-            {
-                event(handle_status)
-            }
-        }});
+    function open_upphoto_layer(image_ex,url, title,event) {
+        let image_url = '<?php echo e(URL::asset('images/car_license_ex.jpg')); ?>',image_info="行驶证示例";
+        if(image_ex != null && image_ex!==""){
+            image_url = image_ex;
+            image_info = "已存行驶证";
+        }
+        layer.confirm("<img src=\""+image_url+"\" height=\"300px\" width=\"400px\"/>", {offset: '100px',area: ['auto', 'auto'], title:image_info}, function(index){
+            layer.open({title: title || '窗口', type: 2, area: ['320px', '430px'], fix: true, maxmin: false, content: url,end:function () {
+                let $ = layui.$;
+                let handle_status = $("#handle_status").val();
+                if(handle_status !== undefined && handle_status !==''){
+                    event(handle_status)
+                }
+            }});
+            layer.close(index);
+        },function (index) {
+            layer.close(index);
+        });
     }
 </script>

@@ -491,7 +491,7 @@ class ThirdInterfaceController extends BaseController
                     $object[] = $array;
                 }
             }
-            return response()->json(['status' => 1, 'data' => $object]);
+            return response()->json(['status' => 0, 'data' => $object]);
         }
     }
 }

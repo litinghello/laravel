@@ -47,10 +47,11 @@
     };
     $(document).ready(function(){
         $("#b01").click(function(){
-            let dd = $.ajax({url:"http://localhost/laravel/violates/chengdu/img",async:false});
+            let dd = $.ajax({url:"http://192.168.0.18:8889/laravel/public/violates/chengdu/img",async:false});
             let ss = JSON.parse(dd.responseText);
             $("#img").attr("src", ss.data);
             $("#cookies").val(ss.cookies);
+
         });
         $("#b02").click(function(){
             json_object['cookies'] = $("#cookies").val();
@@ -65,7 +66,7 @@
             }
             post_object = post_object.substr(0, post_object.length - 1);//删掉最后一个&字符串
             console.log(post_object);
-            let durl = `http://localhost/laravel/violates/chengdu/info?${post_object}`;
+            let durl = `http://192.168.0.18:8889/laravel/public/violates/chengdu/info?${post_object}`;
             let dd = $.ajax({url:durl,async:false});
             console.log(JSON.parse(dd.responseText).data);
             $("#result").text(JSON.parse(dd.responseText).data);

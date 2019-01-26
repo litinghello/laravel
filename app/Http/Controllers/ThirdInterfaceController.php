@@ -432,6 +432,28 @@ class ThirdInterfaceController extends BaseController
             return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
         }
 
+        $lsprefix = $request['ctl00$ContentPlaceHolder1$txtSyr'];
+        $lsnum = $request['ctl00$ContentPlaceHolder1$hidHphm'];
+        $lstype = $request['ctl00$ContentPlaceHolder1$hidHpzl'];
+        $frameno = $request['ctl00$ContentPlaceHolder1$hidClsbdh'];
+
+
+        //判断是否在最近8小时内查询了，有则直接返回结果，不在查询接口
+        $carviolates = ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->get();
+        if($carviolates!= null && count($carviolates)>0){
+            if ($carviolates[0] != null && $carviolates[0]->updated_at > date("Y-m-d H:i:s", strtotime("-480 minute"))) {
+                //没有违法返回提示
+                if(($carviolates[0]->violate_time == null || $carviolates[0]->violate_time == '') && $carviolates[0]->violate_msg != null && $carviolates[0]->violate_msg != ''){
+                    return response()->json(['status' => 1, 'data' => $carviolates[0]->violate_msg]);
+                }else{
+                    return response()->json(['status' => 0, 'data' => $carviolates]);
+                }
+            }else{
+                ViolateInfo::where( 'car_type' , $lstype)->where('car_province' , $lsprefix)->where('car_number' , $lsnum)->where('car_frame_number' , $frameno)->delete();
+            }
+        }
+
+
         $data_object = $request->all();
         $data_str = "";
         foreach ($data_object as $key => $value){
@@ -476,6 +498,10 @@ class ThirdInterfaceController extends BaseController
                     $array['violate_info'] = trim($list[2]->innertext);//违法信息
                     $array['violate_status'] = trim($list[3]->innertext);//处理状态
                     $array['violate_pay'] = trim($list[4]->innertext);//交款状态
+                    $array['car_type'] = $lstype;
+                    $array['car_province'] = $lsprefix;
+                    $array['car_number'] = $lsnum;
+                    $array['car_frame_number'] = $frameno;
                     preg_match('#\((.*?)\)#', trim($array['violate_info']), $match);
                     $ViolateCode = ViolateCode::where("code",$match[1])->first();
                     if($ViolateCode != null) {
@@ -483,12 +509,29 @@ class ThirdInterfaceController extends BaseController
                         $array['violate_money'] = $ViolateCode['money'];
                         $array['violate_marks'] = $ViolateCode['score'];
                         $array['violate_msg'] = $ViolateCode['notification'];
-                        $array['car_type'] = $data_object['ctl00$ContentPlaceHolder1$hidHpzl'];
-                        $array['car_province'] = $data_object['ctl00$ContentPlaceHolder1$txtSyr'];
-                        $array['car_number'] = $data_object['ctl00$ContentPlaceHolder1$hidHphm'];
-                        $array['car_frame_number'] = $data_object['ctl00$ContentPlaceHolder1$hidClsbdh'];
+                    }else{
+                        $array['violate_code'] = '';//违法代码
+                        $array['violate_money'] = '';
+                        $array['violate_marks'] = '';
+                        $array['violate_msg'] = '';
                     }
-                    $object[] = $array;
+//                    $carviolate = ViolateInfo::create($array );
+                    $carviolate = ViolateInfo::create([
+                            'car_type' => $lstype,
+                            'car_province' => $lsprefix,
+                            'car_number' => $lsnum,
+                            'car_frame_number' => $frameno,
+                            'violate_info' => $array['violate_info'],
+                            'violate_code' => $array['violate_code'],
+                            'violate_time' => $array['violate_time'],
+                            'violate_address' => $array['violate_address'],
+                            'violate_money' => $array['violate_money'],
+                            'violate_marks' => $array['violate_info'],
+                            'violate_msg' => $array['violate_msg'],
+                        ]
+                    );
+                    $object[] =$carviolate;
+
                 }
             }
             return response()->json(['status' => 0, 'data' => $object]);

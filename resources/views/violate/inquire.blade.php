@@ -18,7 +18,7 @@
                             <div class="input-group-addon">
                                 <select id="car_province" class="selectpicker" data-style="btn-info">
                                 </select>
-                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="A879Y9">
+                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon" >车辆类型</div>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车架号码</div>
-                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="JT000614">
+                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="">
                         </div>
                         <div class="form-group input-group hidden">
                             <div class="input-group-addon">发动机号</div>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车主姓名</div>
-                            <input type="text" class="form-control" id="car_name" value="杨力">
+                            <input type="text" class="form-control" id="car_name" value="">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">验证码</div>

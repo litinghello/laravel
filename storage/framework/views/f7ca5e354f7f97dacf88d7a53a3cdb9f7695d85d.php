@@ -15,7 +15,7 @@
                             <div class="input-group-addon">
                                 <select id="car_province" class="selectpicker" data-style="btn-info">
                                 </select>
-                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="A879Y9">
+                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon" >车辆类型</div>
@@ -29,31 +29,23 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车架号码</div>
-                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="JT000614">
+                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="">
                         </div>
-
                         <div class="form-group input-group hidden">
                             <div class="input-group-addon">发动机号</div>
                             <input type="text" class="form-control" id="car_engine_number" placeholder="后六位" value="">
                         </div>
-
-
                         <div class="form-group input-group">
                             <div class="input-group-addon">车主姓名</div>
-                            <input type="text" class="form-control" id="car_name" value="杨力">
+                            <input type="text" class="form-control" id="car_name" value="">
                         </div>
-
-
                         <div class="form-group input-group">
                             <div class="input-group-addon">验证码</div>
                             <input type="text" class="form-control" id="code"  value="">
                         </div>
-
                         <div class="form-group input-group">
                             <span><img id="check_img"/><a id="check_img_but" style="color: red;margin-left: 10px;">看不清，换一张</a></span>
                         </div>
-
-
                         <div class="form-group">
                             <div class="text-center">
                                 <button id="violate_submit" type="button" class="btn btn-primary">
@@ -64,7 +56,6 @@
                         </div>
                         <input id="check_cookies" placeholder="cookies" hidden>
                     </div>
-
                     <input id="handle_status" value="" hidden="hidden">
 
                     <?php $__env->startComponent('layouts.datatables'); ?>
@@ -80,6 +71,11 @@
                 </div>
 
                 <script type="text/javascript">
+                    function get_code() {
+                        let image_data = $.ajax({url:"<?php echo e(route('violates.chengdu_img')); ?>",async:false});
+                        $("#check_img").attr("src", JSON.parse(image_data.responseText).data);
+                        $("#check_cookies").val(JSON.parse(image_data.responseText).cookies);
+                    }
                     let info_object = {
                         'car_type':'车辆种类',
                         'car_province':'车辆省份',
@@ -94,14 +90,13 @@
                     var province_array = ["川"];
                     // var province_array = ["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                     $(document).ready(function() {
+                        get_code();
                         user_float_menu_select(2);
                         province_array.forEach(function(value){
                             $("#car_province").append("<option value='"+value+"'>"+value+"</option>");
                         });
                         $("#check_img_but").click(function(){
-                            let image_data = $.ajax({url:"<?php echo e(route('violates.chengdu_img')); ?>",async:false});
-                            $("#check_img").attr("src", JSON.parse(image_data.responseText).data);
-                            $("#check_cookies").val(JSON.parse(image_data.responseText).cookies);
+                            get_code();
                         });
                         $("#violate_submit").click(function (){
                             let json_object = {

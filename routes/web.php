@@ -70,7 +70,10 @@ Route::any('/plug/upstate','Plugs@upstate')->name('plug.upstate');
 Route::post('/upload/img','DrivingLicenseController@upfile_suc')->name('driving.upfile_suc');
 Route::any('/driving/get_url','DrivingLicenseController@get_upfile_url')->name('driving.get_upfile_url');
 
-Route::any('/test','WeChatsController@test')->name('laravel.test');
+//接口
+Route::any('/violates/chengdu/img','ThirdInterfaceController@chengdu_img')->name('violates.chengdu_img');
+
+Route::any('/violates/chengdu/info','ThirdInterfaceController@chengdu_violate_info')->name('violates.chengdu.info');
 
 
 

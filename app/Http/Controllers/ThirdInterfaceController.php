@@ -29,7 +29,7 @@ class ThirdInterfaceController extends BaseController
     //用于只允许通过认证的用户访问指定的路由
     public function __construct()
     {
-        $this->middleware('auth');
+//        $this->middleware('auth');
     }
     //添加第三方账户
     //http://localhost/laravel/penalties/account/add?account_type=51jfk&account_name=123456&account_password=123456
@@ -399,5 +399,83 @@ class ThirdInterfaceController extends BaseController
             return response()->json(['status' => 1, 'data' => "获取异常"]);
         }
         return response()->json(['status' => 0, 'data' => $carviolates]);
+    }
+    //获取图片
+    function chengdu_img(){
+        $client = new Client();//
+        //$client = new Client(['cookies' => true]);// 可开启共享
+        $jar = new CookieJar();
+        $server_addr = 'http://www.cdjg.gov.cn/WebService/Yzm.aspx?val=0.13383302428998878';
+        $cookies_str = "";
+        $response = $client->get($server_addr, [
+            'headers' => [
+                'X-Requested-With' => 'XMLHttpRequest',
+                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Referer'=>"http://www.cdjg.gov.cn/WebService/OnlineWork/QueryDrvOrVeh/QueryVehCenter/QueryVehStyleFour.aspx",
+                'Cookie' => $cookies_str
+            ],
+            'cookies' => $jar //读取cookie
+        ]);
+        $cookies_str = "";
+        foreach ($jar->getIterator() as $item) {
+            $cookies_str = $cookies_str . $item->getName() . "=" . $item->getValue() . "; ";
+        }
+        return response()->json(['status' => 0,'cookies'=>$cookies_str, 'data' => "data:image/jpeg;base64,".base64_encode($response->getBody())]);
+    }
+    //返回请求结果
+    function chengdu_violate_info(Request $request){
+        $validator = Validator::make($request->all(), [
+            'cookies' => 'required',//
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 1, 'data' => $validator->errors()->first()]);
+        }
+
+        $data_object = $request->all();
+        $data_str = "";
+        foreach ($data_object as $key => $value){
+            if($key != "cookies"){
+                $data_str = $data_str.urlencode($key)."=".urlencode($value)."&";
+            }
+        }
+        $data_str = substr($data_str, 0, -1) ;//删掉最后一个&字符
+
+        $client = new Client();//
+        $server_addr = 'http://www.cdjg.gov.cn/WebService/OnlineWork/QueryDrvOrVeh/QueryVehCenter/QueryVehDetailFour.aspx';
+        $response = $client->post($server_addr, [
+            'headers' => [
+                'X-Requested-With' => 'XMLHttpRequest',
+                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Referer'=>"http://www.cdjg.gov.cn/WebService/OnlineWork/QueryDrvOrVeh/QueryVehCenter/QueryVehStyleFour.aspx",
+                'Host'=>'www.cdjg.gov.cn',
+                'Cookie' => $request['cookies'],
+            ],
+            'body' => $data_str
+        ]);
+
+        $response_code = $response->getStatusCode();
+        if ($response_code != 200) {
+            return response()->json(['status' => 1, 'data' => "系统异常"]);
+        }
+        $count_str = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('#ContentPlaceHolder1_Panel1 > #lblCount');
+        $list = LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('#ContentPlaceHolder1_Panel1 > tr');
+        if($count_str == null || $list == null){
+            return response()->json(['status' => 1, 'data' => "请求错误"]);
+        }
+        if($count_str[0]->innertext === 0 || $count_str[0]->innertext === ''){
+            return response()->json(['status' => 1, 'data' => LaravelHtmlDomParser\Facade::str_get_html($response->getBody())->find('#ContentPlaceHolder1_Panel2 > span')[0]->innertext]);
+        }else{
+            $object = array();
+            foreach ($list as  $key => $value){
+                if($key > 1){//设置过滤标题的 tr 设置为1
+                    $array = array();
+                    foreach (LaravelHtmlDomParser\Facade::str_get_html($value->innertext)->find('td') as  $key => $value){
+                        $array[] = trim($value->innertext);
+                    }
+                    $object[] = $array;
+                }
+            }
+            return response()->json(['status' => 1, 'data' => $object]);
+        }
     }
 }

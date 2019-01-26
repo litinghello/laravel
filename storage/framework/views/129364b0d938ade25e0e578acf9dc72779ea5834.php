@@ -90,7 +90,7 @@
         let image_url = '<?php echo e(URL::asset('images/car_license_ex.jpg')); ?>',image_info="行驶证示例";
         if(image_ex != null && image_ex!==""){
             image_url = image_ex;
-            image_info = "已存照片";
+            image_info = "已存行驶证";
         }
         layer.confirm("<img src=\""+image_url+"\" height=\"300px\" width=\"400px\"/>", {offset: '100px',area: ['auto', 'auto'], title:image_info}, function(index){
             layer.open({title: title || '窗口', type: 2, area: ['320px', '430px'], fix: true, maxmin: false, content: url,end:function () {

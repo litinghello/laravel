@@ -15,7 +15,7 @@
                             <div class="input-group-addon">
                                 <select id="car_province" class="selectpicker" data-style="btn-info">
                                 </select>
-                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="">
+                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="A879Y9">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon" >车辆类型</div>
@@ -29,12 +29,31 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车架号码</div>
-                            <input type="text" class="form-control" id="car_frame_number" placeholder="后六位" value="">
+                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="JT000614">
                         </div>
+
                         <div class="form-group input-group hidden">
                             <div class="input-group-addon">发动机号</div>
                             <input type="text" class="form-control" id="car_engine_number" placeholder="后六位" value="">
                         </div>
+
+
+                        <div class="form-group input-group">
+                            <div class="input-group-addon">车主姓名</div>
+                            <input type="text" class="form-control" id="car_name" value="杨力">
+                        </div>
+
+
+                        <div class="form-group input-group">
+                            <div class="input-group-addon">验证码</div>
+                            <input type="text" class="form-control" id="code"  value="">
+                        </div>
+
+                        <div class="form-group input-group">
+                            <span><img id="check_img"/><a id="check_img_but" style="color: red;margin-left: 10px;">看不清，换一张</a></span>
+                        </div>
+
+
                         <div class="form-group">
                             <div class="text-center">
                                 <button id="violate_submit" type="button" class="btn btn-primary">
@@ -43,6 +62,7 @@
                                 </button>
                             </div>
                         </div>
+                        <input id="check_cookies" placeholder="cookies" hidden>
                     </div>
 
                     <input id="handle_status" value="" hidden="hidden">
@@ -58,6 +78,7 @@
                     <?php $__env->startComponent('layouts.floatmenu'); ?>
                     <?php echo $__env->renderComponent(); ?>
                 </div>
+
                 <script type="text/javascript">
                     let info_object = {
                         'car_type':'车辆种类',
@@ -77,20 +98,42 @@
                         province_array.forEach(function(value){
                             $("#car_province").append("<option value='"+value+"'>"+value+"</option>");
                         });
-
+                        $("#check_img_but").click(function(){
+                            let image_data = $.ajax({url:"<?php echo e(route('violates.chengdu_img')); ?>",async:false});
+                            $("#check_img").attr("src", JSON.parse(image_data.responseText).data);
+                            $("#check_cookies").val(JSON.parse(image_data.responseText).cookies);
+                        });
                         $("#violate_submit").click(function (){
-                            let post_data = {
-                                car_province:$("#car_province").val(),
-                                car_number:$("#car_number").val().toLocaleUpperCase(),
-                                car_type:$("#car_type").val(),
-                                car_frame_number:$("#car_frame_number").val(),
-                                car_engine_number:$("#car_engine_number").val(),
+                            let json_object = {
+                                "__EVENTTARGET":"ctl00%24ContentPlaceHolder1%24btnVeh",
+                                "__EVENTARGUMENT":"",
+                                "__VIEWSTATE":"%2FwEPDwULLTE2MTY5NTQyNDQPZBYCZg9kFgQCBQ8PFgIeBFRleHQFBDEwMzdkZAIHDw8WAh8ABQkyNDQzNzA0MzFkZGR5Q9t%2B087xC4AqKlSvvs8YY9eSZ%2BkqeI94Pi%2BsBw3Pvg%3D%3D",
+                                "__VIEWSTATEGENERATOR":"B386BE9B",
+                                "__PREVIOUSPAGE":"Atov0RgqxUCPpmnPaWLhwrQ68YFgo55B0Eqh1d3fRBAN3GOaej3EhvhtD2IfgaCzm4mCTLeTlV_zlWphsGEVGWbQ4SHgjRn1mw8bxqHZV24u-lNFKxppD8CGBF4neha9aLRWtjZDr6MAyAu8cLZo6hqKy6FUJ4yvVvexj2mitKLs10Phe2gDJUgFi-q1poYO0",
+                                "__EVENTVALIDATION":"%2FwEdAAm6HXBzvi7lHpKd1LEIWuoTU1nw%2BekAp261U8JQiZc9CSUh7%2BmcdQVCh7zs1yhjMaHoKrN8Em90H9%2FCULMBREiAtd4irRCGYF9cWkg9N731x4sFrRe%2FK9yDRLISNEAr2KLaPn1lP427U6BbhUdiccb9%2BAID6RSWbuIxYniix%2B9qZCFDiZv7uMZvG0Evv%2B8hFIjNoXIc4ylIblglHfiHeaU12LnJtb3xHleb0Yw8xEZwBg%3D%3D",
+                                "ctl00%24ContentPlaceHolder1%24txtYzm":"",
+                                "ctl00%24ContentPlaceHolder1%24txtSyr":"",
+                                "ctl00%24ContentPlaceHolder1%24hidCode":"",
+                                "ctl00%24ContentPlaceHolder1%24hidHpzl":"",
+                                "ctl00%24ContentPlaceHolder1%24hidHphm":"",
+                                "ctl00%24ContentPlaceHolder1%24hidClsbdh":""
                             };
-                            // $("#violate_submit").attr('disabled',true);
+
+                            json_object['cookies'] = $("#check_cookies").val();
+                            json_object['ctl00%24ContentPlaceHolder1%24txtYzm'] = $("#code").val();
+                            json_object['ctl00%24ContentPlaceHolder1%24txtSyr'] = $("#car_name").val();
+                            json_object['ctl00%24ContentPlaceHolder1%24hidHphm'] = $("#car_province").val()+$("#car_number").val().toLocaleUpperCase();
+                            json_object['ctl00%24ContentPlaceHolder1%24hidHpzl'] = $("#car_type").val()
+                            json_object['ctl00%24ContentPlaceHolder1%24hidClsbdh'] = $("#car_frame_number").val();
+                            let post_object = "";
+                            for(let index in json_object) {
+                                post_object += index+"="+json_object[index]+"&";
+                            }
+                            post_object = post_object.substr(0, post_object.length - 1);//删掉最后一个&字符串
                             user_modal_loading(0);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
-                                url:"<?php echo e(route('violates.info')); ?>",type:"POST",data:post_data,
+                                url:"<?php echo e(route('violates.chengdu.info')); ?>",type:"POST",data:post_object,
                                 success:function(data){
                                     user_modal_loading_close();
                                     if(data['status'] === 0){
@@ -101,7 +144,7 @@
                                                 }
                                                 display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
                                                 display_info += "<div>收费规则：150元*扣分+罚款+30元服务费</div>";
-                                                open_upphoto_layer('<?php echo e(url('driving/upfile')); ?>','上传行驶证正面照片',function (d) {
+                                                open_upphoto_layer(null,'<?php echo e(url('driving/upfile')); ?>','上传行驶证正面照片',function (d) {
                                                     if (d !== undefined && d !== '') {
                                                         $.ajax({
                                                             type: 'POST',

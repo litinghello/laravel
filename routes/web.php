@@ -72,7 +72,7 @@ Route::any('/driving/get_url','DrivingLicenseController@get_upfile_url')->name('
 
 //接口
 Route::any('/violates/chengdu/img','ThirdInterfaceController@chengdu_img')->name('violates.chengdu_img');
-
+//接口
 Route::any('/violates/chengdu/info','ThirdInterfaceController@chengdu_violate_info')->name('violates.chengdu.info');
 
 

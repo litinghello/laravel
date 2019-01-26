@@ -6,11 +6,14 @@
     <br>
     车牌号码：<input id="car" placeholder="川AXXXX" value="川AF474B">
     <br>
-    车牌类型：<input id="tp" placeholder="02" value="02">
+    <!--车牌类型：<input id="tp" placeholder="02" value="02">-->
+    车牌类型：<select id="tp" class="selectpicker" data-style="btn-info">
+        <option value="02" >小型汽车</option><option value="01" >大型汽车</option><option value="15" >挂车</option><option value="04" >领馆汽车</option><option value="05" >境外汽车</option><option value="06" >外籍汽车</option><option value="07" >两、三轮摩托车</option><option value="08" >轻便摩托车</option><option value="09" >使馆摩托车</option><option value="10" >领馆摩托车</option><option value="11" >境外摩托车</option><option value="12" >外籍摩托车</option><option value="13" >农用运输车</option><option value="14" >拖拉机</option><option value="03" >使馆汽车</option><option value="16" >教练汽车</option><option value="17" >教练摩托车</option><option value="18" >试验汽车</option><option value="19" >试验摩托车</option><option value="20" >临时入境汽车</option><option value="21" >临时入境摩托车</option><option value="22" >临时行驶车</option><option value="23" >警用汽车</option><option value="24" >警用摩托</option><option value="25" >原农机</option><option value="26" >香港入出境车</option><option value="27" >澳门入出境车</option>
+    </select>
     <br>
     车主姓名：<input id="name" placeholder="全称" value="曾行">
     <br>
-    发动机号：<input id="cid" placeholder="全部编号" value="A4300825">
+    车辆识别代号/车架号(后8位)：<input id="cid" placeholder="全部编号" value="A4300825">
     <br>
     <input id="cookies" placeholder="cookies" hidden>
     <img id="img">

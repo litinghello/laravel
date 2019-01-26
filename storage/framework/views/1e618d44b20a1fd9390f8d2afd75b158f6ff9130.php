@@ -15,7 +15,7 @@
                             <div class="input-group-addon">
                                 <select id="car_province" class="selectpicker" data-style="btn-info">
                                 </select>
-                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="AF474B">
+                            </div><input type="text" class="form-control" id="car_number" placeholder="" value="A879Y9">
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon" >车辆类型</div>
@@ -29,31 +29,23 @@
                         </div>
                         <div class="form-group input-group">
                             <div class="input-group-addon">车架号码</div>
-                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="A4300825">
+                            <input type="text" class="form-control" id="car_frame_number" placeholder="后八位" value="JT000614">
                         </div>
-
                         <div class="form-group input-group hidden">
                             <div class="input-group-addon">发动机号</div>
                             <input type="text" class="form-control" id="car_engine_number" placeholder="后六位" value="">
                         </div>
-
-
                         <div class="form-group input-group">
                             <div class="input-group-addon">车主姓名</div>
-                            <input type="text" class="form-control" id="car_name" value="曾行">
+                            <input type="text" class="form-control" id="car_name" value="杨力">
                         </div>
-
-
                         <div class="form-group input-group">
                             <div class="input-group-addon">验证码</div>
                             <input type="text" class="form-control" id="code"  value="">
                         </div>
-
                         <div class="form-group input-group">
-                            <span><img src="" alt="" id="img_code"/><a href="javascript:vertify()" style="color: red;margin-left: 10px;">看不清，换一张</a></span>
+                            <span><img id="check_img"/><a id="check_img_but" style="color: red;margin-left: 10px;">看不清，换一张</a></span>
                         </div>
-
-
                         <div class="form-group">
                             <div class="text-center">
                                 <button id="violate_submit" type="button" class="btn btn-primary">
@@ -62,10 +54,8 @@
                                 </button>
                             </div>
                         </div>
-
-                        <input id="cookies" placeholder="cookies" hidden>
+                        <input id="check_cookies" placeholder="cookies" hidden>
                     </div>
-
                     <input id="handle_status" value="" hidden="hidden">
 
                     <?php $__env->startComponent('layouts.datatables'); ?>
@@ -81,19 +71,11 @@
                 </div>
 
                 <script type="text/javascript">
-
-                    let code_url = 'http://192.168.0.18:8889/laravel/public/violates/chengdu/img';
-                    let search_url= 'http://192.168.0.18:8889/laravel/public/violates/chengdu/info';
-
-                    function vertify() {
-                        let dd = $.ajax({url:code_url,async:false});
-                        let ss = JSON.parse(dd.responseText);
-                        $("#img_code").attr("src", ss.data);
-                        $("#cookies").val(ss.cookies);
+                    function get_code() {
+                        let image_data = $.ajax({url:"<?php echo e(route('violates.chengdu_img')); ?>",async:false});
+                        $("#check_img").attr("src", JSON.parse(image_data.responseText).data);
+                        $("#check_cookies").val(JSON.parse(image_data.responseText).cookies);
                     }
-
-
-
                     let info_object = {
                         'car_type':'车辆种类',
                         'car_province':'车辆省份',
@@ -108,26 +90,15 @@
                     var province_array = ["川"];
                     // var province_array = ["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                     $(document).ready(function() {
-
-                        vertify()
-
+                        get_code()
                         user_float_menu_select(2);
-
                         province_array.forEach(function(value){
                             $("#car_province").append("<option value='"+value+"'>"+value+"</option>");
                         });
-
-
+                        $("#check_img_but").click(function(){
+                            get_code();
+                        });
                         $("#violate_submit").click(function (){
-                            let post_data = {
-                                car_province:$("#car_province").val(),
-                                car_number:$("#car_number").val().toLocaleUpperCase(),
-                                car_type:$("#car_type").val(),
-                                car_frame_number:$("#car_frame_number").val(),
-                                car_engine_number:$("#car_engine_number").val(),
-                            };
-
-
                             let json_object = {
                                 "__EVENTTARGET":"ctl00%24ContentPlaceHolder1%24btnVeh",
                                 "__EVENTARGUMENT":"",
@@ -135,15 +106,15 @@
                                 "__VIEWSTATEGENERATOR":"B386BE9B",
                                 "__PREVIOUSPAGE":"Atov0RgqxUCPpmnPaWLhwrQ68YFgo55B0Eqh1d3fRBAN3GOaej3EhvhtD2IfgaCzm4mCTLeTlV_zlWphsGEVGWbQ4SHgjRn1mw8bxqHZV24u-lNFKxppD8CGBF4neha9aLRWtjZDr6MAyAu8cLZo6hqKy6FUJ4yvVvexj2mitKLs10Phe2gDJUgFi-q1poYO0",
                                 "__EVENTVALIDATION":"%2FwEdAAm6HXBzvi7lHpKd1LEIWuoTU1nw%2BekAp261U8JQiZc9CSUh7%2BmcdQVCh7zs1yhjMaHoKrN8Em90H9%2FCULMBREiAtd4irRCGYF9cWkg9N731x4sFrRe%2FK9yDRLISNEAr2KLaPn1lP427U6BbhUdiccb9%2BAID6RSWbuIxYniix%2B9qZCFDiZv7uMZvG0Evv%2B8hFIjNoXIc4ylIblglHfiHeaU12LnJtb3xHleb0Yw8xEZwBg%3D%3D",
-                                "ctl00%24ContentPlaceHolder1%24txtYzm":"LPDD",
-                                "ctl00%24ContentPlaceHolder1%24txtSyr":"%E6%9B%BE%E8%A1%8C",
+                                "ctl00%24ContentPlaceHolder1%24txtYzm":"",
+                                "ctl00%24ContentPlaceHolder1%24txtSyr":"",
                                 "ctl00%24ContentPlaceHolder1%24hidCode":"",
-                                "ctl00%24ContentPlaceHolder1%24hidHpzl":"02",
-                                "ctl00%24ContentPlaceHolder1%24hidHphm":"%E5%B7%9DAF474B",
-                                "ctl00%24ContentPlaceHolder1%24hidClsbdh":"A4300825"
+                                "ctl00%24ContentPlaceHolder1%24hidHpzl":"",
+                                "ctl00%24ContentPlaceHolder1%24hidHphm":"",
+                                "ctl00%24ContentPlaceHolder1%24hidClsbdh":""
                             };
 
-                            json_object['cookies'] = $("#cookies").val();
+                            json_object['cookies'] = $("#check_cookies").val();
                             json_object['ctl00%24ContentPlaceHolder1%24txtYzm'] = $("#code").val();
                             json_object['ctl00%24ContentPlaceHolder1%24txtSyr'] = $("#car_name").val();
                             json_object['ctl00%24ContentPlaceHolder1%24hidHphm'] = $("#car_province").val()+$("#car_number").val().toLocaleUpperCase();
@@ -154,19 +125,13 @@
                                 post_object += index+"="+json_object[index]+"&";
                             }
                             post_object = post_object.substr(0, post_object.length - 1);//删掉最后一个&字符串
-
-
-                            let durl = search_url;
-
                             user_modal_loading(0);
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': "<?php echo e(csrf_token()); ?>"},
-                                url:durl,type:"POST",data:post_object,
+                                url:"<?php echo e(route('violates.chengdu.info')); ?>",type:"POST",data:post_object,
                                 success:function(data){
-
                                     user_modal_loading_close();
                                     if(data['status'] === 0){
-                                        console.log(data)
                                             user_datatables_init(info_object,data['data'],function (data) {
                                                 let display_info = "";
                                                 for(key in info_object){

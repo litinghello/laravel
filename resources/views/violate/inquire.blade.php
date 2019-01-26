@@ -73,6 +73,11 @@
                 </div>
 
                 <script type="text/javascript">
+                    function get_code() {
+                        let image_data = $.ajax({url:"{{route('violates.chengdu_img')}}",async:false});
+                        $("#check_img").attr("src", JSON.parse(image_data.responseText).data);
+                        $("#check_cookies").val(JSON.parse(image_data.responseText).cookies);
+                    }
                     let info_object = {
                         'car_type':'车辆种类',
                         'car_province':'车辆省份',
@@ -87,14 +92,13 @@
                     var province_array = ["川"];
                     // var province_array = ["川","渝","鄂","豫","皖","云","吉","鲁","沪","陕","京","湘","宁","津","粤","新","冀","晋","辽","黑","赣","桂","琼","藏","甘","青","闽","蒙","贵","苏","浙"];
                     $(document).ready(function() {
+                        get_code();
                         user_float_menu_select(2);
                         province_array.forEach(function(value){
                             $("#car_province").append("<option value='"+value+"'>"+value+"</option>");
                         });
                         $("#check_img_but").click(function(){
-                            let image_data = $.ajax({url:"{{route('violates.chengdu_img')}}",async:false});
-                            $("#check_img").attr("src", JSON.parse(image_data.responseText).data);
-                            $("#check_cookies").val(JSON.parse(image_data.responseText).cookies);
+                            get_code();
                         });
                         $("#violate_submit").click(function (){
                             let json_object = {

@@ -336,6 +336,8 @@ class ThirdInterfaceController extends BaseController
                            'violate_address' => '',
                            'violate_money' => 0,
                            'violate_marks' => 0,
+                           'violate_status' => '',
+                           'violate_pay' => '',
                            'violate_msg' => $error[1]->innertext,
                        ]
                    );
@@ -528,6 +530,8 @@ class ThirdInterfaceController extends BaseController
                             'violate_money' => $array['violate_money'],
                             'violate_marks' => $array['violate_marks'],
                             'violate_msg' => $array['violate_msg'],
+                            'violate_status' => $array['violate_status'],
+                            'violate_pay' => $array['violate_pay'],
                         ]
                     );
                     $object[] =$carviolate;

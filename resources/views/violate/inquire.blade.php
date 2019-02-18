@@ -140,8 +140,12 @@
                                                 for(key in info_object){
                                                     display_info += "<div>"+info_object[key]+":"+data[key]+"</div>";
                                                 }
-                                                display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
-                                                display_info += "<div>收费规则：150元*扣分+罚款+30元服务费</div>";
+                                                if(parseFloat(data.violate_marks) === 0){
+                                                    display_info += "<div>合计："+parseFloat(50 + parseFloat(data.violate_money) + 30)+"元</div>";
+                                                }else{
+                                                    display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
+                                                }
+                                                display_info += "<div>收费规则：150元每分+罚款+（普通30元或0分80元）</div>";
                                                 open_upphoto_layer(null,'{{url('driving/upfile')}}','上传行驶证正面照片',function (d) {
                                                     if (d !== undefined && d !== '') {
                                                         $.ajax({

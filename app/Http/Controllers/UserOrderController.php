@@ -64,7 +64,11 @@ class UserOrderController extends Controller
                     if($order_info == null){
                         return response()->json(['status' => 1, 'data' => '数据有误']);
                     }
-                    $request['order_money'] = $order_info->violate_money + $order_info->violate_marks * 150 + 30;//每一分150元手续费30元
+                    if($order_info->violate_marks == 0){
+                        $request['order_money'] = $order_info->violate_money + 50 + 30;//0分收80元服务费
+                    }else{
+                        $request['order_money'] = $order_info->violate_money + $order_info->violate_marks * 150 + 30;//每一分150元手续费30元
+                    }
                     break;
                 case 'penalty':
                     $order_info =  PenaltyInfo::where('id',$request['order_src_id'])->first();

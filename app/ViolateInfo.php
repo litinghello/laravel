@@ -20,6 +20,8 @@ class ViolateInfo extends Model
         'violate_address',
         'violate_money',
         'violate_marks',
+        'violate_status',
+        'violate_pay',
         'violate_msg',
     ];
 }

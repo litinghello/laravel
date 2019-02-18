@@ -88,6 +88,8 @@
                         'violate_address':'违章地点',
                         'violate_money':'罚款金额（元）',
                         // 'penalty_phone_number':'手续费',
+                        // 'violate_status':'处理',
+                        // 'violate_pay':'交款',
                         'violate_marks':'扣分（仅供参考）',
                     };
                     var province_array = ["川"];
@@ -146,24 +148,30 @@
                                                     display_info += "<div>合计："+parseFloat(parseFloat(data.violate_marks)*150 + parseFloat(data.violate_money) + 30)+"元</div>";
                                                 }
                                                 display_info += "<div>收费规则：150元每分+罚款+（普通30元或0分80元）</div>";
-                                                open_upphoto_layer(null,'{{url('driving/upfile')}}','上传行驶证正面照片',function (d) {
-                                                    if (d !== undefined && d !== '') {
-                                                        $.ajax({
-                                                            type: 'POST',
-                                                            data: {'order_src_id': data['id'], 'img': d},
-                                                            url: "{{route('driving.upfile_suc')}}",
-                                                            headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"}
-                                                        })
+                                                user_modal_comfirm(display_info, function () {
+                                                    if(data['violate_status'] === '已处理'){
+                                                        user_modal_warning("次单已扣分，请选择代缴罚款进行处理。");
+                                                    }else{
+                                                        open_upphoto_layer(null,'{{url('driving/upfile')}}','上传行驶证正面照片',function (d) {
+                                                            if (d !== undefined && d !== '') {
+                                                                $.ajax({
+                                                                    type: 'POST',
+                                                                    data: {'order_src_id': data['id'], 'img': d},
+                                                                    url: "{{route('driving.upfile_suc')}}",
+                                                                    headers: {'X-CSRF-TOKEN': "{{csrf_token()}}"},
+                                                                    success: function(){
+                                                                        let order_value = {
+                                                                            order_money: 0,
+                                                                            order_src_type: "violate",
+                                                                            order_src_id: data['id'],
+                                                                            order_phone_number: "13000000000"
+                                                                        };
+                                                                        user_order_create_pay(order_value);
+                                                                    }
+                                                                })
+                                                            }
+                                                        });
                                                     }
-                                                    user_modal_comfirm(display_info, function () {
-                                                        let order_value = {
-                                                            order_money: 0,
-                                                            order_src_type: "violate",
-                                                            order_src_id: data['id'],
-                                                            order_phone_number: "13000000000"
-                                                        };
-                                                        user_order_create_pay(order_value);
-                                                    });
                                                 });
                                             });
                                             user_datatables_show();
